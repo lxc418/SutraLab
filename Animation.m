@@ -63,7 +63,9 @@ for i=1:100; % Should be inp.nno
    
  plot(xboun,yboun,'k-','linewidth',lw); hold on % Plot the boundary of domain
  fill(xfil,yfil,'w','linestyle','none'); hold on % Fill the interpolated area outside the domain
- plot([xinter 80],[td td],'k-','linewidth',lw); hold off % Plot the tidal level
+ plot([xinter 80],[td td],'k-','linewidth',lw); hold on % Plot the tidal level
+ plot([seep(2,1,i) seep(2,1,i)],[seep(3,1,i) seep(3,1,i)],'ro', ...
+      'markersize',9,'markerfacecolor','r'); hold off % Plot the seepage node
  
  set(gca,'fontname','times new roman','fontsize',fl);
  xlabel('\it x \rm (m)','fontname','times new roman','fontsize',fz);

@@ -25,6 +25,7 @@ bcopfiles={bcopfiles.name};
 bcopFile=char(bcopfiles);
 
 ETFile='ET.DAT'; % ET.DAT with model setup
+SEEPFile='SEEPAGE.DAT'; % SEEPAGE position
 
 tide=struct;
 [tide]=SutraLab.readETinp(ETFile);
@@ -67,6 +68,10 @@ if inp.neo~=0
     [b b1]=SutraLab.readele(eleFile,inp,outele); % Function that reads *.ele file
     fprintf(1,'ELE file reading finished\n');
 end
+
+seep=zeros(3,1,outele);
+[seep]=SutraLab.readseep(SEEPFile,outele,f4);
+fprintf(1,'SEEPAGE file reading finished\n');
 
 bcof=struct;
 bcof1=zeros(3,inp.nnh,inp.nbcof);

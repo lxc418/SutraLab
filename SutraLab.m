@@ -196,6 +196,22 @@ classdef SutraLab
        %****************************** END ********************************
        
        
+	   %*********************** Function readseep *************************
+       function [seep]=readseep(fname,outele,f4)
+          fn=fopen(fname);
+          line=fgetl(fn); % Jump over the first time step's output
+          for j=1:outele-1
+            for i=1:f4(1)-1
+              line=fgetl(fn);
+            end
+              seep(:,:,j)=fscanf(fn,'%g %*g %g %g',[3 1]);
+              line=fgetl(fn);
+          end % for
+          fclose(fn);
+       end % Function readseep
+       %****************************** END ********************************
+	   
+	   
        %*********************** Function readbcof *************************
        function [bcof,bcof1]=readbcof(fname,inp)
            fn=fopen(fname);
