@@ -63,9 +63,17 @@ classdef SutraLab
             line=fgetl(fn); % Reand the line of Dataset 8B again to proceed to the next line
             if mod(itmax,f3(1))==0  % Calculate the number of output in .NOD file
                 if(f3(1)<0)
+                    if abs(f3(1))==1
+                    inp.nno=(itmax-mod(itmax,abs(f3(1))))/abs(f3(1)); % Number of output in .NOD file
+                    else
                     inp.nno=(itmax-mod(itmax,abs(f3(1))))/abs(f3(1))+1; % Number of output in .NOD file
+                    end
                 else
-                    inp.nno=(itmax-mod(itmax,f3(1)))/f3(1)+2; % Number of output in .NOD file
+                    if f3(1)==1
+                    inp.nno=(itmax-mod(itmax,f3(1)))/f3(1)+1; % Number of output in .NOD file
+                    else
+                    inp.nno=(itmax-mod(itmax,f3(1)))/f3(1)+2; %
+                    end
                 end % if
             else
                 if(f3(1)<0)
@@ -82,16 +90,25 @@ classdef SutraLab
                 inp.neo=(itmax-mod(itmax,f4(1)))/f4(1)+2; % Number of output in .ELE file
             end % if
             
-            line=fgetl(fn);
-            f5=fscanf(fn,'%f %f %f %f %*s',[1 4]);  % Dataset 8C
+            %line2=fgetl(fn);
+            line4=SutraLab.readnext(fn,'#') ;
+            f5=cell2mat(textscan(line4,'%f %f %f %f %*s',[1 4]));  % Dataset 8C
             if mod(itmax,f5(1))==0  % Calculate the number of output in .BCOF file
-                inp.nbcof=(itmax-mod(itmax,f5(1)))/f5(1)+1; % Number of output in .BCOF file
+              if f5(1)==1 % a conditioner to resolve nonconsistency when nbcfpr==1 
+	       inp.nbcof=(itmax-mod(itmax,f5(1)))/f5(1)+0; % Number of output in .BCOF file
+              else
+	       inp.nbcof=(itmax-mod(itmax,f5(1)))/f5(1)+1; % Number of output in .BCOF file
+	      end
             else
                 inp.nbcof=(itmax-mod(itmax,f5(1)))/f5(1)+2; % Number of output in .BCOF file
             end % if
             
             if mod(itmax,f5(3))==0  % Calculate the number of output in .BCOP file
+	      if f5(3)==1
+                inp.nbcop=(itmax-mod(itmax,f5(3)))/f5(3)+0; % Number of output in .BCOP file
+	      else
                 inp.nbcop=(itmax-mod(itmax,f5(3)))/f5(3)+1; % Number of output in .BCOP file
+              end
             else
                 inp.nbcop=(itmax-mod(itmax,f5(3)))/f5(3)+2; % Number of output in .BCOP file
             end % if
@@ -163,6 +180,64 @@ classdef SutraLab
 	   end % Funtion readnod
        %****************************** END ********************************
        
+       %*********************** Function readnod **************************
+       function [a ta a1]=readnod2(fname,inp,outnod)
+            fn=fopen(fname);
+            
+            for i=1:12 % Reading the first 12 rows' heading
+               line=fgetl(fn);
+            end
+               temp=fscanf(fn,'%*s %g %g %*s %*g %*s %*g %*s %*g',[2 inp.nno]); % Time steps (1st row) and Time (sec) (2nd row)
+               if inp.nno==inp.neo
+                 ta(1:2,:)=temp(1:2,2:inp.nno);
+                 ta(2,:)=ta(2,:)/24/3600; % Change time from seconds to day
+               else
+                 ta(1:2,:)=temp(1:2,3:inp.nno);
+                 ta(2,:)=ta(2,:)/24/3600; % Change time from seconds to day
+               end % if
+               line=fgetl(fn); % Read the line again to proceed to the next line
+            
+            for j=1:outnod
+              for i=1:5  % Read the first five rows of each out
+                line=fgetl(fn);
+              end % i
+           
+            if inp.nno==inp.neo
+              if j==1  % Jump over the first round of output
+                for m=1:inp.nn
+                   line=fgetl(fn);
+                end
+              else
+                  a(j-1).label={'x','y','p','c','s'};
+                  temp=fscanf(fn,'%f %g %g %g %g %g %g %g %g',[9 inp.nn]);
+                  a1(:,:,j-1)=temp;
+                  line=fgetl(fn);   % If the last column is not captured, it requires to use the previous line
+                  for k=1:5
+                    a(j-1).terms{k}=a1(k,:,j-1);
+                  end % for
+              a(j-1).TsNumber=ta(1,j-1);  % Time steps
+		      a(j-1).RealTDays=ta(2,j-1); % Time (day)
+              end % if
+            else
+              if j<=2  % Jump over the first round of output
+                for m=1:inp.nn
+                   line=fgetl(fn);
+                end
+              else
+                  a(j-2).label={'x','y','p','c','s'};
+                  a1(:,:,j-2)=fscanf(fn,'%f %g %g %g %g %g %g %g %g',[9 inp.nn]);
+                  line=fgetl(fn);   % If the last column is not captured, it requires to use the previous line
+                  for k=1:5
+                    a(j-2).terms{k}=a1(k,:,j-2);
+                  end % for
+              a(j-2).TsNumber=ta(1,j-2);  % Time steps
+		      a(j-2).RealTDays=ta(2,j-2); % Time (day)
+              end % if
+            end %if
+            end % j
+            fclose(fn);
+	   end % Funtion readnod
+       %****************************** END ********************************
        
        %*********************** Function readele **************************
        function [b b1]=readele(fname,inp,outele)
@@ -275,6 +350,19 @@ classdef SutraLab
        end % Function readbcop
        %****************************** END ********************************
        
+
        
+       
+       
+        function line=readnext(fn,keywords)
+        % line=readnext(fn,keywords)
+	% read next line that is not started from '#'
+	% fn  -- file handle
+	% keywords -- should be hatch
+             line=fgetl(fn);
+             while  line(1)=='#'
+               line=fgetl(fn);
+             end
+	end % function
    end % methods 
 end % classdef
