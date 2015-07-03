@@ -159,12 +159,12 @@ classdef inpObj
       
       % ---------------       DATASET 1    -------------------------
       fn=fopen(fname);
-      o.inp.dataset1a=getNextLine(fn,'#');
-      o.inp.dataset1b=getNextLine(fn,'#');
+      o.inp.dataset1a=getNextLine(fn,'criterion','without','keyword','#');
+      o.inp.dataset1b=getNextLine(fn,'criterion','without','keyword','#');
       % ---------------       DATASET 2A   -------------------------
-      o.inp.dataset2a=getNextLine(fn,'#');
+      o.inp.dataset2a=getNextLine(fn,'criterion','without','keyword','#');
       % ---------------       DATASET 2B   -------------------------
-      o.inp.dataset2b=getNextLine(fn,'#');
+      o.inp.dataset2b=getNextLine(fn,'criterion','without','keyword','#');
       % remove single quote
       strprc      = regexprep(o.inp.dataset2b,'''','');
       tmp         = textscan(strprc,'%s %s %s %f %f');
@@ -173,7 +173,7 @@ classdef inpObj
       o.nn1       = tmp{4};
       o.nn2       = tmp{5};
       % ---------------       DATASET 3    -------------------------
-      o.inp.dataset3 = getNextLine(fn,'#');
+      o.inp.dataset3 = getNextLine(fn,'criterion','without','keyword','#');
       str            = textscan(o.inp.dataset3,'%f %f %f %f %f %f %f');
       o.nn           = str{1};
       o.ne           = str{2};
@@ -184,29 +184,29 @@ classdef inpObj
       o.nobs         = str{7};
       
       % ---------------       DATASET 4    -------------------------
-      o.inp.dataset4=getNextLine(fn,'#');
+      o.inp.dataset4=getNextLine(fn,'criterion','without','keyword','#');
       
       
       % ---------------       DATASET 5    -------------------------
-      o.inp.dataset5 = getNextLine(fn,'#');
+      o.inp.dataset5 = getNextLine(fn,'criterion','without','keyword','#');
       
       
       % ---------------       DATASET 6    -------------------------
-      o.inp.dataset6 = getNextLine(fn,'#');
-      o.inp.dataset6 = getNextLine(fn,'#');
-      o.inp.dataset6 = getNextLine(fn,'#');
+      o.inp.dataset6 = getNextLine(fn,'criterion','without','keyword','#');
+      o.inp.dataset6 = getNextLine(fn,'criterion','without','keyword','#');
+      o.inp.dataset6 = getNextLine(fn,'criterion','without','keyword','#');
       
       % ---------------       DATASET 7A   -------------------------
-      o.inp.dataset7a = getNextLine(fn,'#');
+      o.inp.dataset7a = getNextLine(fn,'criterion','without','keyword','#');
       
       % ---------------       DATASET 7B   -------------------------
-      o.inp.dataset7b = getNextLine(fn,'#');
+      o.inp.dataset7b = getNextLine(fn,'criterion','without','keyword','#');
       
       % ---------------       DATASET 7C   -------------------------
-      o.inp.dataset7c = getNextLine(fn,'#');
+      o.inp.dataset7c = getNextLine(fn,'criterion','without','keyword','#');
       
       % ---------------       DATASET 8A   -------------------------
-      o.inp.dataset8a = getNextLine(fn,'#');
+      o.inp.dataset8a = getNextLine(fn,'criterion','without','keyword','#');
       strprc          = regexprep(o.inp.dataset8a,'''','');
       str             = textscan(strprc,'%f %s %s %s %s %s %s %s %s %s');
       o.nprint        = str{1} ;
@@ -220,18 +220,18 @@ classdef inpObj
       o.cscrn         = str{9}{1};
       o.cpause        = str{10}{1};
       % ---------------       DATASET 8B   -------------------------
-      o.inp.dataset8b = getNextLine(fn,'#');
+      o.inp.dataset8b = getNextLine(fn,'criterion','without','keyword','#');
       strprc          = regexprep(o.inp.dataset8b,'''','');
       str             = textscan(strprc,'%f %s %s %s ');
       ncolpr=str{1};
       % ---------------       DATASET 8C   -------------------------
-      o.inp.dataset8c = getNextLine(fn,'#');
+      o.inp.dataset8c = getNextLine(fn,'criterion','without','keyword','#');
       strprc          = regexprep(o.inp.dataset8c,'''','');
       str             = textscan(strprc,'%f %s %s %s ');
       lcolpr=str{1};
 
       % ---------------       DATASET 8D   -------------------------
-      o.inp.dataset8d = getNextLine(fn,'#');
+      o.inp.dataset8d = getNextLine(fn,'criterion','without','keyword','#');
       strprc          = regexprep(o.inp.dataset8d,'''','');
       str             = textscan(strprc,'%f %f %f %f %s');
       o.nbcfpr        = str{1};
@@ -241,19 +241,19 @@ classdef inpObj
       o.cinact        = str{5}{1};
       
       % ---------------       DATASET 9    -------------------------
-      o.inp.dataset9 = getNextLine(fn,'#');
+      o.inp.dataset9 = getNextLine(fn,'criterion','without','keyword','#');
       
       % ---------------       DATASET 10   -------------------------
-      o.inp.dataset10 = getNextLine(fn,'#');
+      o.inp.dataset10 = getNextLine(fn,'criterion','without','keyword','#');
       
       % ---------------       DATASET 11   -------------------------
-      o.inp.dataset11 = getNextLine(fn,'#');
+      o.inp.dataset11 = getNextLine(fn,'criterion','without','keyword','#');
       
       % ---------------       DATASET 12   -------------------------
-      o.inp.dataset12 = getNextLine(fn,'#');
+      o.inp.dataset12 = getNextLine(fn,'criterion','without','keyword','#');
       
       % ---------------       DATASET 13   -------------------------
-      o.inp.dataset13 = getNextLine(fn,'#');
+      o.inp.dataset13 = getNextLine(fn,'criterion','without','keyword','#');
 
       
       %            for i=1:10
@@ -298,7 +298,7 @@ classdef inpObj
       %            end % if
       %            
       %            %line2=fgetl(fn);
-      %            line4=SutraLab.readnext(fn,'#') ;
+      %            line4=SutraLab.readnext(fn,'keyword','#') ;
       %            f5=cell2mat(textscan(line4,'%f %f %f %f %*s',[1 4]));  % Dataset 8C
       %            if mod(itmax,f5(1))==0  % Calculate the number of output in .BCOF file
       %              if f5(1)==1 % a conditioner to resolve nonconsistency when nbcfpr==1 
