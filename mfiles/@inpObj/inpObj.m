@@ -1,4 +1,275 @@
-classdef SutraLab
+classdef inpObj
+   properties % it is changed
+   % the following list are associated with property defination
+   % http://stackoverflow.com/questions/7192048/can-i-assign-types-to-class-properties-in-matlab
+   % http://undocumentedmatlab.com/blog/setting-class-property-types
+    a,b,dataset1@char
+% now only key data are stored in inpObj, other non-relevant data will all be 
+% wiped out 
+% if one wish to convert from class to truct due to reasons like jasn file 
+%   one can use a=struct(inpObj)
+
+
+%   inp should later be removed now it is here for storing all strings extracted
+%     from the file
+    inp
+%   please make sure that all decleared varables here are in accordance with 
+%    Original SUTRA code for the convinence of 1. better understanding of the 
+%    original code (input are in indat1 and indat2) and 2. make code consistent
+%   A comment can be made after the name declaration 
+
+
+%   DATASET 2B
+%   matlab stats that, array 
+%    mshtyp   = char(2,10)   
+%   http://stackoverflow.com/questions/7100841/create-an-array-of-strings
+
+    mshtyp@cell=repmat({''},2,1)     % mesh type
+    nn1  % -- number of node in the first direction
+    nn2  % -- number of node in the second direction
+    nn3  % -- number of node in the third direction
+%   DATASET 3
+    nn   
+    ne   
+    npbc 
+    nubc 
+    nsop 
+    nsou 
+    nobs 
+%   dataset1       = repmat({''},1,2);
+%    e             = char(23);
+%    e@char(20)
+    varargin@cell;
+%    dtst@cell=repmat({''},22,1)
+%    dtst{1}@cell=repmat({''},2,1)   % how to do this
+%    dtst{2}@cell=repmat({''},2,1)
+%    dtst1@cell=repmat({''},2,1)
+    %dtst2@char
+%    dtst2@cell=repmat({''},2,1)
+%    dtst3@char
+%    dtst4@char
+%    dtst5@char
+%    dtst6@cell=repmat({''},3,1)
+%    dtst7@cell=repmat({''},3,1)
+%    dtst8@cell=repmat({''},4,1)
+%    dtst9@char
+%    dtst10@char
+%    dtst11@char
+%    dtst12@char
+%    dtst13@char
+%    dtst14@char
+%    dtst15@char
+%    dtst16@char
+    e=char(14)   %  this is working now but the 14 means have 14 strings
+%    f=char(2,4)   %  this is working now but the 14 means have 14 strings
+    g=cell(2,4)   %  this is working now but the 14 means have 14 strings
+    Inp_str=struct   %  this is working now but the 14 means have 14 strings
+%    h{1}=repmat({''},2,1)
+%    h{2}=repmat({''},2,1)
+
+     nnv
+     nns
+%            'dtst1'   ,{'title1';'title2'},...
+
+
+
+   end
+%    Bgt=repmat(...
+%        struct(...
+%            'period' ,0,...
+%            'tstp'   ,0,...
+%            'label'  ,{[]},...
+%            'NLAY'   ,0,'NROW',0,'NCOL',0,...
+%            'term'   ,{[]},...
+%            'lays'   ,0,...
+%            'rows'   ,0,...
+%            'cols'   ,0),...
+%        10, 1);
+%       end
+   properties (Access=protected)
+   c ,d
+   end
+
+   properties (Dependent=true)
+   % these values are only called when input are changed
+%   a, b, c ,d, e,
+   %nns
+   end
+
+  methods    % seems that all functions in methods needs to be called.
+%*********************** Function readinp **************************
+    function o=inpObj(varargin)
+
+      o.varargin        = varargin;
+      [fname, varargin] = getNext(varargin,'char','');
+      [read,  varargin] = getProp(varargin,'operation',[]);
+
+%     o.nnv=varargin;
+%     fprintf(1,varargin);
+%      o.dataset1=varargin{1};
+%[time,       varargin] = getProp(varargin,{'t','totim'},[]);
+%[userLabels, varargin] = getNext(varargin,{'cell','char'},{});
+%
+%[userPeriods,varargin] = getNext(varargin,'double',[]);
+%[userTstps,  varargin] = getNext(varargin,'double',[]);
+%[userLays,   varargin] = getNext(varargin,'double',[]);
+%[userRows,   varargin] = getNext(varargin,'double',[]);
+%[userCols,   ~       ] = getNext(varargin,'double',[]);
+
+
+% get the filename
+%   fname=varargin{1};
+%   o.dtst3=read;
+   
+%    o.inp      =struct(  ...
+%            'dtst1'   ,{[]},...
+%            'dtst2'   ,{[]},...
+%            'dtst3'   ,{[]},...
+%            'dtst4'   ,{[]},...
+%            'dtst5'   ,{[]},...
+%            'dtst6'   ,{[]},...
+%            'dtst7'   ,{[]},...
+%            'dtst8'   ,{[]});
+%    o.inp.dtst1=struct(...
+%            'title1'   ,{[]},...
+%            'title2'   ,{[]});
+
+
+        fn=fopen(fname);
+	o.inp.dataset1a=getNextLine(fn,'#');
+	o.inp.dataset1b=getNextLine(fn,'#');
+% ---------------       DATASET 2A   -------------------------
+	o.inp.dataset2a=getNextLine(fn,'#');
+% ---------------       DATASET 2B   -------------------------
+	o.inp.dataset2b=getNextLine(fn,'#');
+	    % remove single quote
+	    strprc=regexprep(o.inp.dataset2b,'''','');
+            tmp=textscan(strprc,'%s %s %s %f %f'); 
+	    o.mshtyp(1,:)=tmp{1};
+	    o.mshtyp(2,:)=tmp{2};
+            o.nn1=tmp{4}; 
+            o.nn2=tmp{5};
+% ---------------       DATASET 2B   -------------------------
+	o.inp.dataset3=getNextLine(fn,'#');
+	    
+            str=textscan(o.inp.dataset3,'%f %f %f %f %f %f %f'); 
+            o.nn=str{1};
+            o.ne=str{2};
+            o.npbc=str{3};
+            o.nubc=str{4};
+            o.nsop=str{5};
+            o.nsou=str{6};
+            o.nobs=str{7};
+
+
+
+
+%            o.nev=f1(1)-1;   % Number of elements along x-direction
+%            o.neh=f1(2)-1;   % Number of elements along y-direction
+%            o.ne=(f1(1)-1)*(f1(2)-1); % Number of elements
+%            line=fgetl(fn); % reand the line of Dataset 2B again to proceed to the next line
+%            
+%            for i=1:10
+%                line=fgetl(fn);
+%            end
+%            f2=fscanf(fn,'%*s %*s %*s %*s %g %g %g %g %g %g %g %g %g',[1 9]); % Dataset 6B
+%            itmax=f2(2);  % total numner of time steps
+%            line=fgetl(fn); % reand the line of Dataset 6B again to proceed to the next line
+%           
+%            for i=1:9
+%                line=fgetl(fn);
+%            end
+%            f3=fscanf(fn,'%f %*s %*s %*s %*s %*s',[1 1]);  % Dataset 8B
+%            line=fgetl(fn); % reand the line of Dataset 8B again to proceed to the next line
+%            if mod(itmax,f3(1))==0  % Calculate the number of output in .NOD file
+%                if(f3(1)<0)
+%                    if abs(f3(1))==1
+%                    o.nno=(itmax-mod(itmax,abs(f3(1))))/abs(f3(1)); % Number of output in .NOD file
+%                    else
+%                    o.nno=(itmax-mod(itmax,abs(f3(1))))/abs(f3(1))+1; % Number of output in .NOD file
+%                    end
+%                else
+%                    if f3(1)==1
+%                    o.nno=(itmax-mod(itmax,f3(1)))/f3(1)+1; % Number of output in .NOD file
+%                    else
+%                    o.nno=(itmax-mod(itmax,f3(1)))/f3(1)+2; %
+%                    end
+%                end % if
+%            else
+%                if(f3(1)<0)
+%                    o.nno=(itmax-mod(itmax,abs(f3(1))))/abs(f3(1))+2; % Number of output in .NOD file
+%                else
+%                    o.nno=(itmax-mod(itmax,f3(1)))/f3(1)+3; % Number of output in .NOD file
+%                end % if
+%            end % if
+%            f4=fscanf(fn,'%f %*s %*s %*s %*s',[1 1]);  % Dataset 8C
+%            line=fgetl(fn); % Reand the line of Dataset 8C again to proceed to the next line
+%            if mod(itmax,f4(1))==0  % Calculate the number of output in .NOD file
+%                o.neo=(itmax-mod(itmax,f4(1)))/f4(1)+1; % Number of output in .ELE file
+%            else
+%                o.neo=(itmax-mod(itmax,f4(1)))/f4(1)+2; % Number of output in .ELE file
+%            end % if
+%            
+%            %line2=fgetl(fn);
+%            line4=SutraLab.readnext(fn,'#') ;
+%            f5=cell2mat(textscan(line4,'%f %f %f %f %*s',[1 4]));  % Dataset 8C
+%            if mod(itmax,f5(1))==0  % Calculate the number of output in .BCOF file
+%              if f5(1)==1 % a conditioner to resolve nonconsistency when nbcfpr==1 
+%	       o.nbcof=(itmax-mod(itmax,f5(1)))/f5(1)+0; % Number of output in .BCOF file
+%              else
+%	       o.nbcof=(itmax-mod(itmax,f5(1)))/f5(1)+1; % Number of output in .BCOF file
+%	      end
+%            else
+%                o.nbcof=(itmax-mod(itmax,f5(1)))/f5(1)+2; % Number of output in .BCOF file
+%            end % if
+%            
+%            if mod(itmax,f5(3))==0  % Calculate the number of output in .BCOP file
+%	      if f5(3)==1
+%                o.nbcop=(itmax-mod(itmax,f5(3)))/f5(3)+0; % Number of output in .BCOP file
+%	      else
+%                o.nbcop=(itmax-mod(itmax,f5(3)))/f5(3)+1; % Number of output in .BCOP file
+%              end
+%            else
+%                o.nbcop=(itmax-mod(itmax,f5(3)))/f5(3)+2; % Number of output in .BCOP file
+%            end % if
+%                        
+%            fclose(fn);
+      end % Function readinp
+      %****************************** END ********************************
+
+
+
+
+
+%
+%       %*********************** Function readETdat ************************
+%       function o=linecount(fname)
+%
+%           fn=fopen(fname);
+%           nrow=0;
+%           tline=fgetl(fn);
+%           while ischar(tline)
+%               tline=fgetl(fn);
+%               nrow=nrow+1;
+%           end % while
+%           fclose(fn);
+%       end % Function linecount
+%       %****************************** END ********************************
+
+       function nnv=get.nnv(o)
+         % it is working the same time as others, which is not a procedural way.
+	 % everytime when o.a is changing, nnv is changing.
+         nnv=o.a+1; 
+       end
+%  a endless loop
+%       function nns=get.nns(b), 
+%         % it is working the same time as others, which is not a procedural way.
+%	 % everytime when o.a is changing, nnv is changing.
+%         nns=b; 
+%       end
+%       function nnv=set.nnv(x), nnv=1; end
+%       function o=set.nns(o,10), o.nns=10; end
+   end  % end methods
    methods(Static)
        
        %*********************** Function readETdat ************************
@@ -16,20 +287,6 @@ classdef SutraLab
            tide.msl=temp(1,5);
            fclose(fn);
        end % Function readETinp
-       %****************************** END ********************************
-       
-       
-       %*********************** Function readETdat ************************
-       function nrow=linecount(fname)
-           fn=fopen(fname);
-           nrow=0;
-           tline=fgetl(fn);
-           while ischar(tline)
-               tline=fgetl(fn);
-               nrow=nrow+1;
-           end % while
-           fclose(fn);
-       end % Function linecount
        %****************************** END ********************************
        
        
@@ -180,64 +437,6 @@ classdef SutraLab
 	   end % Funtion readnod
        %****************************** END ********************************
        
-       %*********************** Function readnod **************************
-       function [a ta a1]=readnod2(fname,inp,outnod)
-            fn=fopen(fname);
-            
-            for i=1:12 % Reading the first 12 rows' heading
-               line=fgetl(fn);
-            end
-               temp=fscanf(fn,'%*s %g %g %*s %*g %*s %*g %*s %*g',[2 inp.nno]); % Time steps (1st row) and Time (sec) (2nd row)
-               if inp.nno==inp.neo
-                 ta(1:2,:)=temp(1:2,2:inp.nno);
-                 ta(2,:)=ta(2,:)/24/3600; % Change time from seconds to day
-               else
-                 ta(1:2,:)=temp(1:2,3:inp.nno);
-                 ta(2,:)=ta(2,:)/24/3600; % Change time from seconds to day
-               end % if
-               line=fgetl(fn); % Read the line again to proceed to the next line
-            
-            for j=1:outnod
-              for i=1:5  % Read the first five rows of each out
-                line=fgetl(fn);
-              end % i
-           
-            if inp.nno==inp.neo
-              if j==1  % Jump over the first round of output
-                for m=1:inp.nn
-                   line=fgetl(fn);
-                end
-              else
-                  a(j-1).label={'x','y','p','c','s'};
-                  temp=fscanf(fn,'%f %g %g %g %g %g %g %g %g',[9 inp.nn]);
-                  a1(:,:,j-1)=temp;
-                  line=fgetl(fn);   % If the last column is not captured, it requires to use the previous line
-                  for k=1:5
-                    a(j-1).terms{k}=a1(k,:,j-1);
-                  end % for
-              a(j-1).TsNumber=ta(1,j-1);  % Time steps
-		      a(j-1).RealTDays=ta(2,j-1); % Time (day)
-              end % if
-            else
-              if j<=2  % Jump over the first round of output
-                for m=1:inp.nn
-                   line=fgetl(fn);
-                end
-              else
-                  a(j-2).label={'x','y','p','c','s'};
-                  a1(:,:,j-2)=fscanf(fn,'%f %g %g %g %g %g %g %g %g',[9 inp.nn]);
-                  line=fgetl(fn);   % If the last column is not captured, it requires to use the previous line
-                  for k=1:5
-                    a(j-2).terms{k}=a1(k,:,j-2);
-                  end % for
-              a(j-2).TsNumber=ta(1,j-2);  % Time steps
-		      a(j-2).RealTDays=ta(2,j-2); % Time (day)
-              end % if
-            end %if
-            end % j
-            fclose(fn);
-	   end % Funtion readnod
-       %****************************** END ********************************
        
        %*********************** Function readele **************************
        function [b b1]=readele(fname,inp,outele)
@@ -363,6 +562,14 @@ classdef SutraLab
              while  line(1)=='#'
                line=fgetl(fn);
              end
-	end % function
-   end % methods 
+	
+       end
+
+       function nns=nnns(o), 
+         % it is working the same time as others, which is not a procedural way.
+	 % everytime when o.a is changing, nnv is changing.
+         nns.nns=o.a+7; 
+       end % function
+       
+   end % methods (static)
 end % classdef
