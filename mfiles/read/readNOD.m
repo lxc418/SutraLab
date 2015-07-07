@@ -56,11 +56,11 @@ function [o,o2]=readNOD(varargin)
   o2.mshtyp{2}                    = tmp{2}{1};
 
   % ---------------- parsing the number of results    ------------------------
-  o2.OutputInfo =getNextLine(fn,'criterion','with','keyword',...
+  tmp = getNextLine(fn,'criterion','with','keyword',...
                  '## NODEWISE RESULTS','operation','delete');
-  tmp           = textscan(o2.OutputInfo,'%f ');
+  tmp           = textscan(tmp,'%f ');
   o2.ktprn      = tmp{1};  % expected no. time steps
-  if output_no~ = 0;
+  if output_no ~= 0;
     output_no   = min(o2.ktprn,output_no);
   else
     output_no = o2.ktprn;
@@ -83,7 +83,7 @@ function [o,o2]=readNOD(varargin)
       tmp = regexprep(tmp,{'## TIME STEP','Duration:','sec','Time:'}...
                     ,{'','','',''});
       tmp   = textscan(tmp,'%f %f %f');
-      [ o(n).itout o(n).durn o(n).toutr] = deal(tmp{:});
+      [ o(n).itout o(n).durn o(n).tout] = deal(tmp{:});
 
       tmp = getNextLine(fn,'criterion','with'...
                     ,'keyword','##  ','operation','delete');

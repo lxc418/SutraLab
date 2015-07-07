@@ -39,10 +39,6 @@ function o=getNextLine(varargin)
 
   o=fgetl(fn);
   kw_length=length(keyword);
-  %if length(o)<kw_length
-  %  fprintf(1,'keyword length is more than extracted string length! \n');
-  %  return
-  %end
   if strcmpi(criterion,'without')
      while strcmp(o(1:  min(kw_length,length(o))   ), keyword)
        o=fgetl(fn);
@@ -50,11 +46,6 @@ function o=getNextLine(varargin)
          fprintf(1,'Search up to the end of the file\n');
 	 return
        end
-       %lth=min(kw_length,length(o))
-       %if length(o)<kw_length
-       %  fprintf(1,'keyword length is more than extracted string length! \n');
-       %  return
-       %end
      end
   elseif strcmpi(criterion,'equal')
      while ~strcmp(o,keyword)
@@ -72,16 +63,11 @@ function o=getNextLine(varargin)
          fprintf(1,'Search up to the end of the file\n');
 	 return
        end
-       %if length(o)<kw_length
-       %  %fprintf(1,'keyword length is more than extracted string length! \n');
-       %  return
-       %end
      end
 
      if strcmp(operation,'delete')
        o=o(length(keyword)+1:end);
      end
-
   end
 end % function
 
