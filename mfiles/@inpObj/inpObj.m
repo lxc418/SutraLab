@@ -96,27 +96,14 @@ classdef inpObj
     prods1
 
 
-
+    % examples to declear cells and structs in properties
     %    dtst@cell=repmat({''},22,1)
     %    dtst{1}@cell=repmat({''},2,1)   % how to do this
     %    dtst{2}@cell=repmat({''},2,1)
     %    dtst1@cell=repmat({''},2,1)
-        %dtst2@char
     %    dtst2@cell=repmat({''},2,1)
-    %    dtst3@char
-    %    dtst4@char
-    %    dtst5@char
-    %    dtst6@cell=repmat({''},3,1)
-    %    dtst7@cell=repmat({''},3,1)
     %    dtst8@cell=repmat({''},4,1)
     %    dtst9@char
-    %    dtst10@char
-    %    dtst11@char
-    %    dtst12@char
-    %    dtst13@char
-    %    dtst14@char
-    %    dtst15@char
-    %    dtst16@char
     e=char(14)   %  this is working now but the 14 means have 14 strings
     %    f=char(2,4)   %  this is working now but the 14 means have 14 strings
     g=cell(2,4)   %  this is working now but the 14 means have 14 strings
@@ -138,7 +125,6 @@ classdef inpObj
   end
 
   methods    % seems that all functions in methods needs to be called.
-%*********************** Function readinp **************************
     function o=inpObj(varargin)
       % inpObj constructor
       caller=dbstack('-completenames'); caller=caller.name;
@@ -146,18 +132,6 @@ classdef inpObj
       [fname, varargin] = getNext(varargin,'char','');
       [read,  varargin] = getProp(varargin,'operation',[]);
 
-      %     o.nnv=varargin;
-      %     fprintf(1,varargin);
-      %      o.dataset1=varargin{1};
-      %[time,       varargin] = getProp(varargin,{'t','totim'},[]);
-      %[userLabels, varargin] = getNext(varargin,{'cell','char'},{});
-      %
-      %[userPeriods,varargin] = getNext(varargin,'double',[]);
-      %[userTstps,  varargin] = getNext(varargin,'double',[]);
-      %[userLays,   varargin] = getNext(varargin,'double',[]);
-      %[userRows,   varargin] = getNext(varargin,'double',[]);
-      %[userCols,   ~       ] = getNext(varargin,'double',[]);
-      
       % ---------------       DATASET 1    -------------------------
       fn=fopen([fname,'.INP']);
       if fn==-1 
@@ -250,7 +224,7 @@ classdef inpObj
       o.cinact        = str{5}{1};
       
       % ---------------       DATASET 9    -------------------------
-      o.inp.dataset9 = getNextLine(fn,'criterion','without','keyword','#');
+      o.inp.dataset9  = getNextLine(fn,'criterion','without','keyword','#');
       
       % ---------------       DATASET 10   -------------------------
       o.inp.dataset10 = getNextLine(fn,'criterion','without','keyword','#');
@@ -264,93 +238,7 @@ classdef inpObj
       % ---------------       DATASET 13   -------------------------
       o.inp.dataset13 = getNextLine(fn,'criterion','without','keyword','#');
 
-      
-      %            for i=1:10
-      %                line=fgetl(fn);
-      %            end
-      %            f2=fscanf(fn,'%*s %*s %*s %*s %g %g %g %g %g %g %g %g %g',[1 9]); % Dataset 6B
-      %            itmax=f2(2);  % total numner of time steps
-      %            line=fgetl(fn); % reand the line of Dataset 6B again to proceed to the next line
-      %           
-      %            for i=1:9
-      %                line=fgetl(fn);
-      %            end
-      %            f3=fscanf(fn,'%f %*s %*s %*s %*s %*s',[1 1]);  % Dataset 8B
-      %            line=fgetl(fn); % reand the line of Dataset 8B again to proceed to the next line
-      %            if mod(itmax,f3(1))==0  % Calculate the number of output in .NOD file
-      %                if(f3(1)<0)
-      %                    if abs(f3(1))==1
-      %                    o.nno=(itmax-mod(itmax,abs(f3(1))))/abs(f3(1)); % Number of output in .NOD file
-      %                    else
-      %                    o.nno=(itmax-mod(itmax,abs(f3(1))))/abs(f3(1))+1; % Number of output in .NOD file
-      %                    end
-      %                else
-      %                    if f3(1)==1
-      %                    o.nno=(itmax-mod(itmax,f3(1)))/f3(1)+1; % Number of output in .NOD file
-      %                    else
-      %                    o.nno=(itmax-mod(itmax,f3(1)))/f3(1)+2; %
-      %                    end
-      %                end % if
-      %            else
-      %                if(f3(1)<0)
-      %                    o.nno=(itmax-mod(itmax,abs(f3(1))))/abs(f3(1))+2; % Number of output in .NOD file
-      %                else
-      %                    o.nno=(itmax-mod(itmax,f3(1)))/f3(1)+3; % Number of output in .NOD file
-      %                end % if
-      %            end % if
-      %            f4=fscanf(fn,'%f %*s %*s %*s %*s',[1 1]);  % Dataset 8C
-      %            line=fgetl(fn); % Reand the line of Dataset 8C again to proceed to the next line
-      %            if mod(itmax,f4(1))==0  % Calculate the number of output in .NOD file
-      %                o.neo=(itmax-mod(itmax,f4(1)))/f4(1)+1; % Number of output in .ELE file
-      %            else
-      %                o.neo=(itmax-mod(itmax,f4(1)))/f4(1)+2; % Number of output in .ELE file
-      %            end % if
-      %            
-      %            %line2=fgetl(fn);
-      %            line4=SutraLab.readnext(fn,'keyword','#') ;
-      %            f5=cell2mat(textscan(line4,'%f %f %f %f %*s',[1 4]));  % Dataset 8C
-      %            if mod(itmax,f5(1))==0  % Calculate the number of output in .BCOF file
-      %              if f5(1)==1 % a conditioner to resolve nonconsistency when nbcfpr==1 
-      %	       o.nbcof=(itmax-mod(itmax,f5(1)))/f5(1)+0; % Number of output in .BCOF file
-      %              else
-      %	       o.nbcof=(itmax-mod(itmax,f5(1)))/f5(1)+1; % Number of output in .BCOF file
-      %	      end
-      %            else
-      %                o.nbcof=(itmax-mod(itmax,f5(1)))/f5(1)+2; % Number of output in .BCOF file
-      %            end % if
-      %            
-      %            if mod(itmax,f5(3))==0  % Calculate the number of output in .BCOP file
-      %	      if f5(3)==1
-      %                o.nbcop=(itmax-mod(itmax,f5(3)))/f5(3)+0; % Number of output in .BCOP file
-      %	      else
-      %                o.nbcop=(itmax-mod(itmax,f5(3)))/f5(3)+1; % Number of output in .BCOP file
-      %              end
-      %            else
-      %                o.nbcop=(itmax-mod(itmax,f5(3)))/f5(3)+2; % Number of output in .BCOP file
-      %            end % if
-      %                        
-      %            fclose(fn);
-      end % Function readinp
-      %****************************** END ********************************
-
-
-
-
-
-%
-%       %*********************** Function readETdat ************************
-%       function o=linecount(fname)
-%
-%           fn=fopen(fname);
-%           nrow=0;
-%           tline=fgetl(fn);
-%           while ischar(tline)
-%               tline=fgetl(fn);
-%               nrow=nrow+1;
-%           end % while
-%           fclose(fn);
-%       end % Function linecount
-%       %****************************** END ********************************
+      end % Function constructor
 
        function nnv=get.nnv(o)
          % it is working the same time as others, which is not a procedural way.
@@ -366,290 +254,13 @@ classdef inpObj
 %       function nnv=set.nnv(x), nnv=1; end
 %       function o=set.nns(o,10), o.nns=10; end
    end  % end methods
+
+
    methods(Static)
-       
-       
-       
-       %*********************** Function readinp **************************
-       function [inp,f1,f2,f3,f4,f5]=readinp(fname)
-          fn=fopen(fname);
-       
-            for i=1:5
-                line=fgetl(fn);
-            end
-            f1=fscanf(fn,'%*s %*s %*s %g %g',[1 2]); % Dataset 2B
-            inp.nnv=f1(1);  % Number of nodes along x-direction
-            inp.nnh=f1(2);  % Number of nodes along y-direction
-            inp.nev=f1(1)-1;   % Number of elements along x-direction
-            inp.neh=f1(2)-1;   % Number of elements along y-direction
-            inp.nn=f1(1)*f1(2); % Number of nodes
-            inp.ne=(f1(1)-1)*(f1(2)-1); % Number of elements
-            line=fgetl(fn); % Reand the line of Dataset 2B again to proceed to the next line
-            
-            for i=1:10
-                line=fgetl(fn);
-            end
-            f2=fscanf(fn,'%*s %*s %*s %*s %g %g %g %g %g %g %g %g %g',[1 9]); % Dataset 6B
-            itmax=f2(2);  % Total numner of time steps
-            line=fgetl(fn); % Reand the line of Dataset 6B again to proceed to the next line
-           
-            for i=1:9
-                line=fgetl(fn);
-            end
-            f3=fscanf(fn,'%f %*s %*s %*s %*s %*s',[1 1]);  % Dataset 8B
-            line=fgetl(fn); % Reand the line of Dataset 8B again to proceed to the next line
-            if mod(itmax,f3(1))==0  % Calculate the number of output in .NOD file
-                if(f3(1)<0)
-                    if abs(f3(1))==1
-                    inp.nno=(itmax-mod(itmax,abs(f3(1))))/abs(f3(1)); % Number of output in .NOD file
-                    else
-                    inp.nno=(itmax-mod(itmax,abs(f3(1))))/abs(f3(1))+1; % Number of output in .NOD file
-                    end
-                else
-                    if f3(1)==1
-                    inp.nno=(itmax-mod(itmax,f3(1)))/f3(1)+1; % Number of output in .NOD file
-                    else
-                    inp.nno=(itmax-mod(itmax,f3(1)))/f3(1)+2; %
-                    end
-                end % if
-            else
-                if(f3(1)<0)
-                    inp.nno=(itmax-mod(itmax,abs(f3(1))))/abs(f3(1))+2; % Number of output in .NOD file
-                else
-                    inp.nno=(itmax-mod(itmax,f3(1)))/f3(1)+3; % Number of output in .NOD file
-                end % if
-            end % if
-            f4=fscanf(fn,'%f %*s %*s %*s %*s',[1 1]);  % Dataset 8C
-            line=fgetl(fn); % Reand the line of Dataset 8C again to proceed to the next line
-            if mod(itmax,f4(1))==0  % Calculate the number of output in .NOD file
-                inp.neo=(itmax-mod(itmax,f4(1)))/f4(1)+1; % Number of output in .ELE file
-            else
-                inp.neo=(itmax-mod(itmax,f4(1)))/f4(1)+2; % Number of output in .ELE file
-            end % if
-            
-            %line2=fgetl(fn);
-            line4=SutraLab.readnext(fn,'#') ;
-            f5=cell2mat(textscan(line4,'%f %f %f %f %*s',[1 4]));  % Dataset 8C
-            if mod(itmax,f5(1))==0  % Calculate the number of output in .BCOF file
-              if f5(1)==1 % a conditioner to resolve nonconsistency when nbcfpr==1 
-	       inp.nbcof=(itmax-mod(itmax,f5(1)))/f5(1)+0; % Number of output in .BCOF file
-              else
-	       inp.nbcof=(itmax-mod(itmax,f5(1)))/f5(1)+1; % Number of output in .BCOF file
-	      end
-            else
-                inp.nbcof=(itmax-mod(itmax,f5(1)))/f5(1)+2; % Number of output in .BCOF file
-            end % if
-            
-            if mod(itmax,f5(3))==0  % Calculate the number of output in .BCOP file
-	      if f5(3)==1
-                inp.nbcop=(itmax-mod(itmax,f5(3)))/f5(3)+0; % Number of output in .BCOP file
-	      else
-                inp.nbcop=(itmax-mod(itmax,f5(3)))/f5(3)+1; % Number of output in .BCOP file
-              end
-            else
-                inp.nbcop=(itmax-mod(itmax,f5(3)))/f5(3)+2; % Number of output in .BCOP file
-            end % if
-                        
-            fclose(fn);
-       end % Function readinp
-       %****************************** END ********************************
-       
-       
-       %*********************** Function readnod **************************
-       function [a ta a1]=readnod(fname,inp,tide,outnod)
-            fn=fopen(fname);
-            
-            for i=1:12 % Reading the first 12 rows' heading
-               line=fgetl(fn);
-            end
-               temp=fscanf(fn,'%*s %g %g %*s %*g %*s %*g %*s %*g',[2 inp.nno]); % Time steps (1st row) and Time (sec) (2nd row)
-               if inp.nno==inp.neo
-                 ta(1:2,:)=temp(1:2,2:inp.nno);
-                 ta(2,:)=ta(2,:)/24/3600; % Change time from seconds to day
-               else
-                 ta(1:2,:)=temp(1:2,3:inp.nno);
-                 ta(2,:)=ta(2,:)/24/3600; % Change time from seconds to day
-               end % if
-               line=fgetl(fn); % Read the line again to proceed to the next line
-            
-            for j=1:outnod
-              for i=1:5  % Read the first five rows of each out
-                line=fgetl(fn);
-              end % i
-           
-            if inp.nno==inp.neo
-              if j==1  % Jump over the first round of output
-                for m=1:inp.nn
-                   line=fgetl(fn);
-                end
-              else
-                  a(j-1).label={'x','y','p','c','s'};
-                  a1(:,:,j-1)=fscanf(fn,'%g %g %g %g %g',[5 inp.nn]);
-                  line=fgetl(fn);   % If the last column is not captured, it requires to use the previous line
-                  for k=1:5
-                    a(j-1).terms{k}=a1(k,:,j-1);
-                  end % for
-              a(j-1).TsNumber=ta(1,j-1);  % Time steps
-		      a(j-1).RealTDays=ta(2,j-1); % Time (day)
-              a(j-1).TDlevel=tide.msl+tide.tasp*sin(2*pi*ta(2,j-1)*86400/tide.tpsp)+ ...
-                                       tide.tane*sin(2*pi*ta(2,j-1)*86400/tide.tpne);  % Calculate tidal level
-              end % if
-            else
-              if j<=2  % Jump over the first round of output
-                for m=1:inp.nn
-                   line=fgetl(fn);
-                end
-              else
-                  a(j-2).label={'x','y','p','c','s'};
-                  a1(:,:,j-2)=fscanf(fn,'%g %g %g %g %g',[5 inp.nn]);
-                  line=fgetl(fn);   % If the last column is not captured, it requires to use the previous line
-                  for k=1:5
-                    a(j-2).terms{k}=a1(k,:,j-2);
-                  end % for
-              a(j-2).TsNumber=ta(1,j-2);  % Time steps
-		      a(j-2).RealTDays=ta(2,j-2); % Time (day)
-              a(j-2).TDlevel=tide.msl+tide.tasp*sin(2*pi*ta(2,j-2)*86400/tide.tpsp)+ ...
-                                       tide.tane*sin(2*pi*ta(2,j-2)*86400/tide.tpne);  % Calculate tidal level
-              end % if
-            end %if
-            end % j
-            fclose(fn);
-	   end % Funtion readnod
-       %****************************** END ********************************
-       
-       
-       %*********************** Function readele **************************
-       function [b b1]=readele(fname,inp,outele)
-           fn=fopen(fname);
-           for i=1:12 % Reading the first 12 rows' heading
-              line=fgetl(fn);
-           end
-              temp=fscanf(fn,'%*s %g %g %*s %*g %*s %*g %*s %*g',[2 inp.neo]); % Time steps (1st row) and Time (sec) (2nd row)
-              line=fgetl(fn); % Read the line again to proceed to the next line
-          
-           for j=1:outele
-              for i=1:5  % Read the first five rows of each out 
-                line=fgetl(fn);
-              end % i
-         
-              if j==1  % Jump over the first round of output
-                for m=1:inp.ne
-                   line=fgetl(fn);
-                end
-              else
-                  b(j-1).label={'xe','ye','vx','vy'};
-                  b1(:,:,j-1)=fscanf(fn,'%g %g %g %g',[4 inp.ne]);
-                  line=fgetl(fn);   % If the last column is not captured, it requires to use the previous line
-                  for k=1:4
-                    b(j-1).terms{k}=b1(k,:,j-1);
-                  end % for
-              end % if
-            end % j
-            fclose(fn);     
-       end % Function readele
-       %****************************** END ********************************
-       
-       
-	   %*********************** Function readseep *************************
-       function [seep]=readseep(fname,outele,f4)
-          fn=fopen(fname);
-          line=fgetl(fn); % Jump over the first time step's output
-          for j=1:outele-1
-            for i=1:f4(1)-1
-              line=fgetl(fn);
-            end
-              seep(:,:,j)=fscanf(fn,'%g %*g %g %g',[3 1]);
-              line=fgetl(fn);
-          end % for
-          fclose(fn);
-       end % Function readseep
-       %****************************** END ********************************
-	   
-	   
-       %*********************** Function readbcof *************************
-       function [bcof,bcof1]=readbcof(fname,inp)
-           fn=fopen(fname);
-           for i=1:12 % Reading the first 12 rows' heading
-              line=fgetl(fn);
-           end
-              temp=fscanf(fn,'%*s %g %g',[2 inp.nbcof]);
-              line=fgetl(fn);
-              
-           for j=1:100 % Should be inp.nbcof
-               for i=1:7
-                  line=fgetl(fn);
-               end
-               
-               if j==1  % Jump over the first round of output
-                 for m=1:inp.nnh
-                   line=fgetl(fn);
-                 end
-               else
-                 bcof(j-1).label={'FluidSource','Conc','Rconc'};
-                 bcof1(:,:,j-1)=fscanf(fn,'%*g %*s %*s %g %g %g',[3 inp.nnh]);
-                 line=fgetl(fn);
-                 for k=1:3
-                   bcof(j-1).terms{k}=bcof1(k,:,j-1);
-                 end
-               end % if
-           end % for
-           fclose(fn);
-       end % Function readbcof
-       %****************************** END ********************************
-       
-       
-       %*********************** Function readbcop *************************
-       function [bcop,bcop1]=readbcop(fname,inp)
-           fn=fopen(fname);
-           for i=1:12 % Reading the first 12 rows' heading
-              line=fgetl(fn);
-           end
-              temp=fscanf(fn,'%*s %g %g',[2 inp.nbcop]);
-              line=fgetl(fn);
-              
-           for j=1:100 % Should be inp.nbcop
-               for i=1:7
-                  line=fgetl(fn);
-               end
-               
-               if j==1  % Jump over the first round of output
-                 for m=1:inp.nnh
-                   line=fgetl(fn);
-                 end
-               else
-                 bcop(j-1).label={'RSFluid','SoluteC','RSSolute'};
-                 bcop1(:,:,j-1)=fscanf(fn,'%*g %*s %*s %g %g %g %*g %*g',[3 inp.nnh]);
-                 line=fgetl(fn);
-                 for k=1:3
-                   bcop(j-1).terms{k}=bcop1(k,:,j-1);
-                 end
-               end % if
-           end % for
-           fclose(fn);
-       end % Function readbcop
-       %****************************** END ********************************
-       
-
-       
-       
-       
-        function line=readnext(fn,keywords)
-        % line=readnext(fn,keywords)
-	% read next line that is not started from '#'
-	% fn  -- file handle
-	% keywords -- should be hatch
-             line=fgetl(fn);
-             while  line(1)=='#'
-               line=fgetl(fn);
-             end
-	
-       end
-
-       function nns=nnns(o), 
-         % it is working the same time as others, which is not a procedural way.
-	 % everytime when o.a is changing, nnv is changing.
-         nns.nns=o.a+7; 
-       end % function
-       
+     function nns = nnns(o),
+       % it is working the same time as others, which is not a procedural way.
+       % everytime when o.a is changing, nnv is changing.
+       nns.nns = o.a+7;
+     end % function
    end % methods (static)
 end % classdef
