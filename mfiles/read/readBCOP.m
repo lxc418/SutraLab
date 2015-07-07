@@ -17,10 +17,10 @@ function [o,o2]=readBCOP(varargin)
 
   fn = fopen([fname,'.BCOP']);
   if fn == -1
-    fprintf(1,'%s : Trying to open %s .npbc\n',caller,fname);
-    fn = fopen([fname,'.npbc']);
+    fprintf(1,'%s : Trying to open %s .bcop\n',caller,fname);
+    fn = fopen([fname,'.bcop']);
     if fn == -1
-      fprintf('%s: file npbc found!!\n',caller,fname);
+      fprintf('%s: file bcop found!!\n',caller,fname);
       o=-1;o2=-1;
       return
     end
