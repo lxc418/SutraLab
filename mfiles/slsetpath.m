@@ -41,6 +41,7 @@ addpath([pathstr 'etc']);
 addpath([pathstr 'read']);
 %addpath([pathstr 'visualization']);
 addpath([pathstr 'write']);
+addpath([pathstr 'sutraset']);
 
 fprintf('The mfLab paths have been set for the current sesion.\n\n');
 
