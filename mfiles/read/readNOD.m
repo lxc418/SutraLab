@@ -2,7 +2,9 @@ function [o,o2]=readNOD(varargin)
   % readNOD reads NOD file   
   % o is a struct the same size as the number of output.
   % o2   a struct extracting headers with the extraction inf
-  
+  % Example:
+  % [noddata,nodhead]=readNOD('project','outputnumber',3);
+  %    Purpose: parsing 'project.nod' (or 'project.NOD')
   % a string storing the caller functions
   caller=dbstack('-completenames'); caller=caller.name;
 
@@ -10,8 +12,20 @@ function [o,o2]=readNOD(varargin)
   [fname, varargin] = getNext(varargin,'char','');
   % an option to see whether use inp contents to guide the reading process
   %   a hard reading process will be conducted if left empty
-  [read,  varargin] = getProp(varargin,'inpobj',[]);
-  fn=fopen(fname);
+  [output_no,  varargin] = getProp(varargin,'outputnumber',0);
+  [output_from,  varargin] = getProp(varargin,'outputfrom',0);
+  [inpObj,  varargin] = getProp(varargin,'inpObj',[]);
+  o2.output_no=output_no;
+  fn=fopen([fname,'.NOD']);
+  if fn==-1 
+    fprintf(1,'%s : Trying to open %s .nod\n',caller,fname);
+    fn=fopen([fname,'.nod']);
+    if fn==-1
+      fprintf('%s: file nod found!!\n',caller,fname);
+      o=-1;o2=-1;
+      return
+    end
+  end
   o2.title1=getNextLine(fn,'criterion',...
                          'with','keyword','## ','operation','delete');
   o2.title2=getNextLine(fn,'criterion',...
@@ -21,20 +35,22 @@ function [o,o2]=readNOD(varargin)
   o2.MeshInfo =getNextLine(fn,'criterion','equal','keyword','## ');
   tmp=regexprep(o2.MeshInfo,{'#','(',')','\,','*','='},{'','','','','',''});
   tmp=textscan(tmp,'%s %s %s %f %f %f %*s %f %*s');
-%  [o2.mshtyp{1} o2.mshtyp{2} ] =deal(tmp{:}{1});
-%  [o2.nn1 o2.nn2 o2.nn o2.ne ] =deal(tmp{4,5,6,8});
+  %  [o2.mshtyp{1} o2.mshtyp{2} ] =deal(tmp{1:2}{1});
+  [o2.nn1 o2.nn2 o2.nn o2.ne ] =deal(tmp{4:7});
   o2.mshtyp{1} = tmp{1}{1};
   o2.mshtyp{2} = tmp{2}{1};
-  o2.nn1=tmp{4};
-  o2.nn2=tmp{5};
-  o2.nn=tmp{6};
-  o2.ne=tmp{7};
 
   % ---------------- parsing the number of results    ------------------------
   o2.OutputInfo =getNextLine(fn,'criterion','with','keyword',...
                  '## NODEWISE RESULTS','operation','delete');
   tmp=textscan(o2.OutputInfo,'%f ');
   o2.ktprn=tmp{1};  % expected no. time steps 
+  if output_no~=0;  
+    output_no=min(o2.ktprn,output_no);
+  else
+    output_no=o2.ktprn;
+  end
+
 
   % ---------------- parsing expected results    ----------------------------
   % Refering to OUTNOD.......19900
@@ -44,8 +60,10 @@ function [o,o2]=readNOD(varargin)
     deal(tmp_table{:});
 
   % ---------------- Parsing simulation results -----------------------------
-  for n=1:o2.ktprn
-    fprintf(1,'%s is parsing the %g of %g outputs\n', caller,n,o2.ktprn);
+  fprintf(1,'%s is parsing the %g of %g outputs\n', caller,output_no,o2.ktprn);
+  for n=1:output_no
+    fprintf('.');
+    if rem(n,50)==0; fprintf('%d\n',n);   end
     tmp       = getNextLine(fn,'criterion','with','keyword','## TIME STEP');
     if tmp  ~= -1
       tmp=regexprep(tmp,{'## TIME STEP','Duration:','sec','Time:'}...
@@ -64,4 +82,5 @@ function [o,o2]=readNOD(varargin)
              'out of %g outputs extracted\n'],caller,n,o2.ktprn);
       return
     end % if condition
-  end  % loops
+  end  % n loops
+  fprintf('%s: Parsed %g of %g outputs\n', caller,output_no,o2.ktprn);

@@ -141,6 +141,7 @@ classdef inpObj
 %*********************** Function readinp **************************
     function o=inpObj(varargin)
       % inpObj constructor
+      caller=dbstack('-completenames'); caller=caller.name;
       o.varargin        = varargin;
       [fname, varargin] = getNext(varargin,'char','');
       [read,  varargin] = getProp(varargin,'operation',[]);
@@ -158,7 +159,15 @@ classdef inpObj
       %[userCols,   ~       ] = getNext(varargin,'double',[]);
       
       % ---------------       DATASET 1    -------------------------
-      fn=fopen(fname);
+      fn=fopen([fname,'.INP']);
+      if fn==-1 
+        fprintf(1,'Trying to open %s .inp\n',fname);
+        fn=fopen([fname,'.inp']);
+        if fn==-1
+          fprintf('%s: file nod found!!\n',caller,fname);
+          return
+        end
+      end
       o.inp.dataset1a=getNextLine(fn,'criterion','without','keyword','#');
       o.inp.dataset1b=getNextLine(fn,'criterion','without','keyword','#');
       % ---------------       DATASET 2A   -------------------------
