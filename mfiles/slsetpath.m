@@ -1,5 +1,5 @@
-%MFSETPATH  --- set mflab paths and provide strings to be copied into a shortcut
-% run this from the diretory mflab/mfiles
+%SLSETPATH  --- set SutraLab paths and provide strings to be copied into a shortcut
+% run this from the diretory SutraLab/mfiles
 % to set the paths for the current session
 %
 % for a more permanent fixation of the path each time a matlab session is
@@ -7,11 +7,11 @@
 % on the shortcut bar (not that from Matlbab 2013 the user inteface of
 % Matlab has changed, which is also the case with the shortcut bar).
 %
-% To extend the search path with the directories that hold the mfLab
+% To extend the search path with the directories that hold the SutraLab
 % mfiles, copy the lines below in a new shortcut. But make sure that the
-% top line, which sets the path, matches the actual path to the mfLab/mfiles
+% top line, which sets the path, matches the actual path to the SutraLab/mfiles
 % dirctory on your computer. You can get the full path easily by navigating
-% to the directory mfLab/mfiles and then typien pwd (print working
+% to the directory SutraLab/mfiles and then typien pwd (print working
 % directory] the path name can then be copied into the shortcut.
 %
 % Windows uses use backward slashes \, unix and Mac use forward slashes /
@@ -19,13 +19,13 @@
 % Example: 
 % mfsetpath
 %
-% Note: call mfsetpath from the mfLab/mfiles directory type mfsetpath
+% Note: call mfsetpath from the SutraLab/mfiles directory type mfsetpath
 %
 % See Also: setexecutables
 %
-% setexecutables containes the names of the excutables that mfLab
+% setexecutables containes the names of the excutables that SutraLab
 % recognizes. Have a look and make sure the paths in it refer to the
-% directory holding the executables, i.e mfLab/bin
+% directory holding the executables, i.e SutraLab/bin
 
 % Copyright 2009-2013 Theo Olsthoorn, TU-Delft and Waternet, without any warranty
 % under free software foundation GNU license version 3 or later
@@ -43,7 +43,7 @@ addpath([pathstr 'read']);
 addpath([pathstr 'write']);
 addpath([pathstr 'sutraset']);
 
-fprintf('The mfLab paths have been set for the current sesion.\n\n');
+fprintf('The SutraLab paths have been set for the current sesion.\n\n');
 
 %% Instructions to make it easier by creating a shortcut
 
@@ -63,11 +63,11 @@ fprintf('on the top of the Matlab screen\n\n');
 %fprintf('2) Select New Shortcut to open\n');
 %fprintf('3) Give it a name, like mfpaths\n');
 %fprintf('4) Copy the "addpath" lines above into the large textbox and close it\n');
-%fprintf('\nNext time when mfLab cannnot find its files, just press this shortcut\n');
+%fprintf('\nNext time when SutraLab cannnot find its files, just press this shortcut\n');
 %fprintf('\n');
 %
 %
-%%% filling in the pathtoexecutables in mflab/mfiles/write/setExecutables.m
+%%% filling in the pathtoexecutables in SutraLab/mfiles/write/setExecutables.m
 %
 %%% get path to executables relative to current directory
 %cd('..');
@@ -94,12 +94,12 @@ fprintf('on the top of the Matlab screen\n\n');
 %fprintf('Writing setPathtoexecutables.m replacing the string\n');
 %fprintf('pathtoexecutables\n');
 %fprintf('herein with the actual path to the executables, which usually is\n');
-%fprintf('Drive:\\<<path to mflab>>\\bin\n');
+%fprintf('Drive:\\<<path to SutraLab>>\\bin\n');
 %fprintf('If it doesn''t work you have to do it by hand.\n');
 %fprintf('On PC change the path to the form like\n');
 %fprintf('''%s%sbin''\n',pwd,filesep);
 %fprintf('instead of something like\n');
-%fprintf('''vmware-host\\Shared Folders\\tolsthoorn On My Mac\\GRWMODELS\\mflab\\bin''\n');
+%fprintf('''vmware-host\\Shared Folders\\tolsthoorn On My Mac\\GRWMODELS\\SutraLab\\bin''\n');
 %fprintf('otherwise windows is unaware of file changes during a session\n');
 %fprintf('\n');
 %

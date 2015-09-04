@@ -1,4 +1,4 @@
-function [o,o2]=readELE(varargin)
+function [o,o2] = readELE(varargin)
   % readELE reads ELE file   
   %
   % INPUT
