@@ -10,6 +10,12 @@ function o=getNextLine(varargin)
 %                                 the given keyword 
 %         'operation' --  Can be 'delete' (only works when 'criterion'='with')
 %                         delete the keyword from the extracted line
+%         'ignoreblankline' -- can be 'yes' or 'no'
+%                         if 'yes' under 'without' criterion, the lines with
+%                         full spaces or empty lines will be ignored
+%                         Such funtion is created as SUTRA can smartly ignore
+%                         empty lines in INP file (i.e., empty line is the same
+%                         as comment line) TO 150904
 % Examples:
 % line=getNextLine(fn,'criterion','with','keyword','##','operation','delete');
 %    purpose: find line from the file handled by fn with line started with '##'.
@@ -33,19 +39,38 @@ function o=getNextLine(varargin)
   % an option to see whether use inp contents to guide the reading process
   %   a hard reading process will be conducted if left empty
   [criterion,  varargin] = getProp(varargin,'criterion',[]);
-  [keyword  ,  varargin] = getProp(varargin,'keyword',[]);
+  [keyword  ,  varargin] = getProp(varargin,'keyword'  ,[]);
   [operation,  varargin] = getProp(varargin,'operation',[]);
+  [ignoreblankline,varargin] = getProp(varargin,'ignoreblankline','no');
   
 
   o=fgetl(fn);
   kw_length=length(keyword);
+
+
+  if strcmp(ignoreblankline,'yes')
+      isblankline=CheckIfBlankLine(o);
+  elseif strcmp(ignoreblankline,'no')
+      isblankline=0;
+  end
+
+
   if strcmpi(criterion,'without')
-     while strcmp(o(1:  min(kw_length,length(o))   ), keyword)
+     while strcmp(o(1:min(kw_length,length(o))), keyword) || isblankline
        o=fgetl(fn);
+
+       if strcmp(ignoreblankline,'yes')
+           isblankline=CheckIfBlankLine(o);
+       elseif strcmp(ignoreblankline,'no')
+           isblankline=0;
+       end
+
+
        if o==-1 
          fprintf(1,'Search up to the end of the file\n');
 	 return
        end
+
      end
   elseif strcmpi(criterion,'equal')
      while ~strcmp(o,keyword)
