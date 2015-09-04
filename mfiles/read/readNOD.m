@@ -48,13 +48,18 @@ function [o,o2]=readNOD(varargin)
   % ---------------- Parsing the line with node, element info-----------------
   o2.MeshInfo =getNextLine(fn,'criterion','equal','keyword','## ');
   tmp=regexprep(o2.MeshInfo,{'#','(',')','\,','*','='},{'','','','','',''});
-  tmp=textscan(tmp,'%s %s %s %f %f %f %*s %f %*s');
+  tmp2=textscan(tmp,'%s %s %s %f %f %f %*s %f %*s');
+  o2.mshtyp{1}                    = tmp2{1}{1};
+  o2.mshtyp{2}                    = tmp2{2}{1};
+  if strcmp(o2.mshtyp{1},'2-D') && strcmp(o2.mshtyp{2},'REGULAR')
+    tmp=textscan(tmp,'%s %s %s %f %f %f %*s %f %*s');
   % how to realize this by one-liner
   %  [o2.mshtyp{1} o2.mshtyp{2} ] = deal(tmp{1:2}{1});
-  [o2.nn1 o2.nn2 o2.nn o2.ne ]    = deal(tmp{4:7});
-  o2.mshtyp{1}                    = tmp{1}{1};
-  o2.mshtyp{2}                    = tmp{2}{1};
-
+    [o2.nn1,o2.nn2,o2.nn,o2.ne ]    = deal(tmp{4:7});
+  elseif strcmp(o2.mshtyp{1},'3-D') && strcmp(o2.mshtyp{2},'BLOCKWISE')
+    tmp=textscan(tmp,'%s %s %s %f %f %f %f %*s %f %*s');
+    [o2.nn1,o2.nn2,o2.nn3,o2.nn,o2.ne ]    = deal(tmp{4:8});
+  end
   % ---------------- parsing the number of results    ------------------------
   tmp = getNextLine(fn,'criterion','with','keyword',...
                  '## NODEWISE RESULTS','operation','delete');
@@ -70,7 +75,7 @@ function [o,o2]=readNOD(varargin)
   % Refering to OUTNOD.......19900
   tmp       = getNextLine(fn,'criterion','with','keyword','##   --');
   tmp_table = textscan(fn,'##  %f %f %s %f %s %f %s %f ',o2.ktprn);
-  [o2.itt o2.tt o2.cphorp o2.ishorp o2.cptorc o2.istorc o2.cpsatu o2.issatu]=...
+  [o2.itt,o2.tt,o2.cphorp,o2.ishorp,o2.cptorc,o2.istorc,o2.cpsatu,o2.issatu]=...
     deal(tmp_table{:});
 
   % ---------------- Parsing simulation results -----------------------------
@@ -83,12 +88,13 @@ function [o,o2]=readNOD(varargin)
       tmp = regexprep(tmp,{'## TIME STEP','Duration:','sec','Time:'}...
                     ,{'','','',''});
       tmp   = textscan(tmp,'%f %f %f');
-      [ o(n).itout o(n).durn o(n).tout] = deal(tmp{:});
+      [ o(n).itout,o(n).durn,o(n).tout] = deal(tmp{:});
 
       tmp = getNextLine(fn,'criterion','with'...
                     ,'keyword','##  ','operation','delete');
-      tmp        = textscan(tmp,'%s');
-      o(n).label = tmp{1}';
+      %tmp        = textscan(tmp,'%s');
+      %o(n).label = tmp{1}';
+      o(n).label = getOutputLabelName( tmp );
       fmt        = repmat('%f ',1, length(o(n).label));
       o(n).terms = textscan(fn,fmt,o2.nn);
     else

@@ -11,6 +11,8 @@ function [boolean,varargin] = getWord(varargin,word)
 % SEE ALSO: getNext, getProp, getType, getWord
 %
 % TO 130419
+% Called by strcmpi
+
 
 % Copyright 2009-2013 Theo Olsthoorn, TU-Delft and Waternet, without any warranty
 % under free software foundation GNU license version 3 or later

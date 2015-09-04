@@ -51,7 +51,7 @@ function [o,o2] = readELE(varargin)
   tmp=textscan(tmp,'%s %s %s %f %f %f %*s %f %*s');
   % how to realize this by one-liner
   %  [o2.mshtyp{1} o2.mshtyp{2} ] = deal(tmp{1:2}{1});
-  [o2.nn1 o2.nn2 o2.ne o2.nn ]    = deal(tmp{4:7});
+  [o2.nn1,o2.nn2,o2.ne,o2.nn ]    = deal(tmp{4:7});
   o2.mshtyp{1}                    = tmp{1}{1};
   o2.mshtyp{2}                    = tmp{2}{1};
 
@@ -70,7 +70,7 @@ function [o,o2] = readELE(varargin)
   % Refering to OUTELE.......19900
   tmp       = getNextLine(fn,'criterion','with','keyword','##   --');
   tmp_table = textscan(fn,'##  %f %f %s %f %s %f %s %f ',o2.ktprn);
-  [o2.itt o2.tt o2.cpvx o2.isvx o2.cpvy o2.isvy o2.cpvz o2.isvz]=...
+  [o2.itt,o2.tt,o2.cpvx,o2.isvx,o2.cpvy,o2.isvy,o2.cpvz,o2.isvz]=...
     deal(tmp_table{:});
 
   % ---------------- Parsing simulation results -----------------------------
@@ -83,7 +83,7 @@ function [o,o2] = readELE(varargin)
       tmp = regexprep(tmp,{'## TIME STEP','Duration:','sec','Time:'}...
                     ,{'','','',''});
       tmp   = textscan(tmp,'%f %f %f');
-      [ o(n).itout o(n).durn o(n).tout] = deal(tmp{:});
+      [ o(n).itout,o(n).durn,o(n).tout] = deal(tmp{:});
 
 
                 
@@ -91,31 +91,35 @@ function [o,o2] = readELE(varargin)
                     ,'keyword','## ==');                
       % remove '## ' at the beginning
       tmp=tmp(4:end);
-       % a mask matrix for tmp indicating blank space ' '(i.e., white space)
-       tmp_blank_mask=tmp==' ';
-%       % a mask matrix indicating the location of a blank whose both
-%       % neighbours are alphabetics. such effort is to change a pattern
-%       % 'X origin' to 'X_origin'
-%       % if not, 
-%       tmp_singleblank_mask=strfind(tmp_blank_mask,[0 1 0])+1;
-%       
-%       tmp(tmp_singleblank_mask)='_';
-%       tmp        = textscan(tmp,'%s'   );
-       %       o(n).string=tmp;    
-       % I also have tried the following 
-       tmp_blanks_mask=find(tmp_blank_mask(1:end-1)+tmp_blank_mask(2:end)==2);
-       tmp(tmp_blanks_mask)='#';
-       % tmp2(cc)='_'
-       % but there is a problem where all words starts with a space
-       % a mask matrix for tmp indicating blank space ' '(i.e., white space)
-       %  tmp_blank_mask=tmp==' ';
-       
-       %find(tmp_blank_mask(1:end-1)==1 && tmp_blank_mask(2:end)==1)
-       tmp        = textscan(tmp,'%s','delimiter','#'   );       
-
-      % http://au.mathworks.com/matlabcentral/answers/27042-how-to-remove-empty-cell-array-contents
-      tmp=tmp{1}';
-      o(n).label = tmp(~cellfun('isempty',tmp))  ;
+%        % a mask matrix for tmp indicating blank space ' '(i.e., white space)
+%        tmp_blank_mask=tmp==' ';
+% %       % a mask matrix indicating the location of a blank whose both
+% %       % neighbours are alphabetics. such effort is to change a pattern
+% %       % 'X origin' to 'X_origin'
+% %       % if not, 
+% %       tmp_singleblank_mask=strfind(tmp_blank_mask,[0 1 0])+1;
+% %       
+% %       tmp(tmp_singleblank_mask)='_';
+% %       tmp        = textscan(tmp,'%s'   );
+%        %       o(n).string=tmp;    
+%        % I also have tried the following 
+%        tmp_blanks_mask=find(tmp_blank_mask(1:end-1)+tmp_blank_mask(2:end)==2);
+%        tmp(tmp_blanks_mask)='#';
+% 
+% 
+%        % tmp=regexprep(tmp,' +','#');
+%        % tmp2(cc)='_'
+%        % but there is a problem where all words starts with a space
+%        % a mask matrix for tmp indicating blank space ' '(i.e., white space)
+%        %  tmp_blank_mask=tmp==' ';
+%        
+%        %find(tmp_blank_mask(1:end-1)==1 && tmp_blank_mask(2:end)==1)
+%        tmp        = textscan(tmp,'%s','delimiter','#'   );       
+% 
+%       % http://au.mathworks.com/matlabcentral/answers/27042-how-to-remove-empty-cell-array-contents
+%       tmp=tmp{1}';
+%       o(n).label = tmp(~cellfun('isempty',tmp))  ;
+      o(n).label = getOutputLabelName( tmp );
       fmt        = repmat('%f ',1, length(o(n).label));
       o(n).terms = textscan(fn,fmt,o2.nn);
     else
