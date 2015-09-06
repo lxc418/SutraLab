@@ -1,5 +1,5 @@
-function [sw,se]=fayer1995_SWCC(psim,alpha,nv,psim0,slr)
-% function [sw,se]=fayer1995_SWCC(psim,alpha,nv,psim0,slr)
+function [sw,se]=Fayer1995WRR_SWCC(psim,alpha,nv,psim0,slr)
+% function [sw,se]=Fayer1995WRR_SWCC(psim,alpha,nv,psim0,slr)
 % liquid water sauturation as a function of matric potential 
 % based on Fayer(1955)
 % Fayer, M. J., & Simmons, C. S. (1995). Modified Soil Water 
@@ -18,6 +18,6 @@ function [sw,se]=fayer1995_SWCC(psim,alpha,nv,psim0,slr)
 %      se   (-) -- effective liquid water saturation
 %      TO20150906
 
-beta = (log(-psim0)-log(-psim))/log(-psi0);
+beta = (log(-psim0)-log(-psim))/log(-psim0);
 se   = 1./( 1+(alpha*psim).^nv   ).^(1-1/nv);
-sw   = (1-beta_ss*slr).*se +beta*slr;
+sw   = (1-beta*slr).*se +beta*slr;
