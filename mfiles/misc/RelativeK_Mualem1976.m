@@ -1,5 +1,5 @@
-function kr=Mualem1976_RelativeK(psim,alpha,nv,psim0,slr)
-% function [sw,se]=fayer1995_SWCC(psim,alpha,nv,psim0,slr)
+function kr=RelativeK_Mualem1976(psim,alpha,nv,psim0,slr)
+%function kr=RelativeK_Mualem1976(psim,alpha,nv,psim0,slr)
 % liquid water sauturation as a function of matric potential 
 % based on Fayer(1955)
 % Fayer, M. J., & Simmons, C. S. (1995). Modified Soil Water 

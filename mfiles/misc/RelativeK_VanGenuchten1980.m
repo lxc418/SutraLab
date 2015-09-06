@@ -1,5 +1,5 @@
-function kr=VanGenuchten1980_RelativeK(psim,alpha,nv)
-% function kr=VanGenuchten1980_RelativeK(psim,alpha,nv)
+function kr=RelativeK_VanGenuchten1980(psim,alpha,nv)
+%function kr=RelativeK_VanGenuchten1980(psim,alpha,nv)
 % relative permeability as a function of matric potential 
 % based on VanGenuchten (1980)
 % Genuchten, M. Van. (1980). A closed-form equation for 

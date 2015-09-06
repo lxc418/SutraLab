@@ -1,5 +1,5 @@
-function [kfs kfr]=Tokunaga2009WRR_FilmRelativeK(psim,tk,agr,por,corf)
-% function [kfs kfr]=Tokunaga2009_FilmRelativeK(psim,tk,agr,por,corf)
+function [kfs kfr]=FilmRelativeK_Tokunaga2009WRR(psim,tk,agr,por,corf)
+%function [kfs kfr]=FilmRelativeK_Tokunaga2009WRR(psim,tk,agr,por,corf)
 % Relative permeability induced by film water as a function 
 %   of matric potential 
 % Based on;
