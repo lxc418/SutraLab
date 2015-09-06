@@ -42,6 +42,7 @@ addpath([pathstr 'read']);
 %addpath([pathstr 'visualization']);
 addpath([pathstr 'write']);
 addpath([pathstr 'sutraset']);
+addpath([pathstr 'misc']);
 
 fprintf('The SutraLab paths have been set for the current sesion.\n\n');
 
