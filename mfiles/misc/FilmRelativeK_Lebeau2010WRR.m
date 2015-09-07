@@ -1,5 +1,5 @@
-function [kfs kfr]=FilmRelativeK_Lebeau2010WRR(psim,tk,sw,por,asvl)
-%function [kfs kfr]=FilmRelativeK_Lebeau2010WRR(psim,tk,sw,por,asvl)
+function [kfs kfr]=FilmRelativeK_Lebeau2010WRR(psim,sw,tk,swm,por,asvl)
+%function [kfs kfr]=FilmRelativeK_Lebeau2010WRR(psim,tk,swm,por,asvl)
 % Relative permeability induced by film water as a function 
 %   of matric potential 
 % Based on:
@@ -43,8 +43,8 @@ function [kfs kfr]=FilmRelativeK_Lebeau2010WRR(psim,tk,sw,por,asvl)
 %%    （r)elative (p)ermeability due to (f)ilm flow (rpf) [-]
 %kfr=(1+agr*2.d0*psic/zeta)^(-1.5d0);
 %
-%rhow0=1e3;
-%gva=9.81;
+rhow0=1e3;
+gva=9.81;
 %psicm=-1e3;
 %swm=aaa;
 
@@ -58,17 +58,17 @@ botzc=1.381e-23;
 %    (electr)on (c)harge   (electrc) [coulombs or as]
 electrc=1.602e-19;
 
-
+psicm=1e3;
 %.....effective diameter equation 17 of Lebeau(2010)
-ed=6*(1-por)* (-asvl/(6*pi*rhow0*gva*psim))^(1/3)/por/swm
+ed=6*(1-por)* (-asvl/(6*pi*rhow0*gva*psicm))^(1/3)/por/swm;
 %.....film thickness (warning) this is not the full part
-del=(relpw*permvac/(2*rhow0*gva))**.5d0*(pi*botzc*tk/electrc)
-kfs=4.d0*(1-por)*del**3.d0/pi/ed
+del=(relpw*permvac/(2*rhow0*gva))^.5e0*(pi*botzc*tk/electrc);
+kfs=4.e0*(1-por)*del^3.e0/pi/ed;
 
 %.....relative permeability due to film flow
 %     capillary pressure head
 psic=-psim;           
-kfr=(1-sw)*psic**(-1.5d0)
+kfr=(1-sw).*psic.^(-1.5d0);
 %.....for checking the spf and rpf value see page 179 and relativek.sage
 %      if (psic.gt.1.d3)then
 %        reapl=spf*rpf
