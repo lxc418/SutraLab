@@ -1,4 +1,4 @@
-function [kfs kfr]=FilmRelativeK_Lebeau2010WRR(psim,sw,tk,swm,por,asvl)
+function [kfs,kfr]=FilmRelativeK_Lebeau2010WRR(psim,sw,tk,swm,por,asvl)
 %function [kfs kfr]=FilmRelativeK_Lebeau2010WRR(psim,tk,swm,por,asvl)
 % Relative permeability induced by film water as a function 
 %   of matric potential 
