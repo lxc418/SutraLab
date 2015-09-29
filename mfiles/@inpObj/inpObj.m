@@ -28,7 +28,18 @@ classdef inpObj
     %   matlab stats that, string array should be declared as cells
     %    mshtyp   = char(2,10)   
     %   http://stackoverflow.com/questions/7100841/create-an-array-of-strings
-
+    ktype=zeros(1,2)   % ktype(1) determines the dimension of the system
+                       %   ktype(1)  == 2 , 2D problem
+		       %   ktype(1)  ==  3 , 3D problem
+                       % ktype(2) dettermines the type of mesh
+		       %   ktype(2) ==
+         %.....ktype set according to the type of finite-element mesh:            
+         %        2d mesh          ==>   ktype(1) = 2                             
+         %        3d mesh          ==>   ktype(1) = 3                             
+         %        irregular mesh   ==>   ktype(2) = 0                             
+         %        layered mesh     ==>   ktype(2) = 1                             
+         %        regular mesh     ==>   ktype(2) = 2                             
+         %        blockwise mesh   ==>   ktype(2) = 3                             
     mshtyp@cell=repmat({''},2,1)     % mesh type
     nn1  % -- number of node in the first direction
     nn2  % -- number of node in the second direction
@@ -96,6 +107,18 @@ classdef inpObj
     prods1
 
 
+    % ---------------  DATASET 14 variable declaration--------------------
+    scalx  
+    scaly  
+    scalz  
+    porfac 
+
+    % ---------------  DATASET 14 variable declaration--------------------
+    iqcp
+    qinc
+    uinc
+
+
     % examples to declear cells and structs in properties
     %    dtst@cell=repmat({''},22,1)
     %    dtst{1}@cell=repmat({''},2,1)   % how to do this
@@ -150,11 +173,32 @@ classdef inpObj
       o.inp.dataset2b=getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
       % remove single quote
       strprc      = regexprep(o.inp.dataset2b,'''','');
-      tmp         = textscan(strprc,'%s %s %s %f %f');
-      o.mshtyp(1) = tmp{1};
-      o.mshtyp(2) = tmp{2};
-      o.nn1       = tmp{4};
-      o.nn2       = tmp{5};
+      % find if it is (1) 2D (3) 3D
+      tmp         = textscan(strprc,'%s ');
+
+      if strcmpi(tmp{1}{1},'2D')
+        o.ktype(1)  = 2;
+        tmp         = textscan(strprc,'%s %s %s %f %f');
+        o.mshtyp(1) = tmp{1};
+        o.mshtyp(2) = tmp{2};
+        o.nn1       = tmp{4};
+        o.nn2       = tmp{5};
+      elseif strcmpi(tmp{1}{1},'3D')
+        o.ktype(1)  = 3;
+        tmp         = textscan(strprc,'%s %s %s %f %f %f');
+        o.mshtyp(1) = tmp{1};
+        o.mshtyp(2) = tmp{2};
+        o.nn1       = tmp{4};
+        o.nn2       = tmp{5};
+        o.nn3       = tmp{6};
+	% get relationships
+	for n = 1:o.ktype(1)
+          strprc = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
+          tmp = textscan(strprc,'%s ');
+	  fmt = repmat('%f ' , 1, str2num(tmp{1}{1})+1);
+	  tmp = textscan(strprc,fmt);
+        end
+      end
       % ---------------       DATASET 3    -------------------------
       o.inp.dataset3 = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
       str            = textscan(o.inp.dataset3,'%f %f %f %f %f %f %f');
@@ -238,6 +282,46 @@ classdef inpObj
       % ---------------       DATASET 13   -------------------------
       o.inp.dataset13 = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
 
+      % ---------------       DATASET 14   -------------------------
+      o.inp.dataset14a = getNextLine(fn,'criterion','with','keyword',...
+                              '''NODE''','operation','delete');
+      str      = textscan(o.inp.dataset14a,'%f %f %f %f');
+      o.scalx  = str{1};
+      o.scaly  = str{2};
+      o.scalz  = str{3};
+      o.porfac = str{4};
+      o.inp.dataset14b = '';
+      for n = 1:o.nn
+          o.inp.dataset14b= [o.inp.dataset14b getNextLine(fn,'criterion','without','keyword',...
+                              '#','ignoreblankline','yes')];
+      end
+
+      % ---------------       DATASET 15   -------------------------
+      o.inp.dataset15a = getNextLine(fn,'criterion','with','keyword',...
+                              '''ELEMENT''','operation','delete');
+      for n = 1:o.ne
+          o.inp.dataset15b= [o.inp.dataset14b getNextLine(fn,'criterion','without','keyword',...
+                              '#','ignoreblankline','yes')];
+      end
+       
+      % ---------------       DATASET 17   -------------------------
+      if o.nsop~=0
+           o.iqcp=zeros(1,o.nsop);
+           o.qinc=zeros(1,o.nsop);
+           o.uinc=zeros(1,o.nsop);
+         for n=1:o.nsop
+           tmp= getNextLine(fn,'criterion','without','keyword',...
+                              '#','ignoreblankline','yes');
+           str= textscan(tmp,'%f %f %f ');
+	   o.iqcp(n) = str{1};
+	   o.qinc(n) = str{2};
+	   o.uinc(n) = str{3};
+         end
+      end
+
+
+
+
       end % Function constructor
 
        function nnv=get.nnv(o)
@@ -257,7 +341,7 @@ classdef inpObj
 
 
    methods(Static)
-     function nns = nnns(o),
+     function nns = nnns(o)
        % it is working the same time as others, which is not a procedural way.
        % everytime when o.a is changing, nnv is changing.
        nns.nns = o.a+7;
