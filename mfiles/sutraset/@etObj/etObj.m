@@ -1,4 +1,7 @@
-classdef etObj
+% the header handle is to make sure that we don't need to use
+% obj=obj.getPET to update any objects. 
+% http://stackoverflow.com/questions/209005/how-do-properties-work-in-object-oriented-matlab
+classdef etObj <handle
   properties
     % the following list are associated with property defination
     % http://stackoverflow.com/questions/7192048/can-i-assign-types-to-class-properties-in-matlab
@@ -35,74 +38,76 @@ classdef etObj
     met  % -- switch of evaporation
     mar  % -- aerodynamic resistance
     msr  % -- surface resistance
-	msc  % -- salt resistance
-	mht  % -- heat balance
-	mvt  % -- vapour transport
-	mft  % -- film transport
-	mrk  % -- relative hydraulic conductivity
+    msc  % -- salt resistance
+    mht  % -- heat balance
+    mvt  % -- vapour transport
+    mft  % -- film transport
+    mrk  % -- relative hydraulic conductivity
 	
     % ---------- DATASET 1: TIDE FLUCTUATION IN USUBS ----------
     tasp  % -- spring tidal amplitude (m)
-	tane  % -- neap tidal amplitude (m)
+    tane  % -- neap tidal amplitude (m)
     tpsp  % -- tidal period of spring tide (s)
     tpne  % -- tidal period of neap tide (s) 
-	tm    % -- mean tidal level (m) 
-	rhost % -- the density of tide water
-	sc    % -- salinity of seawater 
+    tm    % -- mean tidal level (m) 
+    rhost % -- the density of tide water
+    sc    % -- salinity of seawater 
 	
     % ---------- DATASET 1: EVAPORATION INPUT ----------
     qet   % -- potential evaporation rate (m/s)
     uet   % -- solute density taken by evaporation (kg/kg)
     pet   % -- pore-water pressure threshold (pa), below which evaporation will take place
-	uvm   % -- solubility (kg/kg)
+    uvm   % -- solubility (kg/kg)
     night % -- if=1 evaporation is switched off during night time, if=0 it is always on
-	ite   % -- temporarily not used, it was designed for the number of time call for BCTIME
+    ite   % -- temporarily not used, it was designed for the number of time call for BCTIME
 	
     % ---------- DATASET 13E: EVAPORATION PARAMETERS ----------
     tma  % -- atmospheric temperature on the top of the column (Celsius)
-	tmi  % -- initial soil temperature (Celsius)
-	alf  % -- albedo (i)
-	rs   % -- short wave incoming radiation (mj/m2/day)
-	rh   % -- relative humidity 0<rh<1
-	ap   % -- UNKNOWN
-	bp   % -- UNKNOWN
-	u2   % -- daily mean wind speed at 2m above ground (km/day)
-	tsd  % -- temperature of the side of the column
-	scf  % -- scaling factor between the top surface and side surface of the 1D column
+    tmi  % -- initial soil temperature (Celsius)
+    alf  % -- albedo (i)
+    rs   % -- short wave incoming radiation (mj/m2/day)
+    rh   % -- relative humidity 0<rh<1
+    ap   % -- UNKNOWN
+    bp   % -- UNKNOWN
+    u2   % -- daily mean wind speed at 2m above ground (km/day)
+    tsd  % -- temperature of the side of the column
+    scf  % -- scaling factor between the top surface and side surface of the 1D column
 
-	% ---------- DATASET 13I: SOIL CHARACTERISTIC PARAMETERS ----------
-	swres1  % -- residual saturation
-	aa1     % -- van Genuchten alpha (1/m)
-	vn1     % -- van Genuchten N
-	swres2  % -- residual saturation
-	aa2     % -- van Genuchten alpha (1/m)
-	vn2     % -- van Genuchten N
+    % ---------- DATASET 13I: SOIL CHARACTERISTIC PARAMETERS ----------
+    swres1  % -- residual saturation
+    aa1     % -- van Genuchten alpha (1/m)
+    vn1     % -- van Genuchten N
+    swres2  % -- residual saturation
+    aa2     % -- van Genuchten alpha (1/m)
+    vn2     % -- van Genuchten N
     swres3  % -- residual saturation
-	lam3
-	phyb3   % -- (m)
-	swres4  % -- residual saturation
-	lam4
-	phyb4   % -- (m)
-	phy0    % -- (m)
-	ecto    % -- eccentricity and tortuosity, the default value is 0.5
+    lam3
+    phyb3   % -- (m)
+    swres4  % -- residual saturation
+    lam4
+    phyb4   % -- (m)
+    phy0    % -- (m)
+    ecto    % -- eccentricity and tortuosity, the default value is 0.5
 
-	% ---------- DATASET 13F: AERODYNAMIC RESISTANCE TERM ----------
-	ravt   % -- aerodynamic resistance at the soil surface (s/m)
-	ravs   % -- aerodynamic resistance at the side of the column (s/m)
-	swrat  % -- parameters to switch on (1) or off (0) the temperature change on the surface
+    % ---------- DATASET 13F: AERODYNAMIC RESISTANCE TERM ----------
+    ravt   % -- aerodynamic resistance at the soil surface (s/m)
+    ravs   % -- aerodynamic resistance at the side of the column (s/m)
+    swrat  % -- parameters to switch on (1) or off (0) the temperature change on the surface
+    
+    % ---------- DATASET 13L: PARAMETERS FOR SURFACE RESISTANCE ----------
+    tal   % -- thickness of air layer (m)
+    ec    % -- eccentricity of the active pore
+    etr   % -- residual evaporation rate
+    psip  % -- must be positive
+    cors  % -- correction coefficient, set as 1
+    
 	
-	% ---------- DATASET 13L: PARAMETERS FOR SURFACE RESISTANCE ----------
-	tal   % -- thickness of air layer (m)
-	ec    % -- eccentricity of the active pore
-	etr   % -- residual evaporation rate
-	psip  % -- must be positive
-	cors  % -- correction coefficient, set as 1
+    % ---------- DATASET 12H: PARAMETERS FOR SALT RESISTANCE ----------
+    ar  % -- fitting parameter
+    br  % -- fitting parameter
 	
-	
-	% ---------- DATASET 12H: PARAMETERS FOR SALT RESISTANCE ----------
-	ar  % -- fitting parameter
-	br  % -- fitting parameter
-	
+    % --------- parameters from functions  ----------------
+    pot_evap_rate  % potential evaporation rate in m/s
   end
   
   
@@ -135,16 +140,16 @@ classdef etObj
       end
 	  
 	  % ---------------       DATASET 13C    -------------------------
-      o.et.dataset13c= getNextLine(fn,'criterion','without','keyword','#');
-      str            = textscan(o.et.dataset13c,'%f %f %f %f %f %f %f %f');
-	  o.met          = str{1};
-      o.mar          = str{2};
-      o.msr          = str{3};
-	  o.msc          = str{4};
-	  o.mht          = str{5};
-	  o.mvt          = str{6};
-	  o.mft          = str{7};
-	  o.mrk          = str{8};
+	o.et.dataset13c= getNextLine(fn,'criterion','without','keyword','#');
+	str		= textscan(o.et.dataset13c,'%f %f %f %f %f %f %f %f');
+	o.met	    = str{1};
+    o.mar	    = str{2};
+	o.msr	    = str{3};
+	o.msc	    = str{4};
+	o.mht	    = str{5};
+	o.mvt	    = str{6};
+	o.mft	    = str{7};
+	o.mrk	    = str{8};
 	  
       % ---------------       DATASET 1a   -------------------------
       o.et.dataset1a= getNextLine(fn,'criterion','without','keyword','#');
@@ -200,7 +205,8 @@ classdef etObj
 	  o.ecto        = str{14};
 	  
 	  % ---------------       DATASET 13F   -------------------------
-      o.et.dataset13f= getNextLine(fn,'criterion','without','keyword','#');
+      o.et.dataset13f= getNextLine(fn,'criterion','without','keyword','#'...
+            ,'ignoreblankline','yes');
 	  str           = textscan(o.et.dataset13f,'%f %f %f');
 	  o.ravt        = str{1};
 	  o.ravs        = str{2};
@@ -236,6 +242,9 @@ classdef etObj
 %       end
 %       function nnv=set.nnv(x), nnv=1; end
 %       function o=set.nns(o,10), o.nns=10; end
+      %function er=get.pot_evap_rate(o)
+      %  er=o.pot_evap_rate;
+      %end
    end  % end methods
 
 
