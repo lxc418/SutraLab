@@ -1,5 +1,5 @@
 function [o]=readFIL(varargin)
-  % readNOD reads NOD file   
+  % readFIL reads .FIL file   
   %
   % INPUT
   %   filename     -- if file is named as 'abc.nod', a filename='abc'
@@ -30,19 +30,13 @@ function [o]=readFIL(varargin)
   o2.output_no             = output_no;
   fn                       = fopen('SUTRA.FIL');
 
-%  if fn==-1 
-%    fprintf(1,'%s : Trying to open %s .nod\n',caller,fname);
-%    fn=fopen([fname,'.nod']);
-%    if fn==-1
-%      fprintf('%s: file nod found!!\n',caller,fname);
-%      o=-1;o2=-1;
-%      return
-%    end
-%  end
   
   o.line1 = getNextLine(fn,'criterion','without','keyword','#');
+  o.line1 = regexprep(o.line1,'''','');
   tmp=textscan(o.line1,'%s  %f  %s'); 
-  [o.name,o.filename]=deal(tmp{1,3}{1});
+  o.name=tmp{1}{1};
+  o.filename=tmp{3}{1};
+  o.basename=o.filename(1:end-4);
   o.no=tmp{2};
 
 %  o2.title2 = getNextLine(fn,'criterion',...

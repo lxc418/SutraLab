@@ -44,6 +44,11 @@ addpath([pathstr 'write']);
 addpath([pathstr 'sutraset']);
 addpath([pathstr 'misc']);
 
+%a further path to read modules associated with sutravap
+addpath([pathstr 'sutravap']);
+
+
+
 fprintf('The SutraLab paths have been set for the current sesion.\n\n');
 
 %% Instructions to make it easier by creating a shortcut

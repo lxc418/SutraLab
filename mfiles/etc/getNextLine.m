@@ -20,7 +20,7 @@ function o=getNextLine(varargin)
 % line=getNextLine(fn,'criterion','with','keyword','##','operation','delete');
 %    purpose: find line from the file handled by fn with line started with '##'.
 %    once found, delete the starting '##'
-% line=readnext(fn,'cerierion','without','#')
+% line=getNextLine(fn,'criterion','without','#')
 %    Goal: find the first non-commented line ( with commentting notation as '#')
 %  o2.str2      =getNextLine(fn,'criterion','equal','keyword','## ');
 %    Goal: omit all lines that are same as '## ' and return the first line not

@@ -1,14 +1,14 @@
-classdef inpObj
+classdef vapinpObj
   properties
     % the following list are associated with property defination
     % http://stackoverflow.com/questions/7192048/can-i-assign-types-to-class-properties-in-matlab
     % http://undocumentedmatlab.com/blog/setting-class-property-types
     
-    % now only key data are stored in inpObj, other non-relevant data will all be 
+    % now only key data are stored in vapinpObj, other non-relevant data will all be 
     % wiped out 
 
     % if one wish to convert from class to truct due to reasons like jasn file 
-    %   one can use a=struct(inpObj)
+    %   one can use a=struct(vapinpObj)
     %        ML=0 FOR P AND U, ML=1 FOR P ONLY, AND ML=2 FOR U ONLY.         SUTRA........27900
 
     % varagin stores all the input parameters
@@ -56,6 +56,17 @@ classdef inpObj
     %   dataset1       = repmat({''},1,2);
     %    e             = char(23);
     %    e@char(20)
+
+    % ---------------  DATASET 5A variable declaration--------------------
+    scalt 
+    ntmax 
+    timei 
+    timel 
+    timec 
+    ntcyc 
+    tcmult
+    tcmin 
+    tcmax 
     % ---------------  DATASET 8A variable declaration--------------------
     nprint  
     cnodal  
@@ -149,8 +160,8 @@ classdef inpObj
   end
 
   methods    % seems that all functions in methods needs to be called.
-    function o=inpObj(varargin)
-      % inpObj constructor
+    function o=vapinpObj(varargin)
+      % vapinpObj constructor
       caller=dbstack('-completenames'); caller=caller.name;
       o.varargin        = varargin;
       [fname, varargin] = getNext(varargin,'char','');
@@ -220,10 +231,20 @@ classdef inpObj
       
       
       % ---------------       DATASET 6    -------------------------
-      o.inp.dataset6 = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
-      o.inp.dataset6 = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
-      o.inp.dataset6 = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
-      
+      o.inp.dataset6a = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
+      o.inp.dataset6b = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
+      str = textscan(o.inp.dataset6b,'%s %s %s %s %f %f %f %f %f %f %f %f %f ');
+      o.scalt = str {5};
+      o.ntmax = str {6};
+      o.timei = str {7};
+      o.timel = str {8};
+      o.timec = str {9};
+      o.ntcyc = str {10};
+      o.tcmult = str {11};
+      o.tcmin = str {12};
+      o.tcmax = str {13};
+
+      o.inp.dataset6c = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
       % ---------------       DATASET 7A   -------------------------
       o.inp.dataset7a = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
       
@@ -282,6 +303,41 @@ classdef inpObj
       
       % ---------------       DATASET 13   -------------------------
       o.inp.dataset13 = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
+
+
+
+      % ---------------       DATASET 13B   -------------------------
+      o.inp.dataset13b = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
+
+      % ---------------       DATASET 13C   -------------------------
+      o.inp.dataset13c = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
+
+      % ---------------       DATASET 13D   -------------------------
+      o.inp.dataset13d = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
+
+      % ---------------       DATASET 13E   -------------------------
+      o.inp.dataset13e = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
+
+      % ---------------       DATASET 13G   -------------------------
+      o.inp.dataset13g = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
+
+      % ---------------       DATASET 13H   -------------------------
+      o.inp.dataset13h = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
+
+      % ---------------       DATASET 13I   -------------------------
+      o.inp.dataset13i = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
+
+      % ---------------       DATASET 13J   -------------------------
+      o.inp.dataset13j = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
+
+      % ---------------       DATASET 13K   -------------------------
+      o.inp.dataset13k = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
+
+      % ---------------       DATASET 13L   -------------------------
+      o.inp.dataset13l = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
+
+      % ---------------       DATASET 13M   -------------------------
+      o.inp.dataset13m = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
 
       % ---------------       DATASET 14   -------------------------
       o.inp.dataset14a = getNextLine(fn,'criterion','with','keyword',...
