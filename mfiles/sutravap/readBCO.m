@@ -51,28 +51,23 @@ function et=readBCO(fname,inp,nod)
        for i=1:length(nod)  % loop for each snapshot
           if i==1
               if nod(i).itout==0
-                et1(:,i)=-temp(3:inp.nn2+2,nod(i+1).itout)*3600*24*1000;   
-                %3600*24*1000 changes the unit from m/s to mm/day
-                aet1(:,i)=-temp(3:inp.nn2+2,nod(i+1).itout)*inp.scalt*1000;   
-                % unit (mm), 1000 is used to change the unit from m to mm
+                et1(:,i)  = -temp(3:inp.nn2+2,nod(i+1).itout);   
+                aet1(:,i) = -temp(3:inp.nn2+2,nod(i+1).itout)*inp.scalt   
               elseif nod(i).itout==1
-                et1(:,i)=-temp(3:inp.nn2+2,nod(i).itout)*3600*24*1000;   
-                %3600*24*1000 changes the unit from m/s to mm/day
-                aet1(:,i)=-temp(3:inp.nn2+2,nod(i).itout)*inp.scalt*1000;   
-                % unit (mm), 1000 is used to change the unit from m to mm
+                et1(:,i)  = -temp(3:inp.nn2+2,nod(i).itout);
+                aet1(:,i) = -temp(3:inp.nn2+2,nod(i).itout)*inp.scalt
               end
                   
           else
-              et1(:,i)=-temp(3:inp.nn2+2,nod(i).itout)*3600*24*1000;  
-              % unit mm/day
-              aet1(:,i)=aet1(:,i-1)- ...
-              sum( temp(3:inp.nn2+2,nod(i-1).itout+1:nod(i).itout)  ,2) *inp.scalt*1000;
+              et1(:,i)  = -temp(3:inp.nn2+2,nod(i).itout);
+              aet1(:,i) = aet1(:,i-1)- ...
+                  sum( temp(3:inp.nn2+2,nod(i-1).itout+1:nod(i).itout)  ,2) *inp.scalt;
           end
         et(i).steps     = nod(i).itout;
         et(i).t_elapsed = nod(i).tout;
         et(i).label     = {'et','aet'};
-        et(i).terms{1}  = et1(:,i)' /3600/24/1000;
-        et(i).terms{2}  = aet1(:,i)'/3600/24/1000;
+        et(i).terms{1}  = et1(:,i)' ;
+        et(i).terms{2}  = aet1(:,i)';
        end
 %       % avet1 -- the accumulated evaporation on the whole surface.
 %       %algorithm= et*area/whole area

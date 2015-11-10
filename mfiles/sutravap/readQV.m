@@ -138,7 +138,7 @@ end % k loop
 for n = 1:length(qv)
    qv(n).qvx=flipud(qv(n).qvx);
    qv(n).qvy=flipud(qv(n).qvy);
-   qv(n).se=flipud(qv(n).se);
+   qv(n).se=-flipud(qv(n).se);
 end
 
 fprintf(1,'First qv.dat reading finished\n');
