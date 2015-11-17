@@ -1,4 +1,6 @@
-classdef vapinpObj
+classdef vapinpObj <handle
+% the handle is important as it updates the values when modified
+% http://au.mathworks.com/help/matlab/matlab_oop/comparing-handle-and-value-classes.html
   properties
     % the following list are associated with property defination
     % http://stackoverflow.com/questions/7192048/can-i-assign-types-to-class-properties-in-matlab
@@ -125,7 +127,45 @@ classdef vapinpObj
     scalz  
     porfac 
 
-    % ---------------  DATASET 14 variable declaration--------------------
+    nreg
+    x
+    y
+    z
+    por
+
+    % ---------------  DATASET 15 variable declaration--------------------
+    pmaxfa
+    pminfa 
+    angfac
+    almaxf
+    alminf
+    atmaxf
+    atminf   
+
+    lreg
+    pmax
+    pmin
+    anglex
+    almax
+    almin
+    atmax
+    atmin 
+
+    % required by 3D case
+    pmidfa
+    ang1fa
+    ang2fa
+    ang3fa
+    almidf
+    atmidf
+    
+    pmid
+    angle1
+    angle2
+    angle3
+    almid
+    atmid
+    % ---------------  DATASET 17 variable declaration--------------------
     iqcp
     qinc
     uinc
@@ -146,6 +186,10 @@ classdef vapinpObj
     %    h{2}=repmat({''},2,1)
     %            'dtst1'   ,{'title1';'title2'},...
     nnv
+    dx_cell_mtx
+    dy_cell_mtx
+    x_nod_mtx
+    y_nod_mtx
   end
   
   
@@ -353,14 +397,35 @@ classdef vapinpObj
                               '#','ignoreblankline','yes')];
       end
 
+      tmp=textscan(o.inp.dataset14b, '%f %f %f %f %f %f');
+      o.nreg=tmp{2};
+      o.x=tmp{3}*o.scalx;
+      o.y=tmp{4}*o.scaly;
+      o.z=tmp{5}*o.scalz;
+      o.por=tmp{6};
       % ---------------       DATASET 15   -------------------------
       o.inp.dataset15a = getNextLine(fn,'criterion','with','keyword',...
                               '''ELEMENT''','operation','delete');
+      o.inp.dataset15b = '';
       for n = 1:o.ne
-          o.inp.dataset15b= [o.inp.dataset14b getNextLine(fn,'criterion','without','keyword',...
+          o.inp.dataset15b= [o.inp.dataset15b getNextLine(fn,'criterion','without','keyword',...
                               '#','ignoreblankline','yes')];
       end
        
+      if  strcmp(o.mshtyp{1},'2D')
+        tmp=textscan(o.inp.dataset15a,'%f %f %f %f %f %f %f ') ;
+        [o.pmaxfa o.pminfa o.angfac o.almaxf o.alminf o.atmaxf o.atminf]=deal(tmp{1:7});
+        tmp=textscan(o.inp.dataset15b,'%*u %u %f %f %f %f %f %f %f') ;
+        [ o.lreg o.pmax o.pmin o.anglex  o.almax  o.almin...
+            o.atmax o.atmin]=deal(tmp{1:8});
+      elseif strcmp(o.mshtype{1},'3D')
+        tmp=textscan(o.inp.dataset15a,'%*s %f %f %f %f %f %f %f %f %f %f %f %f') ;
+        [o.pmaxfa o.pmidfa o.pminfa o.ang1fa o.ang2fa o.ang3fa o.almaxf ...
+            o.almidf o.alminf o.atmaxf o.atmidf o.atminf]=deal(tmp{1:12});
+        tmp=textscan(o.inp.dataset15b,'%*f %f %f %f %f %f %f %f %f %f %f %f %f %f ') ;
+        [ o.lreg o.pmax o.pmid o.pmin o.angle2 o.angle2 o.angle3 o.almax o.almid o.almin ]=deal(tmp{1:11});
+      end
+
       % ---------------       DATASET 17   -------------------------
       if o.nsop~=0
            o.iqcp=zeros(1,o.nsop);
@@ -375,10 +440,6 @@ classdef vapinpObj
 	   o.uinc(n) = str{3};
          end
       end
-
-
-
-
       end % Function constructor
 
        function nnv=get.nnv(o)
@@ -394,8 +455,11 @@ classdef vapinpObj
 %       end
 %       function nnv=set.nnv(x), nnv=1; end
 %       function o=set.nns(o,10), o.nns=10; end
-   end  % end methods
+%        function dx_cell_mtx=set.dx_cell_mtx(o)
+%            dx_cell_mtx=o.x;
+%        end 
 
+   end  % end methods
 
    methods(Static)
      function nns = nnns(o)

@@ -52,10 +52,10 @@ function et=readBCO(fname,inp,nod)
           if i==1
               if nod(i).itout==0
                 et1(:,i)  = -temp(3:inp.nn2+2,nod(i+1).itout);   
-                aet1(:,i) = -temp(3:inp.nn2+2,nod(i+1).itout)*inp.scalt   
+                aet1(:,i) = -temp(3:inp.nn2+2,nod(i+1).itout)*inp.scalt   ;
               elseif nod(i).itout==1
                 et1(:,i)  = -temp(3:inp.nn2+2,nod(i).itout);
-                aet1(:,i) = -temp(3:inp.nn2+2,nod(i).itout)*inp.scalt
+                aet1(:,i) = -temp(3:inp.nn2+2,nod(i).itout)*inp.scalt;
               end
                   
           else
