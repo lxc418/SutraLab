@@ -316,12 +316,13 @@ classdef vapinpObj <handle
       o.inp.dataset8b = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
       strprc          = regexprep(o.inp.dataset8b,'''','');
       str             = textscan(strprc,'%f %s %s %s ');
-      ncolpr=str{1};
+      o.ncolpr=str{1};
+
       % ---------------       DATASET 8C   -------------------------
       o.inp.dataset8c = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
       strprc          = regexprep(o.inp.dataset8c,'''','');
       str             = textscan(strprc,'%f %s %s %s ');
-      lcolpr=str{1};
+      o.lcolpr=str{1};
 
       % ---------------       DATASET 8D   -------------------------
       o.inp.dataset8d = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');

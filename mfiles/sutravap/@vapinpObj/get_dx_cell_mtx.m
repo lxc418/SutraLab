@@ -6,5 +6,5 @@ function o=get_dx_cell_mtx(o)
     keynodes(:,2:end-1) = (o.x_nod_mtx(:,1:end-1)+o.x_nod_mtx(:,2:end))/2;
     keynodes(:,1)       = o.x_nod_mtx(:,1);
     keynodes(:,end)     = o.x_nod_mtx(:,end);
-    o.dx_cell_mtx       = diff(keynodes,1,2) % check inbuilding function diff
+    o.dx_cell_mtx       = diff(keynodes,1,2); % check inbuilding function diff
 end 

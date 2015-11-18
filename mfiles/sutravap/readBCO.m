@@ -1,42 +1,52 @@
-function et=readBCO(fname,inp,nod)
+function [et mesh]=readBCO(fname,inp,nod)
 %function [xyf,xyr,et1,aet1,avet1,et]=readbco(fname,p,nod)
-       fn=fopen(fname);
-       line=fgetl(fn);
-       %et=struct;
-       temp=fscanf(fn,'%*g %*g %*g %*g %g %g %g %g %g %g ', [6 inp.nsop]);  
-       % NODE, X,Y,Z,XX,YY,HAREA,VAREA,FAREA,R
-       xyf(4:6,:)=temp(3:5,:); 
-       % xyf(1,source/sink node number) node sequence
-       % xyf(2,source/sink node number) x position
-       % xyf(3,source/sink node number) y position
-       % xyf(4,source/sink node number) area of each node in xy panel
-       % xyf(5,source/sink node number) area of node in yz panel (varea)
-       % xyf(6,source/sink node number) area of node in xy panel (farea)
-       xyr=temp([1:2,6],:);
-       % xyr(1, source/sink node number) is xx
-       % xyr(2, source/sink node number) is yy
-       % xyr(3, source/sink node number) is R in cylindrical coordinate
-       % how to vectorize it?
-       % calculating evaporation rate
-       % the disadvantage of this method is that the next node could 
-       % also be affected 
-       % by the node below.
-       % so to some extent the result from .bcof is kind of useless
-       % instead, the best way of getting the accumulative evaporation
-       %rate is from et1
-       %for i=1:f2(4)                          % time step increasement
-       %tf1(3,i)=sum(bcof1(1,1:6,i)./xyf(4,1:6));
-       %end
-       %tf1(3,:)=tf1(3,:)*86400/(p.nnh);      
-       % p.neh is the overall node on the surface
-       
-       % further read about the evaporation rate
-       line=fgetl(fn);
-       
-       % the format of %g can be less than the numbers in the [  ]. 
-       %in that case, the
-       %data obtain will repeat using the pattern given by %g. 
-       temp=fscanf(fn, '%g', [(inp.nn2+2) inp.ntmax]); 
+    fn=fopen(fname);
+    line=fgetl(fn);
+    mesh=struct;
+    temp=fscanf(fn,'%g %g %g %g %g %g %g %g %g %g ', [10 inp.nsop]);  
+    mesh.idx_nod    = temp(1,:);
+    mesh.x_nod      = temp(2,:);
+    mesh.y_nod      = temp(3,:);
+    mesh.z_nod      = temp(4,:);
+    mesh.dx_cell_ay = temp(5,:);
+    mesh.dy_cell_ay = temp(6,:);
+    mesh.area_xz    = temp(7,:);
+    mesh.area_yz    = temp(8,:);
+    mesh.area_xy    = temp(9,:);
+    mesh.vol        = temp(10,:);
+    % NODE, X,Y,Z,XX,YY,HAREA,VAREA,FAREA,R
+    xyf(4:6,:)=temp(3:5,:); 
+    % xyf(1,source/sink node number) node sequence
+    % xyf(2,source/sink node number) x position
+    % xyf(3,source/sink node number) y position
+    % xyf(4,source/sink node number) area of each node in xy panel
+    % xyf(5,source/sink node number) area of node in yz panel (varea)
+    % xyf(6,source/sink node number) area of node in xy panel (farea)
+    xyr=temp([1:2,6],:);
+    % xyr(1, source/sink node number) is xx
+    % xyr(2, source/sink node number) is yy
+    % xyr(3, source/sink node number) is R in cylindrical coordinate
+    % how to vectorize it?
+    % calculating evaporation rate
+    % the disadvantage of this method is that the next node could 
+    % also be affected 
+    % by the node below.
+    % so to some extent the result from .bcof is kind of useless
+    % instead, the best way of getting the accumulative evaporation
+    %rate is from et1
+    %for i=1:f2(4)                          % time step increasement
+    %tf1(3,i)=sum(bcof1(1,1:6,i)./xyf(4,1:6));
+    %end
+    %tf1(3,:)=tf1(3,:)*86400/(p.nnh);      
+    % p.neh is the overall node on the surface
+    
+    % further read about the evaporation rate
+    line=fgetl(fn);
+    
+    % the format of %g can be less than the numbers in the [  ]. 
+    %in that case, the
+    %data obtain will repeat using the pattern given by %g. 
+    temp=fscanf(fn, '%g', [(inp.nn2+2) inp.ntmax]); 
 %       % here using only one %g would be enough
 %       % notice: temp here stores the evaporation rate at all time steps
 %       %, which is
