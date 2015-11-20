@@ -427,13 +427,13 @@ classdef vapinpObj <handle
       % ---------------       DATASET 5    -------------------------
       o.inp.dataset5 = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
       str      = textscan(o.inp.dataset5,'%f %f %f');
-      [o.up o.gnup o.gnuu] =deal(str{1:3});
+      [o.up,o.gnup,o.gnuu] =deal(str{1:3});
       
       
       % ---------------       DATASET 6a   -------------------------
       o.inp.dataset6a = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
       str      = textscan(o.inp.dataset6a,'%f %f %f');
-      [o.nsch o.npcyc o.nucyc] =deal(str{1:3});
+      [o.nsch,o.npcyc,o.nucyc] =deal(str{1:3});
 
 
       % ---------------       DATASET 6b    -------------------------
@@ -453,21 +453,21 @@ classdef vapinpObj <handle
       % ---------------       DATASET 7A   -------------------------
       o.inp.dataset7a = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
       str      = textscan(o.inp.dataset7a,'%f %f %f');
-      [o.itrmax o.npcyc o.nucyc] =deal(str{1:3});
+      [o.itrmax,o.npcyc,o.nucyc] =deal(str{1:3});
       
       % ---------------       DATASET 7B   -------------------------
       o.inp.dataset7b = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
       str      = regexprep(o.inp.dataset7b,'''','');
       str      = textscan(str,'%s %f %f');
       o.csolvp =str{1}{1};
-      [o.itrmxp o.tolp] =deal(str{2:3});
+      [o.itrmxp,o.tolp] =deal(str{2:3});
       
       % ---------------       DATASET 7C   -------------------------
       o.inp.dataset7c = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
       str      = regexprep(o.inp.dataset7c,'''','');
       str      = textscan(str,'%s %f %f');
       o.csolvu =str{1}{1};
-      [o.itrmxu o.tolu] =deal(str{2:3});
+      [o.itrmxu,o.tolu] =deal(str{2:3});
       
       % ---------------       DATASET 8A   -------------------------
       o.inp.dataset8a = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
@@ -488,7 +488,7 @@ classdef vapinpObj <handle
       strprc          = regexprep(o.inp.dataset8b,'''',''); % remove alpostrophe
       strprc          = strtrim(strprc); % remove heading and tailing speces
       str             = regexp(strprc, '\s+','split'); % find multiple spaces ('\s+')  and make separations ('split')
-      o.ncolpr=str{1};
+      o.ncolpr=str2num(str{1});
       for i=1:length(str)-1
           o.ncol{i}=str{i+1};
       end
@@ -501,7 +501,6 @@ classdef vapinpObj <handle
       strprc          = regexprep(o.inp.dataset8c,'''',''); % remove alpostrophe
       strprc          = strtrim(strprc); % remove heading and tailing speces
       str             = regexp(strprc, '\s+','split'); % find multiple spaces ('\s+')  and make separations ('split')
-      o.lcolpr=str{1};
       for i=1:length(str)-1
           o.lcol{i}=str{i+1};
       end
@@ -518,13 +517,13 @@ classdef vapinpObj <handle
       % ---------------       DATASET 9    -------------------------
       o.inp.dataset9  = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
       str= textscan(o.inp.dataset9,'%f %f %f %f %f %f %f %f ');
-      [o.compfl o.cw o.sigmaw o.rhow0 o.urhow0 o.drwdu o.visc0 dvidu] =deal(str{1:8});
+      [o.compfl,o.cw,o.sigmaw,o.rhow0,o.urhow0,o.drwdu,o.visc0,o.dvidu] =deal(str{1:8});
 
       
       % ---------------       DATASET 10   -------------------------
       o.inp.dataset10 = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
       str= textscan(o.inp.dataset10,'%f %f %f %f ');
-      [o.compma o.cs o.sigmas o.rhos ] =deal(str{1:4});
+      [o.compma,o.cs,o.sigmas,o.rhos ] =deal(str{1:4});
       
       % ---------------       DATASET 11   -------------------------
       o.inp.dataset11 = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
@@ -533,108 +532,108 @@ classdef vapinpObj <handle
       str             = regexp(strprc, '\s+','split'); % find multiple spaces ('\s+')  and make separations ('split')
       o.adsmod =str{1};
       if strcmpi(o.adsmod,'solid')
-          o.chi1=str{2};
-          o.chi2=str{3};
+          o.chi1=str2num(str{2});
+          o.chi2=str2num(str{3});
       else strcmpi(o.adsmod,'FREUNDLICH')
-          o.chi1=str{2};
-          o.chi2=str{3};
+          o.chi1=str2num(str{2});
+          o.chi2=str2num(str{3});
       end
 
       % ---------------       DATASET 12   -------------------------
       o.inp.dataset12 = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
       str             = textscan(strprc,'%f %f %f %f ');
-      [o.prodf0 o.prods0 o.prodf1 o.prods1]=deal(str{1:4});
+      [o.prodf0,o.prods0,o.prodf1,o.prods1]=deal(str{1:4});
 
       % ---------------       DATASET 13   -------------------------
       o.inp.dataset13 = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
       if strcmpi(o.mshtyp{1},'2D')
           str = textscan(o.inp.dataset13,'%f %f');
-          [o.gravx o.gravy]=deal(str{1:2});
+          [o.gravx,o.gravy]=deal(str{1:2});
       elseif strcmpi(o.mshtyp{1},'3D')
           str = textscan(o.inp.dataset13,'%f %f %f');
-          [o.gravx o.gravy o.gravz]=deal(str{1:3});
+          [o.gravx,o.gravy,o.gravz]=deal(str{1:3});
       end
 
       % ---------------       DATASET 13B   -------------------------
         o.inp.dataset13b = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
         str=textscan(o.inp.dataset13b,'%f %f %f %f %f %f');
-        [o.ta o.tp o.tm o.rhost o.sc o.itt] =deal(str{1:6});
+        [o.ta,o.tp,o.tm,o.rhost,o.sc,o.itt] =deal(str{1:6});
       % ---------------       DATASET 13C   -------------------------
       o.inp.dataset13c = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
         fmt=repmat('%f ',1,8);
         str=textscan(o.inp.dataset13c,fmt);
-        [o.met o.mar o.msr o.msc o.mht o.mvt o.mft o.mrk] =deal(str{1:8});
+        [o.met,o.mar,o.msr,o.msc,o.mht,o.mvt,o.mft,o.mrk] =deal(str{1:8});
 
       % ---------------       DATASET 13D   -------------------------
       o.inp.dataset13d = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
         fmt=repmat('%f ',1,6);
         str=textscan(o.inp.dataset13d,fmt);
-        [o.qet o.uet o.pet o.uvm o.night o.ite] =deal(str{1:6});
+        [o.qet,o.uet,o.pet,o.uvm,o.night,o.ite] =deal(str{1:6});
 
       % ---------------       DATASET 13E   -------------------------
       o.inp.dataset13e = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
         input_number=10;
         fmt=repmat('%f ',1,input_number);
         str=textscan(o.inp.dataset13e,fmt);
-        [o.tma o.tmi o.alf o.rs o.rh o.ap o.bp o.u2 o.tsd o.scf] =deal(str{1:input_number});
+        [o.tma,o.tmi,o.alf,o.rs,o.rh,o.ap,o.bp,o.u2,o.tsd,o.scf] =deal(str{1:input_number});
 
       % ---------------       DATASET 13F   -------------------------
       o.inp.dataset13f = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
         input_number=3;
         fmt=repmat('%f ',1,input_number);
         str=textscan(o.inp.dataset13f,fmt);
-        [o.ravt o.ravs o.swrat] =deal(str{1:input_number});
+        [o.ravt,o.ravs,o.swrat] =deal(str{1:input_number});
 
       % ---------------       DATASET 13G   -------------------------
       o.inp.dataset13g = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
         input_number=4;
         fmt=repmat('%f ',1,input_number);
         str=textscan(o.inp.dataset13g,fmt);
-        [o.hsc o.her o.rous o.hcs] =deal(str{1:input_number});
+        [o.hsc,o.her,o.rous,o.hcs] =deal(str{1:input_number});
 
       % ---------------       DATASET 13H   -------------------------
       o.inp.dataset13h = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
         input_number=2;
         fmt=repmat('%f ',1,input_number);
         str=textscan(o.inp.dataset13h,fmt);
-        [o.ar o.br] =deal(str{1:input_number});
+        [o.ar,o.br] =deal(str{1:input_number});
 
       % ---------------       DATASET 13I   -------------------------
       o.inp.dataset13i = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
         input_number=14;
         fmt=repmat('%f ',1,input_number);
         str=textscan(o.inp.dataset13i,fmt);
-        [o.swres1 o.aa1 o.vn1 o.swres2 o.aa2 o.vn2 ...
-            o.swres3 o.lam3 o.phyb3 o.swres4 o.lam4 ...
-            o.phyb4 o.phy0 o.ecto] =deal(str{1:input_number});
+        [o.swres1,o.aa1,o.vn1,o.swres2,o.aa2,o.vn2,...
+            o.swres3,o.lam3,o.phyb3,o.swres4,o.lam4,...
+            o.phyb4,o.phy0,o.ecto] =deal(str{1:input_number});
 
       % ---------------       DATASET 13J   -------------------------
       o.inp.dataset13j = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
         input_number=4;
         fmt=repmat('%f ',1,input_number);
         str=textscan(o.inp.dataset13j,fmt);
-        [o.ntc o.b1 o.b2 o.b3]   =deal(str{1:input_number});
+        [o.ntc,o.b1,o.b2,o.b3]   =deal(str{1:input_number});
 
       % ---------------       DATASET 13K   -------------------------
       o.inp.dataset13k = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
         input_number=7;
         fmt=repmat('%f ',1,input_number);
         str=textscan(o.inp.dataset13k,fmt);
-        [o.nef o.ya o.yb o.yc o.yd o.ye o.fc]   =deal(str{1:input_number});
+        [o.nef,o.ya,o.yb,o.yc,o.yd,o.ye,o.fc]   =deal(str{1:input_number});
 
       % ---------------       DATASET 13L   -------------------------
       o.inp.dataset13l = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
         input_number=5;
         fmt=repmat('%f ',1,input_number);
         str=textscan(o.inp.dataset13l,fmt);
-        [o.tal o.ec o.etr o.psip o.cors]  =deal(str{1:input_number});
+        [o.tal,o.ec,o.etr,o.psip,o.cors]  =deal(str{1:input_number});
 
       % ---------------       DATASET 13M   -------------------------
       o.inp.dataset13m = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
         input_number=4;
         fmt=repmat('%f ',1,input_number);
         str=textscan(o.inp.dataset13m,fmt);
-        [o.corf o.agr o.phicm o.asvl]  =deal(str{1:input_number});
+        [o.corf,o.agr,o.phicm,o.asvl]  =deal(str{1:input_number});
 
       % ---------------       DATASET 14   -------------------------
       o.inp.dataset14a = getNextLine(fn,'criterion','with','keyword',...
@@ -667,16 +666,16 @@ classdef vapinpObj <handle
        
       if  strcmp(o.mshtyp{1},'2D')
         tmp=textscan(o.inp.dataset15a,'%f %f %f %f %f %f %f ') ;
-        [o.pmaxfa o.pminfa o.angfac o.almaxf o.alminf o.atmaxf o.atminf]=deal(tmp{1:7});
+        [o.pmaxfa,o.pminfa,o.angfac,o.almaxf,o.alminf,o.atmaxf,o.atminf]=deal(tmp{1:7});
         tmp=textscan(o.inp.dataset15b,'%*u %u %f %f %f %f %f %f %f') ;
-        [ o.lreg o.pmax o.pmin o.anglex  o.almax  o.almin...
-            o.atmax o.atmin]=deal(tmp{1:8});
+        [ o.lreg,o.pmax,o.pmin,o.anglex ,o.almax ,o.almin...
+           ,o.atmax,o.atmin]=deal(tmp{1:8});
       elseif strcmp(o.mshtype{1},'3D')
         tmp=textscan(o.inp.dataset15a,'%*s %f %f %f %f %f %f %f %f %f %f %f %f') ;
-        [o.pmaxfa o.pmidfa o.pminfa o.ang1fa o.ang2fa o.ang3fa o.almaxf ...
-            o.almidf o.alminf o.atmaxf o.atmidf o.atminf]=deal(tmp{1:12});
+        [o.pmaxfa,o.pmidfa,o.pminfa,o.ang1fa,o.ang2fa,o.ang3fa,o.almaxf ...
+           ,o.almidf,o.alminf,o.atmaxf,o.atmidf,o.atminf]=deal(tmp{1:12});
         tmp=textscan(o.inp.dataset15b,'%*f %f %f %f %f %f %f %f %f %f %f %f %f %f ') ;
-        [ o.lreg o.pmax o.pmid o.pmin o.angle2 o.angle2 o.angle3 o.almax o.almid o.almin ]=deal(tmp{1:11});
+        [ o.lreg,o.pmax,o.pmid,o.pmin,o.angle2,o.angle2,o.angle3,o.almax,o.almid,o.almin ]=deal(tmp{1:11});
       end
 
       % ---------------       DATASET 17   -------------------------
