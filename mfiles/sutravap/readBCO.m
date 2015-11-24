@@ -1,4 +1,4 @@
-function [et mesh]=readBCO(fname,inp,nod)
+function [et,mesh]=readBCO(fname,inp,nod)
 %function [xyf,xyr,et1,aet1,avet1,et]=readbco(fname,p,nod)
     fn=fopen(fname);
     line=fgetl(fn);
@@ -46,7 +46,9 @@ function [et mesh]=readBCO(fname,inp,nod)
     % the format of %g can be less than the numbers in the [  ]. 
     %in that case, the
     %data obtain will repeat using the pattern given by %g. 
-    temp=fscanf(fn, '%g', [(inp.nn2+2) inp.ntmax]); 
+    if inp.nbcspr==1
+        output_no=inp.ntmax;
+        temp=fscanf(fn, '%g', [(inp.nn2+2) output_no]); 
 %       % here using only one %g would be enough
 %       % notice: temp here stores the evaporation rate at all time steps
 %       %, which is
@@ -79,6 +81,44 @@ function [et mesh]=readBCO(fname,inp,nod)
         et(i).terms{1}  = et1(:,i)' ;
         et(i).terms{2}  = aet1(:,i)';
        end
+        
+    else  % when nbcspr is the same as nod
+        output_no=ceil(inp.ntmax/inp.nbcspr)+1;
+        temp=fscanf(fn, '%g', [(inp.nn2+2) output_no]); 
+%       % here using only one %g would be enough
+%       % notice: temp here stores the evaporation rate at all time steps
+%       %, which is
+%       % important to obtain the precise
+%       % result for the accumulative evaporation. however, et1 only
+%       %stores the 
+%       % evaporation rate at perticular snapshot
+%       % this is due to too large array size.
+%               
+       et1=zeros(inp.nn2,output_no);
+       aet1=zeros(inp.nn2,output_no);
+       for i=1:output_no  % loop for each snapshot
+          if i==1
+              if nod(i).itout==0
+                et1(:,i)  = -temp(3:inp.nn2+2,i+1);   
+                aet1(:,i) = -temp(3:inp.nn2+2,i+1)*inp.scalt   ;
+              elseif nod(i).itout==1
+                et1(:,i)  = -temp(3:inp.nn2+2,i);
+                aet1(:,i) = -temp(3:inp.nn2+2,i)*inp.scalt;
+              end
+                  
+          else
+              et1(:,i)  = -temp(3:inp.nn2+2,i);
+              aet1(:,i) = aet1(:,i-1)+ ...
+                  et1(:,i)*inp.nbcspr *inp.scalt;
+          end
+        et(i).steps     = nod(i).itout;
+        et(i).t_elapsed = nod(i).tout;
+        et(i).label     = {'et','aet'};
+        et(i).terms{1}  = et1(:,i)' ;
+        et(i).terms{2}  = aet1(:,i)';
+       end        
+        
+    end
 %       % avet1 -- the accumulated evaporation on the whole surface.
 %       %algorithm= et*area/whole area
 %       avet1=(xyf(4,1:p.nnh)*aet1(2:(p.neh+2),:))/sum(xyf(4,1:p.nnh));
