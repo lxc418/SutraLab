@@ -25,7 +25,7 @@ classdef inpObj <handle
     %    Original SUTRA code for the convinence of 1. better understanding of the 
     %    original code (input are in indat1 and indat2) and 2. make code consistent
     %   A comment can be made after the name declaration 
-
+    transpose
 
     % ---------------  DATASET 2B variable declaration--------------------
     %   matlab stats that, string array should be declared as cells
