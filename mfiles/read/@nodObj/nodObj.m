@@ -32,7 +32,7 @@ classdef nodObj <handle
 
   varargin
   data
-  transpose
+  mtx_transpose
 
   output_no
   title1
@@ -53,10 +53,13 @@ classdef nodObj <handle
   cpsatu
   issatu
   
+  %x_mtx
+  %y_mtx
+  %z_mtx
   end % properties
 
   properties (Access=protected)
-  c ,d
+  caa ,d
   end
 
   properties (Dependent=true)
@@ -67,6 +70,7 @@ classdef nodObj <handle
 
   methods
     function o=nodObj(varargin)
+
   	caller = dbstack('-completenames'); caller = caller.name;
 
   	o.varargin       = varargin;
@@ -76,6 +80,7 @@ classdef nodObj <handle
   	[output_no,  varargin]   = getProp(varargin,'outputnumber',0);
   	[output_from,  varargin] = getProp(varargin,'outputfrom',0);
   	[inpObj,  varargin]      = getProp(varargin,'inpObj',[]);
+    [o.mtx_transpose,  varargin] = getProp(varargin,'mtx_transpose','no');
   	o.output_no             = output_no;
   	fn                       = fopen([fname,'.NOD']);
 
@@ -153,6 +158,34 @@ classdef nodObj <handle
   	  end % if condition
   	end  % n loops
   	fprintf('%s: Parsed %g of %g outputs\n', caller,output_no,o.ktprn);
-end
+end 
+
+  function n_idx=get.n_idx(o), n_idx  = find(strcmp(o.data(1).label,'Node')); end
+  function p_idx=get.p_idx(o), p_idx  = find(strcmp(o.data(1).label,'Pressure')); end
+  function c_idx=get.c_idx(o), c_idx  = find(strcmp(o.data(1).label,'Concentration')); end
+  function s_idx=get.s_idx(o), s_idx  = find(strcmp(o.data(1).label,'Saturation')); end
+  function x_idx=get.x_idx(o), x_idx  = find(strcmp(o.data(1).label,'X')); end
+  function y_idx=get.y_idx(o), y_idx  = find(strcmp(o.data(1).label,'Y')); end
+  function z_idx=get.z_idx(o), z_idx  = find(strcmp(o.data(1).label,'Z')); end
+  %function x_mtx=get.x_mtx(o)
+  %  x_idx  = getx_mtx(o); 
+  %end
+
+  function mtx_transpose=get.mtx_transpose(o) 
+  if isempty(o.mtx_transpose) % give a initial result
+      mtx_transpose='no';
+  else
+
+ mtx_transpose  = o.mtx_transpose; 
+  end
+  end
+  function o=set.mtx_transpose(o,varargin), o.mtx_transpose  = varargin{1}; end
+
   end % construction method
+
+  % http://stackoverflow.com/questions/27729618/define-method-in-a-separate-file-with-attributes-in-matlab
+  methods (Access=private)
+    opt=convert_2_mtx(o,varargin)
+  end  % private methods
+
   end % end class
