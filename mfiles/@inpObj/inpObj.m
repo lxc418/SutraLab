@@ -26,6 +26,7 @@ classdef inpObj <handle
     %    original code (input are in indat1 and indat2) and 2. make code consistent
     %   A comment can be made after the name declaration 
     transpose
+    mtx_transpose
 
     % ---------------  DATASET 2B variable declaration--------------------
     %   matlab stats that, string array should be declared as cells
@@ -265,6 +266,7 @@ classdef inpObj <handle
   methods    % seems that all functions in methods needs to be called.
     function o=inpObj(varargin)
       % vapinpObj constructor
+    [o.mtx_transpose,  varargin] = getProp(varargin,'mtx_transpose','no');
       caller=dbstack('-completenames'); caller=caller.name;
       o.varargin        = varargin;
       [fname, varargin] = getNext(varargin,'char','');
@@ -602,6 +604,24 @@ classdef inpObj <handle
 
    end  % end methods
 
+   methods
+
+  function mtx_transpose=get.mtx_transpose(o) 
+  if isempty(o.mtx_transpose) % give a initial result
+      mtx_transpose='no';
+  else
+
+ mtx_transpose  = o.mtx_transpose; 
+  end
+  end
+  function o=set.mtx_transpose(o,varargin), o.mtx_transpose  = varargin{1}; end
+
+   end % methods
+
+  % http://stackoverflow.com/questions/27729618/define-method-in-a-separate-file-with-attributes-in-matlab
+  methods (Access=private)
+    opt=convert_2_mtx(o,varargin)
+  end  % private methods
    methods(Static)
      function nns = nnns(o)
        % it is working the same time as others, which is not a procedural way.

@@ -1,5 +1,7 @@
 classdef eleObj <handle
     properties
+        mtx_transpose
+
         varargin
         output_no
         title1
@@ -73,6 +75,7 @@ classdef eleObj <handle
     
       o.varargin       = varargin;
       [fname, varargin] = getNext(varargin,'char','');
+        [o.mtx_transpose,  varargin] = getProp(varargin,'mtx_transpose','no');
       % an option to see whether use inp contents to guide the reading process
       % a hard reading process will be conducted if left empty
       [output_no,  varargin]   = getProp(varargin,'outputnumber',0);
@@ -181,8 +184,33 @@ classdef eleObj <handle
       end  % n loops
       fprintf('%s: Parsed %g of %g outputs\n', caller,output_no,o.ktprn);
   end % constructor function
-  end %methods
+    function e_idx=get.e_idx(o), e_idx  = find(strcmp(o.data(1).label,'Element')); end
+    function x_idx=get.x_idx(o), x_idx  = find(strcmp(o.data(1).label,'X origin')); end
+    function y_idx=get.y_idx(o), y_idx  = find(strcmp(o.data(1).label,'Y origin')); end
+    function z_idx=get.z_idx(o), z_idx  = find(strcmp(o.data(1).label,'Z origin')); end
+    function vx_idx=get.vx_idx(o), vx_idx  = find(strcmp(o.data(1).label,'X velocity')); end
+    function vy_idx=get.vy_idx(o), vy_idx  = find(strcmp(o.data(1).label,'Y velocity')); end
+    function vz_idx=get.vz_idx(o), vz_idx  = find(strcmp(o.data(1).label,'Z velocity')); end
+    end
+  methods
+    function mtx_transpose=get.mtx_transpose(o) 
+      if isempty(o.mtx_transpose) % give a initial result
+          mtx_transpose='no';
+      else
+          mtx_transpose  = o.mtx_transpose; 
+      end
+    end
+    
+    
+    function o=set.mtx_transpose(o,varargin), o.mtx_transpose  = varargin{1}; end
 
+    end % construction method
 
+    % http://stackoverflow.com/questions/27729618/define-method-in-a-separate-file-with-attributes-in-matlab
+  
+
+  methods (Access=private)
+    opt=convert_2_mtx(o,varargin)
+  end  % private methods
   end %class
 
