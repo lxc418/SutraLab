@@ -148,4 +148,6 @@ classdef bcopObj <handle
 
 
 
+end %method
   end % end class
+

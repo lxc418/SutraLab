@@ -37,6 +37,7 @@ classdef bcofObj <handle
   itt
   tt
   npbc
+  nsop
 
   end % properties
 
@@ -53,7 +54,7 @@ classdef bcofObj <handle
   methods
   
 
-    function [o,o2]=readBCOF(varargin)
+    function o=bcofObj(varargin)
       % readBCOF reads BCOF file   
       % 
       % Argument: 
