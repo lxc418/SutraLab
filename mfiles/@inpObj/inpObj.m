@@ -541,9 +541,10 @@ classdef inpObj <handle
 	   o.qinc(n) = str{2};
 	   o.uinc(n) = str{3};
          end
-      end
-           tmp= getNextLine(fn,'criterion','without','keyword',...
+                    tmp= getNextLine(fn,'criterion','without','keyword',...
                               '#','ignoreblankline','yes');
+      end
+
       % ---------------       DATASET 19   -------------------------
       if o.npbc~=0
            o.ipbc = zeros(1,o.npbc);
@@ -557,9 +558,10 @@ classdef inpObj <handle
             o.pbc(n) = str{2};
             o.ubc(n) = str{3};
          end
+        tmp= getNextLine(fn,'criterion','without','keyword',...
+         '#','ignoreblankline','yes');
       end
-                 tmp= getNextLine(fn,'criterion','without','keyword',...
-                              '#','ignoreblankline','yes');
+
       % ---------------       DATASET 22   -------------------------
 
       o.inp.dataset22a = getNextLine(fn,'criterion','with','keyword',...
