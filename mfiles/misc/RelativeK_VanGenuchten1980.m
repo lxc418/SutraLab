@@ -1,4 +1,4 @@
-function kr=RelativeK_VanGenuchten1980(psim,alpha,nv)
+function [kr,sw]=RelativeK_VanGenuchten1980(psim,alpha,nv,swr)
 %function kr=RelativeK_VanGenuchten1980(psim,alpha,nv)
 % relative permeability as a function of matric potential 
 % based on VanGenuchten (1980)
@@ -17,5 +17,5 @@ function kr=RelativeK_VanGenuchten1980(psim,alpha,nv)
 %      TO20150906
 
 se   = 1./( 1+(alpha*psim).^nv   ).^(1-1/nv);
-
 kr=se.^0.5.*(1-   (   1- se.^(nv/(nv-1) ) ).^((nv-1)/nv)   ).^2;
+sw=se*(1-swr)+swr;

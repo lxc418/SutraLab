@@ -178,6 +178,7 @@ classdef inpObj <handle
     z
     por
 
+    por_actual
     % ---------------  DATASET 15 variable declaration--------------------
     pmaxfa
     pminfa 
@@ -495,7 +496,7 @@ classdef inpObj <handle
         o.z(n)=tmp{5}*o.scalz;
         o.por(n)=tmp{6};
       end
-
+        o.por_actual=o.por*o.porfac;
       % ---------------       DATASET 15   -------------------------
       o.inp.dataset15a = getNextLine(fn,'criterion','with','keyword',...
                               '''ELEMENT''','operation','delete');
