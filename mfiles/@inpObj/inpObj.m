@@ -574,7 +574,7 @@ classdef inpObj <handle
                                   '#','ignoreblankline','yes');
               o.inp.dataset22b= [o.inp.dataset22b tmp];
               fmt=repmat('%f ',1,5);
-              tmp=textscan(o.inp.dataset22b, fmt);
+              tmp=textscan(tmp, fmt);
               [o.ll(n),o.iin1(n),o.iin2(n),o.iin3(n),o.iin4(n)]=deal(tmp{1:5});
           end
       elseif strcmpi(o.mshtyp{1},'3D')
@@ -583,9 +583,9 @@ classdef inpObj <handle
               o.inp.dataset22b= [o.inp.dataset22b tmp];
               fmt=repmat('%f ',1,9);
               tmp=textscan(o.inp.dataset22b, fmt);
-              [o.ll(n),o.iin1(n),o.iin2(n),o.iin3(n),o.iin4(n)...
+              [o.ll(n),o.iin1(n),o.iin2(n),o.iin3(n),o.iin4(n),...
                 o.iin5(n),o.iin6(n),o.iin7(n),o.iin8(n)]=deal(tmp{1:5});
-        end
+      end
       end % Function constructor
 
        function nnv=get.nnv(o)

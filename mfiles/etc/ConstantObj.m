@@ -8,6 +8,9 @@ classdef ConstantObj <handle
     kelvin
     rhow_pure_water
     g
+    kg2g
+    g2kg
+
 
   end
   
@@ -30,6 +33,8 @@ classdef ConstantObj <handle
     o.rhow_pure_water=1000;
     o.g=9.8;
     o.second2day=1/3600/24;
+    o.kg2g=1000;
+    o.g2kg=0.001;
 
     end
    end  % end methods
