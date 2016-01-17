@@ -33,6 +33,7 @@ classdef nodObj <handle
   varargin
   data
   mtx_transpose
+  del_unfinished_end % delete unfinished output at the end of nod file
 
   output_no
   title1
@@ -81,6 +82,7 @@ classdef nodObj <handle
   	[output_from,  varargin] = getProp(varargin,'outputfrom',0);
   	[inpObj,  varargin]      = getProp(varargin,'inpObj',[]);
     [o.mtx_transpose,  varargin] = getProp(varargin,'mtx_transpose','no');
+    [o.del_unfinished_end,varargin]=getProp(varargin,'del_unfinised_end','yes');
   	o.output_no             = output_no;
   	fn                       = fopen([fname,'.NOD']);
 
@@ -154,6 +156,12 @@ classdef nodObj <handle
   	  else
   	    fprintf(1,['WARNING FROM %s: Simulation is not completed\n %g'...
   	           'out of %g outputs extracted\n'],caller,n,o.ktprn);
+        % remove the last output if the output is not complete. this usually
+        % happens when simulation is ongoing
+        if (length(o.data(n-1))~=o.nn && strcmpi(o.del_unfinished_end,'yes'))
+            o.data(n-1)=[]; 
+            fprintf(1,'The last uncompleted output has been deleted');
+        end
   	    return
   	  end % if condition
   	end  % n loops
