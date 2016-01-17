@@ -160,7 +160,7 @@ classdef nodObj <handle
         % happens when simulation is ongoing
         if (length(o.data(n-1))~=o.nn && strcmpi(o.del_unfinished_end,'yes'))
             o.data(n-1)=[]; 
-            fprintf(1,'The last uncompleted output has been deleted');
+            fprintf(1,'The last uncompleted output has been deleted\n');
         end
   	    return
   	  end % if condition

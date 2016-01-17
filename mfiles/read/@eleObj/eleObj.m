@@ -26,6 +26,7 @@ classdef eleObj <handle
 
         data
         transpose
+        del_unfinished_end
 
         e_idx
         x_idx
@@ -81,6 +82,7 @@ classdef eleObj <handle
       [output_no,  varargin]   = getProp(varargin,'outputnumber',0);
       [output_from,  varargin] = getProp(varargin,'outputfrom',0);
       [inpObj,  varargin]      = getProp(varargin,'inpObj',[]);
+      [o.del_unfinished_end,varargin]=getProp(varargin,'del_unfinised_end','yes');
       o.output_no             = output_no;
       fn                       = fopen([fname,'.ELE']);
     
@@ -179,8 +181,14 @@ classdef eleObj <handle
         else
           fprintf(1,['WARNING FROM %s: Simulation is not completed\n %g'...
                  'out of %g outputs extracted\n'],caller,n,o.ktprn);
-          return
-        end % if condition
+            % remove the last output if the output is not complete. this usually
+            % happens when simulation is ongoing
+            if (length(o.data(n-1))~=o.nn && strcmpi(o.del_unfinished_end,'yes'))
+                o.data(n-1)=[]; 
+                fprintf(1,'The last uncompleted output has been deleted\n');
+            end
+         return
+         end % if condition
       end  % n loops
       fprintf('%s: Parsed %g of %g outputs\n', caller,output_no,o.ktprn);
   end % constructor function
