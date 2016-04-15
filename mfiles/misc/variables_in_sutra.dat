@@ -1,0 +1,42 @@
+GNUU
+
+IUP
+GNUU1
+
+NBCN         -- THE NUMBER OF NEUMANN BOUNDARY CONDITIONS, INCLUDING DATASET 19 AND 20
+                GNUP1(NBCN)
+                NBCN=NPBC+NUBC+1                       SUTRA_MAIN...76000
+
+                DIMENSION IPBC(NBCN),IUBC(NBCN),UBC(NBCN),QPLITR(NBCN),PBC(NBCN),  BUDGET........1700
+                1   GNUP1(NBCN),GNUU1(NBCN)                                         BUDGET........1800
+                INTEGER(1) IBCPBC(NBCN),IBCUBC(NBCN),IBCSOP(NSOP),IBCSOU(NSOU)     INDAT2........1800
+                INTEGER IIDPBC(NBCN),IIDUBC(NBCN),IIDSOP(NSOP),IIDSOU(NSOU)        INDAT2........1900
+
+IBCPBC(NBCN) -- INTEGER (1)
+
+                C     IBCPBC(IP) = INDICATOR OF WHERE THIS PRESSURE SPECIFICATION        BCTIME........5100
+                C                  WAS MADE. MUST BE SET TO -1 TO INDICATE THAT THIS     BCTIME........5200
+                C                  SPECIFICATION WAS MADE IN SUBROUTINE BCTIME.          BCTIME........5300
+		
+		this is also printed in BCOP file
+
+                IF (I.GT.0) THEN                                             BCSTEP.......27200
+                   PBC(IP) = PBC1(IP1)                                       BCSTEP.......27300
+                   UBC(IP) = UBC1(IP1)                                       BCSTEP.......27400
+                   GNUP1(IP) = GNUP                                          BCSTEP.......27500
+                   IBCPBC(IP) = 1                                            BCSTEP.......27600
+                ELSE                                                         BCSTEP.......27700
+                   GNUP1(IP) = 0D0                                           BCSTEP.......27800
+                   IBCPBC(IP) = 2                                            BCSTEP.......27900
+                END IF                                                       BCSTEP.......28000
+
+
+IBCUBC(NBCN) -- INTEGER (1)
+
+
+                 C     IBCUBC(IUP) = INDICATOR OF WHERE THIS CONCENTRATION OR TEMPERATURE BCTIME........6200
+                 C                  SPECIFICATION WAS MADE. MUST BE SET TO -1 TO INDICATE BCTIME........6300
+                 C                  THAT THIS SPECIFICATION WAS MADE IN SUBROUTINE        BCTIME........6400
+                 C                  BCTIME.                                               BCTIME........6500
+		 This is also printed in BCOF file.
+

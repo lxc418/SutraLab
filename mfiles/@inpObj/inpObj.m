@@ -51,10 +51,10 @@ classdef inpObj <handle
     %  ---------------------- DATASET 3  ------------------------
     nn   % -- number of node 
     ne   % -- number of element
-    npbc 
-    nubc 
-    nsop 
-    nsou 
+    npbc % -- number of neumann boundary for pressure
+    nubc % -- number of neumann boundary for concentration
+    nsop % -- number of source/sink boundary for pressure
+    nsou % -- number of source/sink boundary for concentration
     nobs 
     %   dataset1       = repmat({''},1,2);
     %    e             = char(23);
