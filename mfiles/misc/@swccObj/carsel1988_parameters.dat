@@ -1,0 +1,15 @@
+#REEFERENCE: THE TABLE BELOW LISTS ALL THE PARAMETERS FOR SOILS CARSEL(1988)
+#                  THEY CAN DIRECTLY INCORPORATED TO THE MODEL
+#                  SWRES (-)  AA1(M-1) VN (-)   HC (M2)   POROSITY(-)  PSIM0(m) comments,      line type 
+CLAY             , 1.789E-1,  8.00E-1,  1.09E+0,  5.669E-14 , 0.38, -50000,  CLAY            ,   r- 
+CLAY LOAM        , 2.317E-1,  1.90E+0,  1.31E+0,  7.370E-14 , 0.41, -50000,  CLAY LOAM       ,   go- 
+LOAM             , 1.814E-1,  3.60E+0,  1.56E+0,  2.948E-13 , 0.43, -50000,  LOAM            ,   b-
+LOAMY SAND       , 1.390E-1,  1.24E+1,  2.28E+0,  4.135E-12 , 0.41, -50000,  LOAMY SAND      ,   c- 
+SILT             , 7.391E-2,  1.60E+0,  1.37E+0,  7.086E-14 , 0.46, -50000,  SILT            ,   m- 
+SILT LOAM        , 1.489E-1,  2.00E+0,  1.41E+0,  1.276E-13 , 0.45, -50000,  SILT LOAM       ,   yo- 
+SILTY CLAY       , 1.944E-1,  5.00E-1,  1.09E+0,  5.669E-15 , 0.36, -50000,  SILTY CLAY      ,   k- 
+SILTY CLAY LOAM  , 2.070E-1,  1.00E+0,  1.23E+0,  1.984E-14 , 0.43, -50000,  SILTY CLAY LOAM ,   r-.
+SAND             , 1.047E-1,  1.45E+1,  2.68E+0,  8.418E-12 , 0.43, -50000,  SAND            ,   g-. 
+SANDY CLAY       , 2.632E-1,  2.70E+0,  1.23E+0,  3.401E-14 , 0.38, -50000,  SANDY CLAY      ,   b-. 
+SANDY CLAY       , 2.564E-1,  5.90E+0,  1.48E+0,  3.713E-13 , 0.39, -50000,  SANDY CLAY      ,   c-. 
+SANDY LOAM       , 1.585E-1,  7.50E+0,  1.89E+0,  1.253E-12 , 0.41, -50000,  SANDY LOAM      ,   mo-.

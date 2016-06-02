@@ -5,6 +5,7 @@ classdef ConstantObj <handle
     second2day
     ms2mmday
     mm2m
+    m2mm
     kelvin
     rhow_pure_water
     g
@@ -29,7 +30,8 @@ classdef ConstantObj <handle
     function o=ConstantObj(varargin)
     o.ms2mmday=3600*24*1000;
     o.kelvin=273.15;
-    o.mm2m=1000;
+    o.mm2m=0.001;
+    o.m2mm=1000;
     o.rhow_pure_water=1000;
     o.g=9.8;
     o.second2day=1/3600/24;

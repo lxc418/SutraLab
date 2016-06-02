@@ -13,11 +13,12 @@ function [sw,se]=SWCC_Fayer1995WRR(psim,alpha,nv,psim0,slr)
 %      nv   (m) -- pore size distribution coefficient
 %      psim0(m) -- the matric potential value where liquid water
 %                  saturation becomes zero
+%                  this value needs to be negative as well
 %      Output
 %      sw   (-) -- liquid water saturation
 %      se   (-) -- effective liquid water saturation
 %      TO20150906
 
 beta = (log(-psim0)-log(-psim))/log(-psim0);
-se   = 1./( 1+(alpha*psim).^nv   ).^(1-1/nv);
+se   = 1./( 1+(psim/alpha).^nv   ).^(1-1/nv);
 sw   = (1-beta*slr).*se +beta*slr;
