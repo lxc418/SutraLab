@@ -1,4 +1,5 @@
-function kr=RelativeK_Mualem1976(psim,alpha,nv)
+function kr=RelativeK_Mualem1976(psim,alpha,nv,varargin)
+    [tor,  varargin] = getProp(varargin,'tortuosity',0.5);
 %function kr=RelativeK_Mualem1976(psim,alpha,nv,psim0,slr)
 % liquid water sauturation as a function of matric potential 
 % based on Fayer(1955)
@@ -16,7 +17,7 @@ function kr=RelativeK_Mualem1976(psim,alpha,nv)
 %                  This value needs to be negative
 %      Output
 se=1./( 1+(psim/alpha).^nv   ).^(1-1/nv);
-kr=se.^0.5.*(1-   (   1- se.^(nv/(nv-1) )       ).^((nv-1)/nv)   ).^2;
+kr=se.^tor.*(1-   (   1- se.^(nv/(nv-1) )       ).^((nv-1)/nv)   ).^2;
 
 end % function
 

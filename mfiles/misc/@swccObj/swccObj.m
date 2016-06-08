@@ -22,6 +22,11 @@ classdef swccObj <handle
     sw_vangenuchten1980
     sw_fayer1995wrr@cell
     kr_mualem1976wrr@cell
+    kr_mualem1976wrr_sw_stretch@cell
+    kfs_tokunaga2009wrr
+    kfr_tokunaga2009wrr@cell
+    kfs_lebeau2010wrr
+    kfr_lebeau2010wrr@cell
 
     no_session
 

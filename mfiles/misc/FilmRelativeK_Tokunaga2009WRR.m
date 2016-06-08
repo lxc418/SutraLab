@@ -25,20 +25,22 @@ function [kfs kfr]=FilmRelativeK_Tokunaga2009WRR(psim,tk,agr,por,corf)
 %    kfr  (-)   -- relative permeability induced by film water.
 %      TO20150906
 
-bp   = 3.00061397378356e-24;
+    bp   = 3.00061397378356e-24;
 % a coef associated with Young-Laplace equation
-zeta = 1.46789e-5;
+    zeta = 1.46789e-5;
+
 
 %    a parameter in b see page 165 of yearbook 2014
 %     bp=2.d0**5.d-1*pi**2*(relpw*permvac/2.d0/surft)**1.5*
 %    1 (botz/ecectr)**3
 %     b=bp*(tpt)**3.d0
 %     now assuming film temperature is constant
-b=bp*tk^3;
+    b=bp*tk^3;
 %     (s)aturated (p)ermeability due to (f)ilm flow (spf) [m2]
-kfs=corf*b*(1-por)*(2*agr)^5.d-1;
+    kfs=corf*b*(1-por)*(2*agr)^5.d-1;
 
 %     capillary pressure head
-psic=-psim;
+    psic=-psim;
 %    （r)elative (p)ermeability due to (f)ilm flow (rpf) [-]
-kfr=(1+agr*2.d0*psic/zeta).^(-1.5d0);
+    kfr=(1+agr*2.d0*psic/zeta).^(-1.5d0);
+end
