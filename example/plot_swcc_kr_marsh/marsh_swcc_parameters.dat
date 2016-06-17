@@ -1,0 +1,6 @@
+#REEFERENCE: THE TABLE BELOW LISTS ALL THE PARAMETERS USED FOR SALT MARSH SOLUT TRANSPORT PAPER
+#                  THEY CAN DIRECTLY INCORPORATED TO THE MODEL
+#                  SWRES (-)  AA1(M-1) VN (-)   HC (M2)   POROSITY(-)  PSIM0(m) comments,      line type 
+SANDY LOAM       , 1.585E-1,  3.51E+0,  1.2E+0,  1.255E-11 , 0.41, -50000,  SANDY LOAM      ,   r-
+SILT LOAM        , 1.489E-1,  2.00E+0,  1.41E+0,  1.276E-13 , 0.45, -50000,  SILT LOAM       ,   g- 
+CLAY LOAM        , 2.317E-1,  1.90E+0,  1.31E+0,  7.370E-14 , 0.41, -50000,  CLAY LOAM       ,   b- 
