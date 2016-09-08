@@ -1,4 +1,5 @@
 function o=convert_regular_nod_2_mtx(o,varargin)
+% Example: eleobj.convert_regular_ele_2_mtx('transpose','yes','delete_terms','yes');
 % A warning to this : if transpose is enabled, the sequence of the array
 % is no longer in accordance with the nodal sequence!
 % but the advantage is that the matrix is formed in a regular form
