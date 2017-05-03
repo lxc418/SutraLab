@@ -1,8 +1,11 @@
 function opt=average(o,varargin)
-% get an average result
+% get an average result of properties in nod file
+% example: opt= nodobj.average('c','mtx')
+% returns a concentration average result, and convert it as a matrix
   caller = dbstack('-completenames'); caller = caller.name;
 
   o.varargin       = varargin;
+  % p_bol c_bol and s_bol determines which variable to do the average
   [p_bol,  varargin] = getWord(varargin,'p');
   [c_bol,  varargin] = getWord(varargin,'c');
   [s_bol,  varargin] = getWord(varargin,'s');
