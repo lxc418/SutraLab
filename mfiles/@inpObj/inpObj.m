@@ -125,14 +125,15 @@ classdef inpObj <handle
     % ---------------  DATASET 8C variable declaration--------------------
     lcolpr
     lcol
-
-    % ---------------  DATASET 8D variable declaration--------------------
+     % ---------------  DATASET 8D variable declaration--------------------
+    noblin
+    % ---------------  DATASET 8Evariable declaration--------------------
     nbcfpr
     nbcspr
     nbcppr
     nbcupr
     cinact
-
+     
     % ---------------  DATASET 9  variable declaration--------------------
     compfl           
     cw       
@@ -338,19 +339,19 @@ classdef inpObj <handle
       o.cread  = str{4}{1};
       o.istore = str{5};
       
-      % ---------------       DATASET 5    -------------------------
+      % ---------------       DATASET 5   Numerical Control Parameters -------------------------
       o.inp.dataset5 = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
       str      = textscan(o.inp.dataset5,'%f %f %f');
       [o.up,o.gnup,o.gnuu] =deal(str{1:3});
       
       
-      % ---------------       DATASET 6a   -------------------------
+      % ---------------       DATASET 6a   Temporal Control-------------------------
       o.inp.dataset6a = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
       str      = textscan(o.inp.dataset6a,'%f %f %f');
       [o.nsch,o.npcyc,o.nucyc] =deal(str{1:3});
 
 
-      % ---------------       DATASET 6b    -------------------------
+      % ---------------       DATASET 6b    and Solution Cycling Data-------------------------
       o.inp.dataset6b = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
       str = textscan(o.inp.dataset6b,'%s %s %s %s %f %f %f %f %f %f %f %f %f ');
       o.scalt  = str {5};
@@ -362,21 +363,28 @@ classdef inpObj <handle
       o.tcmult = str {11};
       o.tcmin  = str {12};
       o.tcmax  = str {13};
-
-      o.inp.dataset6c = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
-      % ---------------       DATASET 7A   -------------------------
+      % ---------------       DATASET 6c    observation-------------------------
+      temp = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
+      i=1;
+      o.inp.dataset6c={};
+      while temp~='-'
+          o.inp.dataset6c{i}=temp;
+          temp = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
+          i=i+1;
+      end
+      % ---------------       DATASET 7A   iteration numbers-------------------------
       o.inp.dataset7a = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
       str      = textscan(o.inp.dataset7a,'%f %f %f');
       [o.itrmax,o.npcyc,o.nucyc] =deal(str{1:3});
       
-      % ---------------       DATASET 7B   -------------------------
+      % ---------------       DATASET 7B   solution for P-------------------------
       o.inp.dataset7b = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
       str      = regexprep(o.inp.dataset7b,'''','');
       str      = textscan(str,'%s %f %f');
       o.csolvp =str{1}{1};
       [o.itrmxp,o.tolp] =deal(str{2:3});
       
-      % ---------------       DATASET 7C   -------------------------
+      % ---------------       DATASET 7C   solution for C/T-------------------------
       o.inp.dataset7c = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
       str      = regexprep(o.inp.dataset7c,'''','');
       str      = textscan(str,'%s %f %f');
@@ -418,15 +426,30 @@ classdef inpObj <handle
       for i=1:length(str)-1
           o.lcol{i}=str{i+1};
       end
-      % ---------------       DATASET 8D   -------------------------
-      o.inp.dataset8d = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
-      strprc          = regexprep(o.inp.dataset8d,'''','');
+      % ---------------       DATASET 8D  Output Controls and Options for “.obs” and “.obc” Files   -------------------------
+      if o.nobs~=0
+        temp = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
+        strprc          = regexprep(temp,'''',''); % remove alpostrophe
+        strprc          = strtrim(strprc); % remove heading and tailing speces
+        o.noblin = str2num(strprc);
+        for i =1:o.nobs
+            o.inp.dataset8e{i}=getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
+        end
+        temp = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes'); % which should be a '-'
+      end
+      % ---------------       DATASET 8E  Output Controls and Options for “.bcof”, “.bcos”, “.bcop”, and “.bcou” Files-------------------------
+      o.inp.dataset8e = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
+      strprc          = regexprep(o.inp.dataset8e,'''','');
       str             = textscan(strprc,'%f %f %f %f %s');
       o.nbcfpr        = str{1};
       o.nbcspr        = str{2};
       o.nbcppr        = str{3};
       o.nbcupr        = str{4};
-      o.cinact        = str{5}{1};
+      try
+          o.cinact        = str{5}{1};
+      catch ME
+      end
+
       
       % ---------------       DATASET 9    -------------------------
       o.inp.dataset9  = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
