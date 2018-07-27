@@ -1,23 +1,27 @@
 # SutraLab
 Post-process code for USGS-SUTRA
 
-implimented functions:
+IMPLIMENTED FUNCTIONS:
+------------------------------------------------------------------------------------------------
 
-readNOD
+readNOD  -- read \*.NOD file to MATLAB
 
-readELE
+readELE  -- read \*.ELE file to MATLAB
 
-readBCOP
+readBCOP -- read \*.BCOP file to MATLAB
 
-readBCOF
+readBCOF -- read \*.BCOF file to MATLAB
 
-inpObj
+inpObj   -- read \*.INP file to MATLAB
+
 
 type help functions in MATLAB to see how to use these functions
 
 
 
-About the drectories
+
+ABOUT THE DRECTORIES
+------------------------------------------------------------------------------------------------
 
 etc  -- some parsing subfunctions required for read functions
 
@@ -34,3 +38,28 @@ several simple rules to make code consistent.
    variables(function names) are named as small case with underscores, it does not matter
    whether it is too long, as long as it is self explainable
 3. use tab rather than space to indentate the code
+
+
+
+HOW TO USE THE CODE:
+------------------------------------------------------------------------------------------------
+  Under MATLAB ENVIRONMENT, run:
+
+>\>run('path\_to\_mflab/mfiles/slsetpath.m')
+
+to let MATLAB accept the library.
+
+
+  Then at the simulation directory, run:
+
+>\>fil =  readFIL;
+>\>inp  = inpObj(fil.basename);
+>\>nod  = readNOD(fil.basename);
+>\>ele  = readELE( fil.basename);
+>\>bcop = readBCOP(fil.basename);
+>\>bcof = readBCOF(fil.basename);
+
+
+to read sutra files to MATLAB
+
+
