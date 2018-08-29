@@ -28,6 +28,10 @@ classdef inpObj <handle
     transpose
     mtx_transpose
 
+    % this is a switch to enable blockreading for dataset 14 -20
+    % because reading lines by lines is a bit too slow
+    sw_block_reading
+
     % ---------------  DATASET 2B variable declaration--------------------
     %   matlab stats that, string array should be declared as cells
     %    mshtyp   = char(2,10)   
@@ -269,6 +273,7 @@ classdef inpObj <handle
     function o=inpObj(varargin)
       % vapinpObj constructor
     [o.mtx_transpose,  varargin] = getProp(varargin,'mtx_transpose','no');
+    [o.sw_block_reading,  varargin] = getProp(varargin,'mtx_transpose','no');
       caller=dbstack('-completenames'); caller=caller.name;
       o.varargin        = varargin;
       [fname, varargin] = getNext(varargin,'char','');
@@ -507,18 +512,19 @@ classdef inpObj <handle
       o.z=zeros(1,o.nn);
       o.por=zeros(1,o.nn);
       o.inp.dataset14b = '';
+      %tic
       for n = 1:o.nn
         str=getNextLine(fn,'criterion','without','keyword',...
                               '#','ignoreblankline','yes');
         o.inp.dataset14b= [o.inp.dataset14b str];
-
-        tmp=textscan(str, '%f %f %f %f %f %f');
-        o.nreg(n)=tmp{2};
-        o.x(n)=tmp{3}*o.scalx;
-        o.y(n)=tmp{4}*o.scaly;
-        o.z(n)=tmp{5}*o.scalz;
-        o.por(n)=tmp{6};
       end
+        tmp=textscan(o.inp.dataset14b, '%f %f %f %f %f %f');
+        o.nreg=tmp{2};
+        o.x=tmp{3}*o.scalx;
+        o.y=tmp{4}*o.scaly;
+        o.z=tmp{5}*o.scalz;
+        o.por=tmp{6};
+      %toc
         o.por_actual=o.por*o.porfac;
       % ---------------       DATASET 15   -------------------------
       o.inp.dataset15a = getNextLine(fn,'criterion','with','keyword',...
@@ -532,10 +538,21 @@ classdef inpObj <handle
             tmp=getNextLine(fn,'criterion','without','keyword',...
                               '#','ignoreblankline','yes');
             o.inp.dataset15b= [o.inp.dataset15b tmp];
-            tmp=textscan(tmp,'%*u %u %f %f %f %f %f %f %f') ;
-            [ o.lreg(n),o.pmax(n),o.pmin(n),o.anglex(n) ,o.almax(n) ,o.almin(n)...
-                ,o.atmax(n),o.atmin(n)]=deal(tmp{1:8});
+            %tmp=textscan(tmp,'%*u %u %f %f %f %f %f %f %f') ;
+            %[ o.lreg(n),o.pmax(n),o.pmin(n),o.anglex(n) ,o.almax(n) ,o.almin(n)...
+             %   ,o.atmax(n),o.atmin(n)]=deal(tmp{1:8});
         end
+        
+        tmp=textscan(o.inp.dataset15b,'%*u %u %f %f %f %f %f %f %f') ;
+        %tmp=deal(tmp{1:8});
+        o.lreg=tmp{1};
+        o.pmax=tmp{2};
+        o.pmin=tmp{3};
+        o.anglex=tmp{4};
+        o.almax=tmp{5};
+        o.almin=tmp{6};
+        o.atmax=tmp{7};
+        o.atmin=tmp{8};
         o.pmax=o.pmax*o.pmaxfa;
         o.pmin=o.pmax*o.pminfa;
         o.anglex=o.anglex*o.angfac;
@@ -596,10 +613,18 @@ classdef inpObj <handle
               tmp=getNextLine(fn,'criterion','without','keyword',...
                                   '#','ignoreblankline','yes');
               o.inp.dataset22b= [o.inp.dataset22b tmp];
-              fmt=repmat('%f ',1,5);
-              tmp=textscan(tmp, fmt);
-              [o.ll(n),o.iin1(n),o.iin2(n),o.iin3(n),o.iin4(n)]=deal(tmp{1:5});
+              %fmt=repmat('%f ',1,5);
+              %tmp=textscan(tmp, fmt);
+              %[o.ll(n),o.iin1(n),o.iin2(n),o.iin3(n),o.iin4(n)]=deal(tmp{1:5});
           end
+          fmt=repmat('%f ',1,5);
+          tmp=textscan(o.inp.dataset22b, fmt);
+          o.ll=tmp{1};
+          o.iin1=tmp{2};
+          o.iin2=tmp{3};
+          o.iin3=tmp{4};
+          o.iin4=tmp{5};
+          
       elseif strcmpi(o.mshtyp{1},'3D')
               tmp=getNextLine(fn,'criterion','without','keyword',...
                                   '#','ignoreblankline','yes');
