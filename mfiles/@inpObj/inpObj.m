@@ -531,7 +531,7 @@ classdef inpObj <handle
            str=getNextLine(fn,'criterion','without','keyword',...
                                    '#','ignoreblankline','yes');          
            fseek(fn,-1*size(str,2),'cof');   % move back to the beginning of the block
-           fmt=repmat('%f ',1, 6);
+           %fmt=repmat('%f ',1, 6);
            fmt=['%f %f %f %f %f %f %s %s %s %s %s %s'   ]; %the multiple %s here is to remove spaces in the comments
            tmp=textscan(fn,fmt,o.nn);
             o.nreg=tmp{2};
@@ -550,17 +550,25 @@ classdef inpObj <handle
       if  strcmp(o.mshtyp{1},'2D')
         tmp=textscan(o.inp.dataset15a,'%f %f %f %f %f %f %f ') ;
         [o.pmaxfa,o.pminfa,o.angfac,o.almaxf,o.alminf,o.atmaxf,o.atminf]=deal(tmp{1:7});
-        for n =1:o.ne
+       if strcmp(o.sw_block_reading,'no')
+         for n =1:o.ne
             tmp=getNextLine(fn,'criterion','without','keyword',...
                               '#','ignoreblankline','yes');
             o.inp.dataset15b= [o.inp.dataset15b tmp];
             %tmp=textscan(tmp,'%*u %u %f %f %f %f %f %f %f') ;
             %[ o.lreg(n),o.pmax(n),o.pmin(n),o.anglex(n) ,o.almax(n) ,o.almin(n)...
              %   ,o.atmax(n),o.atmin(n)]=deal(tmp{1:8});
-        end
+         end
         
         tmp=textscan(o.inp.dataset15b,'%*u %u %f %f %f %f %f %f %f') ;
         %tmp=deal(tmp{1:8});
+       else
+           tmp=getNextLine(fn,'criterion','without','keyword',...
+                              '#','ignoreblankline','yes');    
+           fseek(fn,-1*size(str,2),'cof');   % move back to the beginning of the block          
+           fmt=['%f %f %f %f %f %f %f %f %s %s %s %s %s %s'   ]; %the multiple %s here is to remove spaces in the comments
+           tmp=textscan(fn,fmt,o.nn);
+       end
         o.lreg=tmp{1};
         o.pmax=tmp{2};
         o.pmin=tmp{3};
