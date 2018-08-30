@@ -1,6 +1,7 @@
 classdef inpObj <handle
 % the handle is important as it updates the values when modified
 % http://au.mathworks.com/help/matlab/matlab_oop/comparing-handle-and-value-classes.html
+% sw_
   properties
     % the following list are associated with property defination
     % http://stackoverflow.com/questions/7192048/can-i-assign-types-to-class-properties-in-matlab
@@ -273,7 +274,7 @@ classdef inpObj <handle
     function o=inpObj(varargin)
       % vapinpObj constructor
     [o.mtx_transpose,  varargin] = getProp(varargin,'mtx_transpose','no');
-    [o.sw_block_reading,  varargin] = getProp(varargin,'mtx_transpose','no');
+    [o.sw_block_reading,  varargin] = getProp(varargin,'block_reading','no');
       caller=dbstack('-completenames'); caller=caller.name;
       o.varargin        = varargin;
       [fname, varargin] = getNext(varargin,'char','');
@@ -513,17 +514,32 @@ classdef inpObj <handle
       o.por=zeros(1,o.nn);
       o.inp.dataset14b = '';
       %tic
-      for n = 1:o.nn
-        str=getNextLine(fn,'criterion','without','keyword',...
-                              '#','ignoreblankline','yes');
-        o.inp.dataset14b= [o.inp.dataset14b str];
+      if strcmpi(o.sw_block_reading,'no')
+          for n = 1:o.nn
+            str=getNextLine(fn,'criterion','without','keyword',...
+                                  '#','ignoreblankline','yes');
+            o.inp.dataset14b= [o.inp.dataset14b str];
+          end
+            tmp=textscan(o.inp.dataset14b, '%f %f %f %f %f %f');
+            o.nreg=tmp{2};
+            o.x=tmp{3}*o.scalx;
+            o.y=tmp{4}*o.scaly;
+            o.z=tmp{5}*o.scalz;
+            o.por=tmp{6};
+      else
+          % this component is still not functional
+           str=getNextLine(fn,'criterion','without','keyword',...
+                                   '#','ignoreblankline','yes');          
+           fseek(fn,-1*size(str,2),'cof');   % move back to the beginning of the block
+           fmt=repmat('%f ',1, 6);
+           fmt=['%f %f %f %f %f %f %s %s %s %s %s %s'   ]; %the multiple %s here is to remove spaces in the comments
+           tmp=textscan(fn,fmt,o.nn);
+            o.nreg=tmp{2};
+            o.x=tmp{3}*o.scalx;
+            o.y=tmp{4}*o.scaly;
+            o.z=tmp{5}*o.scalz;
+            o.por=tmp{6};
       end
-        tmp=textscan(o.inp.dataset14b, '%f %f %f %f %f %f');
-        o.nreg=tmp{2};
-        o.x=tmp{3}*o.scalx;
-        o.y=tmp{4}*o.scaly;
-        o.z=tmp{5}*o.scalz;
-        o.por=tmp{6};
       %toc
         o.por_actual=o.por*o.porfac;
       % ---------------       DATASET 15   -------------------------
@@ -609,6 +625,7 @@ classdef inpObj <handle
                               '''INCIDENCE''');
         o.inp.dataset22b='';
       if strcmpi(o.mshtyp{1},'2D')
+        if strcmpi(o.sw_block_reading,'no')
           for n = 1:o.ne
               tmp=getNextLine(fn,'criterion','without','keyword',...
                                   '#','ignoreblankline','yes');
@@ -624,6 +641,19 @@ classdef inpObj <handle
           o.iin2=tmp{3};
           o.iin3=tmp{4};
           o.iin4=tmp{5};
+        else % sw_block_reading
+           str=getNextLine(fn,'criterion','without','keyword',...
+                                   '#','ignoreblankline','yes');          
+           fseek(fn,-1*size(str,2)-1,'cof');   % move back to the beginning of the block
+           fmt=repmat('%f ',1, 5);
+           %fmt=['%f %f %f %f %f']; % %f %s %s %s %s %s %s'   ]; %the multiple %s here is to remove spaces in the comments
+           tmp=textscan(fn,fmt,o.ne);
+           o.ll=tmp{1};
+           o.iin1=tmp{2};
+           o.iin2=tmp{3};
+           o.iin3=tmp{4};
+           o.iin4=tmp{5};
+        end
           
       elseif strcmpi(o.mshtyp{1},'3D')
               tmp=getNextLine(fn,'criterion','without','keyword',...
