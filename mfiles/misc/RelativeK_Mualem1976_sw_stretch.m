@@ -20,7 +20,7 @@ function kr=RelativeK_Mualem1976_sw_stretch(psim,alpha,nv,slr)
 %      Output
 se=1./( 1+(psim/alpha).^nv   ).^(1-1/nv);
 sw=(1-slr)*se+slr;
-kr=sw.^0.5.*(1-   (   1- se.^(nv/(nv-1) )       ).^((nv-1)/nv)   ).^2;
+kr=sw.^0.5.*(1-   (   1- sw.^(nv/(nv-1) )       ).^((nv-1)/nv)   ).^2;
 
 end % function
 
