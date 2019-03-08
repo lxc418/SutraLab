@@ -44,20 +44,24 @@ several simple rules to make code consistent.
 HOW TO USE THE CODE:
 ------------------------------------------------------------------------------------------------
   Under MATLAB ENVIRONMENT, run:
+```matlab
+>run('path\_to\_mflab/mfiles/slsetpath.m')
+```
 
->\>run('path\_to\_mflab/mfiles/slsetpath.m')
 
 to let MATLAB accept the library.
 
 
   Then at the simulation directory, run:
 
->\>fil =  readFIL;
->\>inp  = inpObj(fil.basename);
->\>nod  = readNOD(fil.basename);
->\>ele  = readELE( fil.basename);
->\>bcop = readBCOP(fil.basename);
->\>bcof = readBCOF(fil.basename);
+```matlab
+fil =  readFIL;
+inp  = inpObj(fil.basename);
+nod  = readNOD(fil.basename);
+ele  = readELE( fil.basename);
+bcop = readBCOP(fil.basename);
+bcof = readBCOF(fil.basename);
+```
 
 
 to read sutra files to MATLAB

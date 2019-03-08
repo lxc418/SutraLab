@@ -6,7 +6,7 @@ classdef inpObj <handle
     % the following list are associated with property defination
     % http://stackoverflow.com/questions/7192048/can-i-assign-types-to-class-properties-in-matlab
     % http://undocumentedmatlab.com/blog/setting-class-property-types
-    
+    % block_reading 
     % now only key data are stored in vapinpObj, other non-relevant data will all be 
     % wiped out 
 
@@ -531,7 +531,12 @@ classdef inpObj <handle
             tmp=isspace(str);
             tmp2 = sprintf('%d', tmp); 
             loc_01=strfind(tmp2,'01'); % the 6th beyond is useless
-            str_new=str(1:loc_01(6));
+            if size(loc_01)>6  % there are comments
+                str_new=str(1:loc_01(6));
+            else   % only useful data, no comments at all
+                str_new=str;
+            end
+           
             % a space is needed otherwise the end of one line with mix with
             % the beginning of the next line
             o.inp.dataset14b= [o.inp.dataset14b str_new, ' ']; 
@@ -566,6 +571,7 @@ classdef inpObj <handle
       %toc
         o.por_actual=o.por*o.porfac;
       % ---------------       DATASET 15   -------------------------
+      fprintf(1,'Trying to parse dataset 15 in %s .inp\n',fname);
       o.inp.dataset15a = getNextLine(fn,'criterion','with','keyword',...
                               '''ELEMENT''','operation','delete');
       o.inp.dataset15b = '';
@@ -622,6 +628,7 @@ classdef inpObj <handle
       end
 
       % ---------------       DATASET 17   -------------------------
+      fprintf(1,'Trying to parse dataset 17 in %s .inp\n',fname);
       if o.nsop~=0
            o.iqcp=zeros(1,o.nsop);
            o.qinc=zeros(1,o.nsop);
@@ -656,7 +663,7 @@ classdef inpObj <handle
       end
 
       % ---------------       DATASET 22   -------------------------
-
+      fprintf(1,'Trying to parse dataset 22 in %s .inp\n',fname);
       o.inp.dataset22a = getNextLine(fn,'criterion','with','keyword',...
                               '''INCIDENCE''');
         o.inp.dataset22b='';

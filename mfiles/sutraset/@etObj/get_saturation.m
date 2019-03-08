@@ -1,4 +1,14 @@
 function opt=get_saturation(o,varargin)
+%function opt=get_saturation
+% this function gives the soil water retention curve of selected parameters
+% The default suctio input is psim: 
+% 'psim',-[0.1:0.1:1,2:1:10,20:10:100,200:100:1000,2000:1000:50000]
+% in ET.INP
+% c=ConstantObj();
+% psim=c.psim_log_range(1:max_adr);
+% TO190308
+% example:
+%    ET.get_saturation
   [psim,  varargin] = getProp(varargin,'psim',-[0.1:0.1:1,2:1:10,20:10:100,200:100:1000,2000:1000:50000]);
   [nreg,  varargin] = getProp(varargin,'nreg',1);
   if nreg==1

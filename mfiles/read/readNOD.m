@@ -6,7 +6,7 @@ function [o,o2]=readNOD(varargin)
   %                   is required
   %   outputnumber -- number of result extracted, this is useful when
   %                   output file is huge
-  %   outputstart  -- (not implimented yet) the start of the result
+  %   output_from  -- (not implimented yet) the start of the result
   %
   % OUTPUT
   % o  -- a struct the same size as the number of output.
@@ -17,7 +17,7 @@ function [o,o2]=readNOD(varargin)
   %    Purpose: parsing 'project.nod' (or 'project.NOD')
   %            only the first three result gets extracted
 
-  % a string storing the caller functions
+  %% a string storing the caller functions
   caller = dbstack('-completenames'); caller = caller.name;
 
   o2.varargin       = varargin;
@@ -71,18 +71,29 @@ function [o,o2]=readNOD(varargin)
     output_no = o2.ktprn;
   end
 
-  % ---------------- parsing expected results    ----------------------------
+  
+  
+  %% ---------------- parsing expected results    ----------------------------
   % Refering to OUTNOD.......19900
   tmp       = getNextLine(fn,'criterion','with','keyword','##   --');
   tmp_table = textscan(fn,'##  %f %f %s %f %s %f %s %f ',o2.ktprn);
   [o2.itt,o2.tt,o2.cphorp,o2.ishorp,o2.cptorc,o2.istorc,o2.cpsatu,o2.issatu]=...
     deal(tmp_table{:});
 
-  % ---------------- Parsing simulation results -----------------------------
+
+  %% ---jumping results when started point is not the first output TO190308----
+  if output_from~=0
+     fprintf(1,'Jumping and starting to read from %d th output\n which is %d th time step, actual time %d\n',output_from,o2.itt(output_from),o2.tt(output_from));
+     a=textscan(fn,'%s', output_from*(o2.nn+5));
+  end
+  
+
+
+  %% ---------------- Parsing simulation results -----------------------------
   fprintf(1,'%s is parsing the %g of %g outputs\n', caller,output_no,o2.ktprn);
   for n=1:output_no
-    fprintf('.');
-    if rem(n,50)==0; fprintf('%d\n',n);   end
+    fprintf('.'); % each dot means a result
+    if rem(n,50)==0; fprintf('%d\n',n);   end % every 50 dot comes with a cartriage
     tmp       = getNextLine(fn,'criterion','with','keyword','## TIME STEP');
     if tmp  ~= -1
       tmp = regexprep(tmp,{'## TIME STEP','Duration:','sec','Time:'}...
