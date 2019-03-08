@@ -498,6 +498,7 @@ classdef inpObj <handle
       end
 
       % ---------------       DATASET 14   -------------------------
+      fprintf(1,'Trying to parse dataset 14 in %s .inp\n',fname);
       o.inp.dataset14a = getNextLine(fn,'criterion','with','keyword',...
                               '''NODE''','operation','delete');
       str      = textscan(o.inp.dataset14a,'%f %f %f %f');
@@ -515,10 +516,26 @@ classdef inpObj <handle
       o.inp.dataset14b = '';
       %tic
       if strcmpi(o.sw_block_reading,'no')
+          
           for n = 1:o.nn
             str=getNextLine(fn,'criterion','without','keyword',...
                                   '#','ignoreblankline','yes');
-            o.inp.dataset14b= [o.inp.dataset14b str];
+            %TO190301
+            % below commands removes all the comments by 
+            % 1. remove space in the beginning,
+            % 2.finding out the sixth block of spaces 
+            % 3. remove all the content after the sixth block of spaces
+            %2706 2   80. 0. 1. 0.445 'Data Set 14B'
+            %  1   2   0. 8. 1. 0.445 'Data Set 14B'
+            % 4. 
+            tmp=isspace(str);
+            tmp2 = sprintf('%d', tmp); 
+            loc_01=strfind(tmp2,'01'); % the 6th beyond is useless
+            str_new=str(1:loc_01(6));
+            % a space is needed otherwise the end of one line with mix with
+            % the beginning of the next line
+            o.inp.dataset14b= [o.inp.dataset14b str_new, ' ']; 
+            
           end
             tmp=textscan(o.inp.dataset14b, '%f %f %f %f %f %f');
             o.nreg=tmp{2};
@@ -528,11 +545,17 @@ classdef inpObj <handle
             o.por=tmp{6};
       else
           % this component is still not functional
+          fprintf(1,'Block reading dataset 14 is enalbed, this will be faster than line-by-line reading, but please make sure the dataset 14 is in block format, that is: no comments in between lines, the format at the end of the comments is the same\n');
            str=getNextLine(fn,'criterion','without','keyword',...
                                    '#','ignoreblankline','yes');          
-           fseek(fn,-1*size(str,2),'cof');   % move back to the beginning of the block
+           fseek(fn,-1*size(str,2)-2,'cof');   % move back to the beginning of the block %TO190304, not sure why -2 is needed but this may be due to the cartriage...
+           fprintf(1,[str,'\n']);
+                      str=getNextLine(fn,'criterion','without','keyword',...
+                                   '#','ignoreblankline','yes');          
+           fseek(fn,-1*size(str,2)-2,'cof');   % move back to the beginning of the block
            %fmt=repmat('%f ',1, 6);
-           fmt=['%f %f %f %f %f %f %s %s %s %s %s %s'   ]; %the multiple %s here is to remove spaces in the comments
+           fprintf(1,[str,'\n']);
+           fmt=['%f %f %f %f %f %f %s %s %s %s %s %s %s %s'];% %s']; %s']; %the multiple %s here is to remove spaces in the comments
            tmp=textscan(fn,fmt,o.nn);
             o.nreg=tmp{2};
             o.x=tmp{3}*o.scalx;
@@ -565,8 +588,13 @@ classdef inpObj <handle
        else
            tmp=getNextLine(fn,'criterion','without','keyword',...
                               '#','ignoreblankline','yes');    
-           fseek(fn,-1*size(str,2),'cof');   % move back to the beginning of the block          
-           fmt=['%f %f %f %f %f %f %f %f %s %s %s %s %s %s'   ]; %the multiple %s here is to remove spaces in the comments
+           fseek(fn,-1*size(tmp,2)-2,'cof');   % move back to the beginning of the block  
+           fprintf(1,[tmp,'\n']);
+           tmp=getNextLine(fn,'criterion','without','keyword',...
+                              '#','ignoreblankline','yes');    
+           fseek(fn,-1*size(tmp,2)-2,'cof');   % move back to the beginning of the block  
+           fprintf(1,[tmp,'\n']);           
+           fmt=['%f %f %f %f %f %f %f %f %s %s %s %s %s %s %s'   ]; %the multiple %s here is to remove spaces in the comments
            tmp=textscan(fn,fmt,o.nn);
        end
         o.lreg=tmp{1};
@@ -672,6 +700,7 @@ classdef inpObj <handle
               [o.ll(n),o.iin1(n),o.iin2(n),o.iin3(n),o.iin4(n),...
                 o.iin5(n),o.iin6(n),o.iin7(n),o.iin8(n)]=deal(tmp{1:5});
       end
+      fprintf(1,'Parsing %s .inp is completed\n',fname);
       end % Function constructor
 
        function nnv=get.nnv(o)
