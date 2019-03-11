@@ -6,12 +6,13 @@
 classdef func
   methods (Static)
     % using temperature to calculate water vapor diffusivity (m2/s)
-    function y = dv(tk)
+    function y = vapor_diffusivity_m2Ps(tk)
         y=2.29e-5*(tk/273.15).^1.75;
     end
     
     % (S)aturated water (V)apor density (rho) at EM(5)0 channel (C) [rhovs]
-    function y = rhovs(tk)
+    function y = sat_vapor_density_kgPm3(tk)
+        % y = sat_vapor_density_kgPm3(tk)
         y = 1e-3*exp(19.819-4976./tk);
     end
     % the derivative of (S)aturated (V)apor density
@@ -20,8 +21,14 @@ classdef func
     end
     
     % (R)elative (H)umidi(T)y
-    function y=rht(psi,tk)
-        y=exp(-psi*9.81*0.018/8.314./tk);
+    function y=rh_matric(matric_potential,tk)
+        % y=rh_matric(matric_potential,tk)
+        % relative humidity due to matric potential
+        %y=exp(-psi*9.81*0.018/8.314./tk);
+        % example:
+        % func.rh_matric([-10,-4000],[20,30]+273.15)
+        c=ConstantObj();
+        y=exp(matric_potential*c.g*c.mol_weight_water_kgPmol/c.R./tk);
     end
         
     % (S)aturated water (V)apor (P)ressure 
@@ -34,8 +41,9 @@ classdef func
         y = 2500250-2365*(t-273.15);
     end
     % (S)urface (R)esistance from (V)an (D)er (G)rivend 1994
-    function y=rs1994(sw,swres,por)
-    % y=rs1994(sw,swres,por)
+    function y=rs1994(sw,por,varargin)
+    % y=rs1994(sw,por,'swres',0.375)
+        [swres,  ~] = getProp(varargin,'swres',0.375);
     % unit (s/m)
         y=10*exp(35.63*por*(swres-sw));
     end
@@ -95,7 +103,7 @@ classdef func
     
     
     % air viscosity
-    function y1=visa(t)
+    function y1=air_visconsity_kgPmPs(t)
         y1=18.27e-6*(291.5+120)/(t+120)*(t/291.5)^1.5;
     end
     
@@ -222,6 +230,28 @@ classdef func
            +psi.*se*sr.*log(psi0./psi)/log(psi0)/(lam-1)...
            +psi*sr.*(1+log(psi0./psi))/log(psi0);
     end %intfayer
+    
+    function ro=rh_osmotic (concentration_kgPkg)
+        % rh_osmotic (concentration_kgPkg) 
+        % relative_humidity_due_to_osmotic_potential
+        % this function returns relative humidity reduced by osmotic potential
+        % func.rh_osmotic([0.265,0.035])
+        c=ConstantObj();
+        %HO = EXP(-WMW*2.D0*CHI(CC)*CC/STM);
+        ro = exp(-c.mol_weight_water_kgPmol*2.D0.*func.chi(concentration_kgPkg)...
+            .*concentration_kgPkg...
+            /c.mol_weight_nacl_kgPmol);   
+    end % ro=rh_osmotic 
+    
+    function y=chi(C)
+        % empirical function to get osmotic potential
+        % inheritated from sutraset
+        % CHI=.9D0+2.6D-3*(C/(1-C))*1.D3+2.6D-3*((C/(1-C))*1.D3)**5.3D-2
+        y=0.9e0+2.6e-3*1.e3*C./(1-C)+2.6e-3*(C*1.e3./(1-C)).^5.3e-2;
+        %return chi
+    end
+    
+    
     
     
   end % methods

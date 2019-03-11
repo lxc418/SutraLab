@@ -84,7 +84,7 @@ function [o,o2]=readNOD(varargin)
   %% ---jumping results when started point is not the first output TO190308----
   if output_from~=0
      fprintf(1,'Jumping and starting to read from %d th output\n which is %d th time step, actual time %d\n',output_from,o2.itt(output_from),o2.tt(output_from));
-     a=textscan(fn,'%s', output_from*(o2.nn+5));
+     textscan(fn,'%s', output_from*(o2.nn+5));
   end
   
 

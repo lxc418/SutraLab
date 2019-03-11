@@ -3,10 +3,74 @@
 % http://stackoverflow.com/questions/209005/how-do-properties-work-in-object-oriented-matlab
 classdef etObj <handle
   properties
+    % object that contains all the parameters in ET.inp file
+    %met  % -- switch of evaporation
+    %mar  % -- aerodynamic resistance
+    %msr  % -- surface resistance
+    %msc  % -- salt resistance
+    %mht  % -- heat balance
+    %mvt  % -- vapour transport
+    %mft  % -- film transport
+    %mrk  % -- relative hydraulic conductivity
+    % ---------- DATASET 1: TIDE FLUCTUATION IN USUBS ----------
+    %tasp  % -- spring tidal amplitude (m)
+    %tane  % -- neap tidal amplitude (m)
+    %tpsp  % -- tidal period of spring tide (s)
+    %tpne  % -- tidal period of neap tide (s) 
+    %tm    % -- mean tidal level (m) 
+    %rhost % -- the density of tide water
+    %sc    % -- salinity of seawater 
+    % ---------- DATASET 1: EVAPORATION INPUT ----------
+    %qet   % -- potential evaporation rate (m/s)
+    %uet   % -- solute density taken by evaporation (kg/kg)
+    %pet   % -- pore-water pressure threshold (pa), below which evaporation will take place
+    %uvm   % -- solubility (kg/kg)
+    %night % -- if=1 evaporation is switched off during night time, if=0 it is always on
+    %ite   % -- temporarily not used, it was designed for the number of time call for BCTIME
+    % ---------- DATASET 13E: EVAPORATION PARAMETERS ----------
+    %tma  % -- atmospheric temperature on the top of the column (Celsius)
+    %tmi  % -- initial soil temperature (Celsius), also temperature in the soils(celsius) TO190311
+    %alf  % -- albedo (i)
+    %rs   % -- short wave incoming radiation (mj/m2/day)
+    %rh   % -- relative humidity 0<rh<1
+    %ap   % -- UNKNOWN
+    %bp   % -- UNKNOWN
+    %u2   % -- daily mean wind speed at 2m above ground (km/day)
+    %tsd  % -- temperature of the side of the column
+    %scf  % -- scaling factor between the top surface and side surface of the 1D colum
+    % ---------- DATASET 13I: SOIL CHARACTERISTIC PARAMETERS ----------
+    %swres1  % -- residual saturation
+    %aa1     % -- van Genuchten alpha (1/m)
+    %vn1     % -- van Genuchten N
+    %swres2  % -- residual saturation
+    %aa2     % -- van Genuchten alpha (1/m)
+    %vn2     % -- van Genuchten N
+    %swres3  % -- residual saturation
+    %lam3
+    %phyb3   % -- (m)
+    %swres4  % -- residual saturation
+    %lam4
+    %phyb4   % -- (m)
+    %phy0    % -- (m)
+    %ecto    % -- eccentricity and tortuosity, the default value is 0.5
+    % ---------- DATASET 13F: AERODYNAMIC RESISTANCE TERM ----------
+    %ravt   % -- aerodynamic resistance at the soil surface (s/m)
+    %ravs   % -- aerodynamic resistance at the side of the column (s/m)
+    %swrat  % -- parameters to switch on (1) or off (0) the temperature change on the surface
+    % ---------- DATASET 13L: PARAMETERS FOR SURFACE RESISTANCE ----------
+    %tal   % -- thickness of air layer (m)
+    %ec    % -- eccentricity of the active pore
+    %etr   % -- residual evaporation rate
+    %psip  % -- must be positive
+    %cors  % -- correction coefficient, set as 1
+    % ---------- DATASET 12H: PARAMETERS FOR SALT RESISTANCE ----------
+    %ar  % -- fitting parameter
+    %br  % -- fitting parameter
+    % --------- parameters from functions  ----------------
+    %pot_evap_rate  % potential evaporation rate in m/s
     % the following list are associated with property defination
     % http://stackoverflow.com/questions/7192048/can-i-assign-types-to-class-properties-in-matlab
     % http://undocumentedmatlab.com/blog/setting-class-property-types
-    
     % now only key data are stored in inpObj, other non-relevant data will all be 
     % wiped out 
 
@@ -63,7 +127,7 @@ classdef etObj <handle
 	
     % ---------- DATASET 13E: EVAPORATION PARAMETERS ----------
     tma  % -- atmospheric temperature on the top of the column (Celsius)
-    tmi  % -- initial soil temperature (Celsius)
+    tmi  % -- initial soil temperature (Celsius), also temperature in the soils(celsius) TO190311
     alf  % -- albedo (i)
     rs   % -- short wave incoming radiation (mj/m2/day)
     rh   % -- relative humidity 0<rh<1

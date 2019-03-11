@@ -255,8 +255,10 @@ classdef inpObj <handle
     nnv
     dx_cell_mtx
     dy_cell_mtx
+    dz_cell_mtx
     x_nod_mtx
     y_nod_mtx
+    z_nod_mtx
   end
   
   
@@ -655,8 +657,10 @@ classdef inpObj <handle
                               '#','ignoreblankline','yes');
            str= textscan(tmp,'%f %f %f ');
             o.ipbc(n) = str{1};
-            o.pbc(n) = str{2};
-            o.ubc(n) = str{3};
+            if o.ipbc(n)>0
+              o.pbc(n) = str{2};
+              o.ubc(n) = str{3};
+            end
          end
         tmp= getNextLine(fn,'criterion','without','keyword',...
          '#','ignoreblankline','yes');

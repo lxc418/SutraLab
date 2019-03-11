@@ -14,8 +14,11 @@ classdef ConstantObj <handle
     psim_log_range
     mol_weight_water
     R
-
-
+    mol_weight_nacl_kgPmol
+    mol_weight_water_kgPmol
+    gPkg
+    mmPm
+    kgPg
   end
   
   
@@ -43,8 +46,20 @@ classdef ConstantObj <handle
     o.psim_log_range=-[0.0001:0.0001:0.001,0.002:0.001:0.01,0.02:0.01:0.1,0.2:0.1:1,2:1:10,20:10:100,200:100:1000,2000:1000:10000,20000:10000:1e5...
     	,2e5:1e5:1e6,2e6:1e6:9e6,1e7:1e7:9e7,1e8:1e8:9e8];
     o.mol_weight_water=0.018; %kg/mol
+    o.mol_weight_water_kgPmol=0.018;
+    %o.mol_weight_nacl_kgPmol=0.0585;
     o.R =8.314;
 
+    o.mmPm=1000;
+    o.kgPg=0.001;
+    o.gPkg=1000;
+    o.mol_weight_nacl_kgPmol=0.0585;
+    
+%!      TSK   -- TEMPERATURE AT THAT NODE
+%!     TS   -- SOIL TEMPERATURE [CELSIUS]
+%!     STM  -- MOLECULAR WEIGHT OF NACL [KG/MOL]
+%!     WMW   -- MOLECULAR WEIGHT OF WATER [KG/MOL]
+    
     end
    end  % end methods
 
