@@ -19,7 +19,7 @@ function [o,o2]=readBCOF(varargin)
   [fname, varargin]        = getNext(varargin,'char','');
   [output_no  ,  varargin] = getProp(varargin,'outputnumber',0);
   [output_from,  varargin] = getProp(varargin,'outputfrom',1);
-  [inpObj,  varargin]      = getProp(varargin,'inpObj',[]);
+  [inpObj,  ~]      = getProp(varargin,'inpObj',[]);
   o2.output_no             = output_no;
 
   fn = fopen([fname,'.BCOF']);
@@ -64,9 +64,69 @@ function [o,o2]=readBCOF(varargin)
   tmp_table       = textscan(fn,'##  %f %f',o2.ktprn);
   [o2.itt o2.tt ] = deal(tmp_table{:});
 
+  
+    %% ---jumping results when started point is not the first output TO190308----
+%   if output_from~=0
+%      fprintf(1,'Jumping and starting to read from %d th output\n which is %d th time step, actual time %d\n',output_from,o2.itt(output_from),o2.tt(output_from));
+%      % this has been found to use out of memories 
+%      textscan(fn,'%s', output_from*(o2.nsop+5));
+%      % below is too slow
+%      %textscan(fn,'', output_from*(o2.nn+5));
+%      % this is slower but would not use out of memories
+%      %textscan(fn,'%s',1,'headerLines' , output_from*(o2.nn+5)-1);
+%   end
+%   
+    n=1;parsing_start_node=1;
+    tmp       = getNextLine(fn,'criterion','with','keyword','## TIME STEP');
+    if tmp  ~= -1 %&& output_from==1  % check if simulation is incomplete
+      tmp = regexprep(tmp,{'## TIME STEP','Duration:','sec','Time:'}...
+                    ,{'','','',''});
+      if output_from==1
+          tmp = textscan(tmp,'%f %f %f');
+          [ o(n).itout o(n).durn o(n).tout] = deal(tmp{:});
+      end
+
+      tmp = getNextLine(fn,'criterion','with'...
+                    ,'keyword','##   Node');
+
+      [tmp o2.nsop] = getBlock(fn,'keyword','#'); %TO190312 sutraset learns nsop from the first trial
+      tmp = textscan(tmp,'%f %s %s %f %f %f ',o2.nsop);
+      if output_from==1
+          parsing_start_node=2;
+          [o(n).i,o(n).ibc,o(n).notapp,o(n).qin,o(n).uucut,...
+                   o(n).qu]= deal(tmp{:});
+      end
+%           end
+%       elseif n>=output_from
+%           tmp = textscan(fn ,'%f %s %s %f %f %f ',o2.nsop);
+%           [o(n).i,o(n).ibc,o(n).notapp,o(n).qin,o(n).uucut,...
+%                   o(n).qu]= deal(tmp{:});          
+%       end
+%       % get o.nbcp as it is not disclosed in *.bcof
+%       if n==output_from 
+%         [tmp o2.nsop] = getBlock(fn,'keyword','#'); %TO190312 sutraset learns nsop from the first trial
+%         tmp = textscan(tmp,'%f %s %s %f %f %f ',o2.nsop);
+%       else
+%         tmp = textscan(fn ,'%f %s %s %f %f %f ',o2.nsop);
+%       end
+% 
+%       [o(n).i,o(n).ibc,o(n).notapp,o(n).qin,o(n).uucut,...
+%                       o(n).qu]= deal(tmp{:});
+    else
+      fprintf(1,['WARNING FROM %s: Simulation is not completed\n %g'...
+             ' out of %g outputs extracted\n'],caller,n,o2.ktprn);
+      return
+    end % if condition
+
+    if output_from~=1
+      fprintf(1,'Jumping and starting to read from %d th output\n which is %d th time step, actual time %d\n'); %,output_from,o2.itt(output_from),o2.tt(output_from));
+      % this has been found to use out of memories 
+        textscan(fn,'%s', output_from*(o2.nsop+5));
+    end
+
   % ---------------- Parsing simulation results -----------------------------
   fprintf(1,'%s is parsing the %g of %g outputs\n', caller,output_no,o2.ktprn);
-  for n=output_from:output_no
+  for n=parsing_start_node:output_no
     fprintf('.'); if rem(n,50)==0; fprintf('%d\n',n); end
     tmp       = getNextLine(fn,'criterion','with','keyword','## TIME STEP');
     if tmp  ~= -1  % check if simulation is incomplete
@@ -77,17 +137,28 @@ function [o,o2]=readBCOF(varargin)
 
       tmp = getNextLine(fn,'criterion','with'...
                     ,'keyword','##   Node');
-		    
-      % get o.nbcp as it is not disclosed in *.bcof
-      if n==output_from 
-        [tmp o2.nsop] = getBlock(fn,'keyword','#');
-        tmp = textscan(tmp,'%f %s %s %f %f %f ',o2.nsop);
-      else
-        tmp = textscan(fn ,'%f %s %s %f %f %f ',o2.nsop);
-      end
-
-      [o(n).i,o(n).ibc,o(n).notapp,o(n).qin,o(n).uucut,...
-                      o(n).qu]= deal(tmp{:});
+%       if n==1
+%           [tmp o2.nsop] = getBlock(fn,'keyword','#'); %TO190312 sutraset learns nsop from the first trial
+%           if n==output_from
+%               tmp = textscan(tmp,'%f %s %s %f %f %f ',o2.nsop);
+%               [o(n).i,o(n).ibc,o(n).notapp,o(n).qin,o(n).uucut,...
+%                   o(n).qu]= deal(tmp{:});
+%           end
+%       elseif n>=output_from
+           tmp = textscan(fn ,'%f %s %s %f %f %f ',o2.nsop);
+           [o(n).i,o(n).ibc,o(n).notapp,o(n).qin,o(n).uucut,...
+                   o(n).qu]= deal(tmp{:});          
+%       end
+%       % get o.nbcp as it is not disclosed in *.bcof
+%       if n==output_from 
+%         [tmp o2.nsop] = getBlock(fn,'keyword','#'); %TO190312 sutraset learns nsop from the first trial
+%         tmp = textscan(tmp,'%f %s %s %f %f %f ',o2.nsop);
+%       else
+%         tmp = textscan(fn ,'%f %s %s %f %f %f ',o2.nsop);
+%       end
+% 
+%       [o(n).i,o(n).ibc,o(n).notapp,o(n).qin,o(n).uucut,...
+%                       o(n).qu]= deal(tmp{:});
     else
       fprintf(1,['WARNING FROM %s: Simulation is not completed\n %g'...
              ' out of %g outputs extracted\n'],caller,n,o2.ktprn);

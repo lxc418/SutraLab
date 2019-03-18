@@ -19,6 +19,7 @@ classdef ConstantObj <handle
     gPkg
     mmPm
     kgPg
+    density_solid_nacl_kgPm3
   end
   
   
@@ -54,7 +55,7 @@ classdef ConstantObj <handle
     o.kgPg=0.001;
     o.gPkg=1000;
     o.mol_weight_nacl_kgPmol=0.0585;
-    
+    o.density_solid_nacl_kgPm3=2160;
 %!      TSK   -- TEMPERATURE AT THAT NODE
 %!     TS   -- SOIL TEMPERATURE [CELSIUS]
 %!     STM  -- MOLECULAR WEIGHT OF NACL [KG/MOL]

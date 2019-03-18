@@ -6,7 +6,7 @@ function [o,o2]=readNOD(varargin)
   %                   is required
   %   outputnumber -- number of result extracted, this is useful when
   %                   output file is huge
-  %   output_from  -- (not implimented yet) the start of the result
+  %   output_from  -- the start of the result
   %
   % OUTPUT
   % o  -- a struct the same size as the number of output.
@@ -25,7 +25,7 @@ function [o,o2]=readNOD(varargin)
   % an option to see whether use inp contents to guide the reading process
   %   a hard reading process will be conducted if left empty
   [output_no,  varargin]   = getProp(varargin,'outputnumber',0);
-  [output_from,  varargin] = getProp(varargin,'outputfrom',0);
+  [output_from,  varargin] = getProp(varargin,'outputfrom',1);
   [inpObj,  varargin]      = getProp(varargin,'inpObj',[]);
   o2.output_no             = output_no;
   fn                       = fopen([fname,'.NOD']);
@@ -82,9 +82,14 @@ function [o,o2]=readNOD(varargin)
 
 
   %% ---jumping results when started point is not the first output TO190308----
-  if output_from~=0
+  if output_from~=1
      fprintf(1,'Jumping and starting to read from %d th output\n which is %d th time step, actual time %d\n',output_from,o2.itt(output_from),o2.tt(output_from));
+     % this has been found to use out of memories 
      textscan(fn,'%s', output_from*(o2.nn+5));
+     % below is too slow
+     %textscan(fn,'', output_from*(o2.nn+5));
+     % this is slower but would not use out of memories
+     %textscan(fn,'%s',1,'headerLines' , output_from*(o2.nn+5)-1);
   end
   
 

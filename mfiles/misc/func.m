@@ -251,7 +251,20 @@ classdef func
         %return chi
     end
     
-    
+    function y=salt_resistance_fujimaki_sPm(salt_weight_per_area_kgPm2,varargin)
+        %salt_resistance_fujimaki_sPm(salt_weight_per_area_kgPm2)
+        %[U_start,  varargin] = getProp(varargin,'ar',6.9e-1);
+        [ar,  varargin] = getProp(varargin,'ar',6.9e-1);
+        %[br,  varargin] = getProp(varargin,'ar',6.9e-1);
+        [br,  ~] = getProp(varargin,'br',-1.04);
+        % 1e2 is due to the change of unit conversion from kg/m3 to mg/cm2
+        % the last 1e2 is to convert cm/s used in FUJIMAKI to m/s
+        %1e6/1e-4
+        y=(ar*log(1.e2*salt_weight_per_area_kgPm2+exp(-br/ar))+br)*1.e2;
+        %SALTRSIS = (AR*DLOG(DS*1.D2+EXP(-BR/AR))+BR)*1.D2
+
+        
+    end
     
     
   end % methods
