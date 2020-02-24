@@ -26,12 +26,13 @@ function [o,o2] = readELE(varargin)
   % a hard reading process will be conducted if left empty
   [output_no,  varargin]   = getProp(varargin,'outputnumber',0);
   [output_from,  varargin] = getProp(varargin,'outputfrom',0);
-  [inpObj,  varargin]      = getProp(varargin,'inpObj',[]);
+  %[inpObj,  varargin]      = getProp(varargin,'inpObj',[]);
   o2.output_no             = output_no;
   fn                       = fopen([fname,'.ELE']);
-
+  fname_actual=[fname,'.ELE'];
   if fn==-1 
     fprintf(1,'%s : Trying to open %s .ele\n',caller,fname);
+    fname_actual=[fname,'.ele'];
     fn=fopen([fname,'.ele']);
     if fn==-1
       fprintf('%s: file ele found!!\n',caller,fname);
@@ -60,7 +61,7 @@ function [o,o2] = readELE(varargin)
                  '## VELOCITY RESULTS','operation','delete');
   tmp           = textscan(tmp,'%f ');
   o2.ktprn      = tmp{1};  % expected no. time steps
-  if output_no ~= 0;
+  if output_no ~= 0
     output_no   = min(o2.ktprn,output_no);
   else
     output_no = o2.ktprn;
@@ -72,6 +73,54 @@ function [o,o2] = readELE(varargin)
   tmp_table = textscan(fn,'##  %f %f %s %f %s %f %s %f ',o2.ktprn);
   [o2.itt,o2.tt,o2.cpvx,o2.isvx,o2.cpvy,o2.isvy,o2.cpvz,o2.isvz]=...
     deal(tmp_table{:});
+
+
+
+  %% ---jumping results when started point is not the first output TO190308----
+  if output_from>1
+     
+     fprintf(1,'Jumping and starting to read from %d th output\n which is %d th time step, actual time %d\n',output_from,o2.itt(output_from),o2.tt(output_from));
+     if ispc 
+         % this has been found to use out of memories 
+         tic
+         textscan(fn,'%s', output_from*(o2.ne+5));  %300s s for ilja case and
+         %the location is wrong
+         %textscan(fn,'%[^\n]', output_from*(o2.nn+5));  %
+         toc
+         % below is too slow
+         %textscan(fn,'', output_from*(o2.nn+5));
+         % this is slower but would not use out of memories
+         %textscan(fn,'%s',1,'headerLines' , output_from*(o2.nn+5)-1);
+     else  % extract from middle
+         fprintf(1,'creat temp nod file nod_')
+         %https://stackoverflow.com/questions/83329/how-can-i-extract-a-predetermined-range-of-lines-from-a-text-file-on-unix
+         start_output_line_number= o2.ktprn + output_from*(o2.ne+5)+12;
+         end_output_line_number=o2.ktprn + (output_from+output_no)*(o2.ne+5)+12;
+         exit_line_number=end_output_line_number+1;
+         %sed -n '16224,16482p;16483q' filename > newfile
+         %command_string=['sed -n ''',fprintf('%d',start_output_line_number), ',',fprintf('%d',end_output_line_number),'p,',fprintf('%d',end_output_line_number),'q, ',fname_actual];
+         tic
+         command_string=sprintf('sed -n ''%d,%dp;%dq'' %s > ele_  ',start_output_line_number,end_output_line_number,exit_line_number,fname_actual);
+         system(command_string);
+         toc
+         fclose(fn);
+           fn                       = fopen('ele_');
+     end
+  elseif output_from<0  % output from the last few
+      % !tail -n 50000 PART6.nod > nod__
+      
+      tic
+      command_string=sprintf('tail -n %d   %s > ele_ ', abs(output_from)*(o2.ne+5)+10,fname_actual   );
+      fprintf(1,'creat temp nod file nod_ by %s\n', command_string);
+      system(command_string);
+      toc
+         fclose(fn);
+           fn                       = fopen('ele_');      
+           output_no=abs(output_from);
+  end
+  
+
+
 
   % ---------------- Parsing simulation results -----------------------------
   fprintf(1,'%s is parsing the %g of %g outputs\n', caller,output_no,o2.ktprn);
