@@ -8,25 +8,25 @@ classdef swccObj <handle
     
     % now only key data are stored in vapinpObj, other non-relevant data will all be 
     % wiped out 
-    soil_type@cell
+    soil_type cell
     swres
     aa1
     vn
     ksat
     por
-    comment@cell
-    line_type@cell
+    comment cell
+    line_type cell
     psim0
 
 
     sw_vangenuchten1980
-    sw_fayer1995wrr@cell
-    kr_mualem1976wrr@cell
-    kr_mualem1976wrr_sw_stretch@cell
+    sw_fayer1995wrr cell
+    kr_mualem1976wrr cell
+    kr_mualem1976wrr_sw_stretch cell
     kfs_tokunaga2009wrr
-    kfr_tokunaga2009wrr@cell
+    kfr_tokunaga2009wrr cell
     kfs_lebeau2010wrr
-    kfr_lebeau2010wrr@cell
+    kfr_lebeau2010wrr cell
 
     no_session
 
@@ -36,7 +36,7 @@ classdef swccObj <handle
     %        ML=0 FOR P AND U, ML=1 FOR P ONLY, AND ML=2 FOR U ONLY.         SUTRA........27900
 
     % varagin stores all the input parameters
-    varargin@cell;
+    varargin cell;
     
     %   inp should later be removed now it is here for storing all strings extracted
     %     from the file
@@ -66,7 +66,7 @@ classdef swccObj <handle
          %        layered mesh     ==>   ktype(2) = 1                             
          %        regular mesh     ==>   ktype(2) = 2                             
          %        blockwise mesh   ==>   ktype(2) = 3                             
-    mshtyp@cell=repmat({''},2,1)     % mesh type
+    mshtyp cell=repmat({''},2,1)     % mesh type
     nn1  % -- number of node in the first direction
     nn2  % -- number of node in the second direction
     nn3  % -- number of node in the third direction

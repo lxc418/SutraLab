@@ -17,9 +17,23 @@ classdef ConstantObj <handle
     mol_weight_nacl_kgPmol
     mol_weight_water_kgPmol
     gPkg
-    mmPm
-    kgPg
     density_solid_nacl_kgPm3
+    psych
+    molecular_weight_water
+    air_density_kgPm3
+    heat_capacity_air_JPkgPK
+    mmPm
+    mPmm
+    kgPg
+    msPmmday
+    psychrometric_paPK
+    mPkm
+    kmPm
+    minutePday
+    secPmsec
+    msecPsec
+    secPday
+    dayPsec
   end
   
   
@@ -51,11 +65,27 @@ classdef ConstantObj <handle
     %o.mol_weight_nacl_kgPmol=0.0585;
     o.R =8.314;
 
-    o.mmPm=1000;
-    o.kgPg=0.001;
-    o.gPkg=1000;
     o.mol_weight_nacl_kgPmol=0.0585;
     o.density_solid_nacl_kgPm3=2160;
+
+    o.psych=62.2;  % pa/K  # https://en.wikipedia.org/wiki/Psychrometric_constant
+    o.molecular_weight_water=0.018;
+    o.air_density_kgPm3=1.27;
+    o.heat_capacity_air_JPkgPK=1010.0;
+    o.mmPm=1000.;
+    o.mPmm=.001;
+    o.gPkg = 1000.;
+    o.kgPg = 0.001;
+    o.msPmmday=3600.*24*1000;
+    o.psychrometric_paPK=66.0;
+    o.mPkm=1000;
+    o.kmPm=0.001;
+    o.minutePday=60.*24;
+    o.secPmsec=1e-3;
+    o.msecPsec=1000;
+    o.secPday=86400;
+    o.dayPsec=1/86400;
+
 %!      TSK   -- TEMPERATURE AT THAT NODE
 %!     TS   -- SOIL TEMPERATURE [CELSIUS]
 %!     STM  -- MOLECULAR WEIGHT OF NACL [KG/MOL]

@@ -25,7 +25,7 @@ function [o,o2]=readNOD(varargin)
   [fname, varargin] = getNext(varargin,'char','');
   % an option to see whether use inp contents to guide the reading process
   %   a hard reading process will be conducted if left empty
-  [output_no,  varargin]   = getProp(varargin,'outputnumber',1);
+  [output_no,  varargin]   = getProp(varargin,'outputnumber',-1);   % -1 means all the results
   [output_from,  varargin] = getProp(varargin,'outputfrom',1);
   %[inpObj,  varargin]      = getProp(varargin,'inpObj',[]);
   o2.output_no             = output_no;
@@ -67,7 +67,7 @@ function [o,o2]=readNOD(varargin)
                  '## NODEWISE RESULTS','operation','delete');
   tmp           = textscan(tmp,'%f ');
   o2.ktprn      = tmp{1};  % expected no. time steps
-  if output_no ~= 0
+  if output_no < 0
     output_no   = min(o2.ktprn,output_no);
   else
     output_no = o2.ktprn;

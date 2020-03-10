@@ -13,9 +13,10 @@ classdef inpObj <handle
     % if one wish to convert from class to truct due to reasons like jasn file 
     %   one can use a=struct(vapinpObj)
     %        ML=0 FOR P AND U, ML=1 FOR P ONLY, AND ML=2 FOR U ONLY.         SUTRA........27900
+    fname
 
     % varagin stores all the input parameters
-    varargin@cell;
+    varargin cell;
     
     %   inp should later be removed now it is here for storing all strings extracted
     %     from the file
@@ -33,6 +34,13 @@ classdef inpObj <handle
     % because reading lines by lines is a bit too slow
     sw_block_reading
 
+    sw_read_from_file
+    % ---------------  DATASET 1 variable declaration--------------------
+    title1   
+    title2
+    % ---------------  DATASET 2A -------------------------------------
+    vermin   % 2.0 2.1
+    simula   % either solute or energy
     % ---------------  DATASET 2B variable declaration--------------------
     %   matlab stats that, string array should be declared as cells
     %    mshtyp   = char(2,10)   
@@ -49,7 +57,7 @@ classdef inpObj <handle
          %        layered mesh     ==>   ktype(2) = 1                             
          %        regular mesh     ==>   ktype(2) = 2                             
          %        blockwise mesh   ==>   ktype(2) = 3                             
-    mshtyp@cell=repmat({''},2,1)     % mesh type
+    mshtyp cell=repmat({''},2,1)     % mesh type
     nn1  % -- number of node in the first direction
     nn2  % -- number of node in the second direction
     nn3  % -- number of node in the third direction
@@ -84,6 +92,9 @@ classdef inpObj <handle
 
 
     % ---------------  DATASET 6A variable declaration--------------------
+    schnam
+    schtyp
+    creft
     scalt 
     ntmax 
     timei 
@@ -178,6 +189,7 @@ classdef inpObj <handle
     scalz  
     porfac 
 
+    ii
     nreg
     x
     y
@@ -194,6 +206,7 @@ classdef inpObj <handle
     atmaxf
     atminf   
 
+    l
     lreg
     pmax
     pmin
@@ -276,26 +289,32 @@ classdef inpObj <handle
     function o=inpObj(varargin)
       % vapinpObj constructor
     [o.mtx_transpose,  varargin] = getProp(varargin,'mtx_transpose','no');
+    [o.sw_read_from_file,  varargin] = getProp(varargin,'read_from_file','yes');
     [o.sw_block_reading,  varargin] = getProp(varargin,'block_reading','no');
-      caller=dbstack('-completenames'); caller=caller.name;
-      o.varargin        = varargin;
-      [fname, varargin] = getNext(varargin,'char','');
-      [read,  varargin] = getProp(varargin,'operation',[]);
+    caller=dbstack('-completenames'); caller=caller.name;
+    o.varargin        = varargin;
+    [o.fname, varargin] = getNext(varargin,'char','');
+    [read,  ~] = getProp(varargin,'operation',[]);
 
-      % ---------------       DATASET 1    -------------------------
-      fn=fopen([fname,'.INP']);
+    if strcmpi(o.sw_read_from_file,'yes') % read from file
+    % ---------------       DATASET 1    -------------------------
+      fn=fopen([o.fname,'.INP']);
       if fn==-1 
-        fprintf(1,'Trying to open %s .inp\n',fname);
-        fn=fopen([fname,'.inp']);
+        fprintf(1,'Trying to open %s .inp\n',o.fname);
+        fn=fopen([o.fname,'.inp']);
         if fn==-1
-          fprintf('%s: file nod found!!\n',caller,fname);
+          fprintf('%s: file nod found!!\n',caller,o.fname);
           return
         end
       end
-      o.inp.dataset1a=getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
-      o.inp.dataset1b=getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
+      % ---------------       DATASET 1   -------------------------
+      o.title1=getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
+      o.title2=getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
       % ---------------       DATASET 2A   -------------------------
       o.inp.dataset2a=getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
+      tmp=textscan(o.inp.dataset2a,'%s %s %s %s %s');
+      o.simula=tmp{4}{1};
+      o.vermin=tmp{3}{1};
       % ---------------       DATASET 2B   -------------------------
       o.inp.dataset2b=getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
       % remove single quote
@@ -306,8 +325,8 @@ classdef inpObj <handle
       if strcmpi(tmp{1}{1},'2D')
         o.ktype(1)  = 2;
         tmp         = textscan(strprc,'%s %s %s %f %f');
-        o.mshtyp(1) = tmp{1};
-        o.mshtyp(2) = tmp{2};
+        o.mshtyp(1) = tmp{1}(1);
+        o.mshtyp(2) = tmp{2}(1);
         o.nn1       = tmp{4};
         o.nn2       = tmp{5};
       elseif strcmpi(tmp{1}{1},'3D')
@@ -319,11 +338,11 @@ classdef inpObj <handle
         o.nn2       = tmp{5};
         o.nn3       = tmp{6};
 	% get relationships
-	for n = 1:o.ktype(1)
-          strprc = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
-          tmp = textscan(strprc,'%s ');
-	  fmt = repmat('%f ' , 1, str2num(tmp{1}{1})+1);
-	  tmp = textscan(strprc,fmt);
+	    for n = 1:o.ktype(1)
+            strprc = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
+            tmp = textscan(strprc,'%s ');
+            fmt = repmat('%f ' , 1, str2double(tmp{1}{1})+1);
+            textscan(strprc,fmt);
         end
       end
       % ---------------       DATASET 3    -------------------------
@@ -339,13 +358,19 @@ classdef inpObj <handle
       
       % ---------------       DATASET 4    -------------------------
       o.inp.dataset4=getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
-      str      = regexprep(o.inp.dataset4,'''','');
-      str      = textscan(str,'%s %s %s %s %f');
-      o.cunsat = str{1}{1};
-      o.cssflo = str{2}{1};
-      o.csstra = str{3}{1};
-      o.cread  = str{4}{1};
-      o.istore = str{5};
+      %str      = regexprep(o.inp.dataset4,'''','');
+      %str      = textscan(str,'%s %s %s %s %f');
+      %o.cunsat = str{1}{1};
+      %o.cssflo = str{2}{1};
+      %o.csstra = str{3}{1};
+      %o.cread  = str{4}{1};
+      %o.istore = str{5};
+      str = textscan(o.inp.dataset4,'%s %s %s %s %s %s %s %s %s %s %s %s %s ','delimiter','''');
+      o.cunsat = str{2}{1};
+      o.cssflo = str{4}{1};
+      o.csstra = str{6}{1};
+      o.cread  = str{8}{1};
+      o.istore = str2double(str{9}{1});
       
       % ---------------       DATASET 5   Numerical Control Parameters -------------------------
       o.inp.dataset5 = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
@@ -371,6 +396,10 @@ classdef inpObj <handle
       o.tcmult = str {11};
       o.tcmin  = str {12};
       o.tcmax  = str {13};
+      str = textscan(o.inp.dataset6b,'%s %s %s %s %s %s %s %s %s %s %s %s %s ','delimiter','''');
+      o.schnam  = str {2}{1};
+      o.schtyp  = str {4}{1};
+      o.creft  = str {6}{1};
       % ---------------       DATASET 6c    observation-------------------------
       temp = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
       i=1;
@@ -383,7 +412,7 @@ classdef inpObj <handle
       % ---------------       DATASET 7A   iteration numbers-------------------------
       o.inp.dataset7a = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
       str      = textscan(o.inp.dataset7a,'%f %f %f');
-      [o.itrmax,o.npcyc,o.nucyc] =deal(str{1:3});
+      [o.itrmax,o.rpmax,o.rumax] =deal(str{1:3});
       
       % ---------------       DATASET 7B   solution for P-------------------------
       o.inp.dataset7b = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
@@ -418,7 +447,7 @@ classdef inpObj <handle
       strprc          = regexprep(o.inp.dataset8b,'''',''); % remove alpostrophe
       strprc          = strtrim(strprc); % remove heading and tailing speces
       str             = regexp(strprc, '\s+','split'); % find multiple spaces ('\s+')  and make separations ('split')
-      o.ncolpr=str2num(str{1});
+      o.ncolpr=str2double(str{1});
       for i=1:length(str)-1
           o.ncol{i}=str{i+1};
       end
@@ -427,25 +456,25 @@ classdef inpObj <handle
       o.inp.dataset8c = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
       strprc          = regexprep(o.inp.dataset8c,'''','');
       str             = textscan(strprc,'%f %s %s %s ');
-      o.lcolpr=str{1};
+      o.lcolpr        =str{1};
       strprc          = regexprep(o.inp.dataset8c,'''',''); % remove alpostrophe
       strprc          = strtrim(strprc); % remove heading and tailing speces
       str             = regexp(strprc, '\s+','split'); % find multiple spaces ('\s+')  and make separations ('split')
       for i=1:length(str)-1
           o.lcol{i}=str{i+1};
       end
-      % ---------------       DATASET 8D  Output Controls and Options for “.obs” and “.obc” Files   -------------------------
+      % ---------------       DATASET 8D  Output Controls and Options for “.obs�? and “.obc�? Files   -------------------------
       if o.nobs~=0
         temp = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
         strprc          = regexprep(temp,'''',''); % remove alpostrophe
         strprc          = strtrim(strprc); % remove heading and tailing speces
-        o.noblin = str2num(strprc);
+        o.noblin        = str2double(strprc);
         for i =1:o.nobs
             o.inp.dataset8e{i}=getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
         end
-        temp = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes'); % which should be a '-'
+        getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes'); % which should be a '-'
       end
-      % ---------------       DATASET 8E  Output Controls and Options for “.bcof”, “.bcos”, “.bcop”, and “.bcou” Files-------------------------
+      % ---------------       DATASET 8E  Output Controls and Options for “.bcof�?, “.bcos�?, “.bcop�?, and “.bcou�? Files-------------------------
       o.inp.dataset8e = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
       strprc          = regexprep(o.inp.dataset8e,'''','');
       str             = textscan(strprc,'%f %f %f %f %s');
@@ -477,30 +506,40 @@ classdef inpObj <handle
       str             = regexp(strprc, '\s+','split'); % find multiple spaces ('\s+')  and make separations ('split')
       o.adsmod =str{1};
       if strcmpi(o.adsmod,'solid')
-          o.chi1=str2num(str{2});
-          o.chi2=str2num(str{3});
+          tmp=textscan(str{2},'%f');
+          o.chi1=tmp{1};
+          tmp=textscan(str{3},'%f');
+          o.chi2=tmp{1};
       elseif strcmpi(o.adsmod,'FREUNDLICH')
-          o.chi1=str2num(str{2});
-          o.chi2=str2num(str{3});
+
+          tmp=textscan(str{2},'%f');
+          o.chi1=tmp{1};
+          tmp=textscan(str{3},'%f');
+          o.chi2=tmp{1};
       end
 
       % ---------------       DATASET 12   -------------------------
       o.inp.dataset12 = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
-      str             = textscan(strprc,'%f %f %f %f ');
+      str             = textscan(o.inp.dataset12,'%f %f %f %f ');
       [o.prodf0,o.prods0,o.prodf1,o.prods1]=deal(str{1:4});
 
       % ---------------       DATASET 13   -------------------------
       o.inp.dataset13 = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
       if strcmpi(o.mshtyp{1},'2D')
-          str = textscan(o.inp.dataset13,'%f %f');
-          [o.gravx,o.gravy]=deal(str{1:2});
+          try
+              str = textscan(o.inp.dataset13,'%f %f %f');
+              [o.gravx,o.gravy,o.gravz]=deal(str{1:3});
+          catch
+              str = textscan(o.inp.dataset13,'%f %f');  TO200306 this may not be compatible to any code that has only two gravities
+              [o.gravx,o.gravy]=deal(str{1:2});
+          end
       elseif strcmpi(o.mshtyp{1},'3D')
           str = textscan(o.inp.dataset13,'%f %f %f');
           [o.gravx,o.gravy,o.gravz]=deal(str{1:3});
       end
 
       % ---------------       DATASET 14   -------------------------
-      fprintf(1,'Trying to parse dataset 14 in %s .inp\n',fname);
+      fprintf(1,'Trying to parse dataset 14 in %s .inp\n',o.fname);
       o.inp.dataset14a = getNextLine(fn,'criterion','with','keyword',...
                               '''NODE''','operation','delete');
       str      = textscan(o.inp.dataset14a,'%f %f %f %f');
@@ -510,6 +549,7 @@ classdef inpObj <handle
       o.porfac = str{4};
 
 
+      o.ii=zeros(1,o.nn);
       o.nreg=zeros(1,o.nn);
       o.x=zeros(1,o.nn);
       o.y=zeros(1,o.nn);
@@ -545,10 +585,11 @@ classdef inpObj <handle
             
           end
             tmp=textscan(o.inp.dataset14b, '%f %f %f %f %f %f');
+            o.ii=tmp{1};
             o.nreg=tmp{2};
-            o.x=tmp{3}*o.scalx;
-            o.y=tmp{4}*o.scaly;
-            o.z=tmp{5}*o.scalz;
+            o.x=tmp{3};
+            o.y=tmp{4};
+            o.z=tmp{5};
             o.por=tmp{6};
       else
           % this component is still not functional
@@ -562,18 +603,19 @@ classdef inpObj <handle
            fseek(fn,-1*size(str,2)-2,'cof');   % move back to the beginning of the block
            %fmt=repmat('%f ',1, 6);
            fprintf(1,[str,'\n']);
-           fmt=['%f %f %f %f %f %f %s %s %s %s %s %s %s %s'];% %s']; %s']; %the multiple %s here is to remove spaces in the comments
+           fmt='%f %f %f %f %f %f %s %s %s %s %s %s %s %s';% %s']; %s']; %the multiple %s here is to remove spaces in the comments
            tmp=textscan(fn,fmt,o.nn);
+            o.ii=tmp{1};
             o.nreg=tmp{2};
-            o.x=tmp{3}*o.scalx;
-            o.y=tmp{4}*o.scaly;
-            o.z=tmp{5}*o.scalz;
+            o.x=tmp{3};
+            o.y=tmp{4};
+            o.z=tmp{5};
             o.por=tmp{6};
       end
       %toc
         o.por_actual=o.por*o.porfac;
       % ---------------       DATASET 15   -------------------------
-      fprintf(1,'Trying to parse dataset 15 in %s .inp\n',fname);
+      fprintf(1,'Trying to parse dataset 15 in %s .inp\n',o.fname);
       o.inp.dataset15a = getNextLine(fn,'criterion','with','keyword',...
                               '''ELEMENT''','operation','delete');
       o.inp.dataset15b = '';
@@ -593,7 +635,7 @@ classdef inpObj <handle
         
         tmp=textscan(o.inp.dataset15b,'%*u %u %f %f %f %f %f %f %f') ;
         %tmp=deal(tmp{1:8});
-       else
+       else  % block reading
            tmp=getNextLine(fn,'criterion','without','keyword',...
                               '#','ignoreblankline','yes');    
            fseek(fn,-1*size(tmp,2)-2,'cof');   % move back to the beginning of the block  
@@ -602,24 +644,18 @@ classdef inpObj <handle
                               '#','ignoreblankline','yes');    
            fseek(fn,-1*size(tmp,2)-2,'cof');   % move back to the beginning of the block  
            fprintf(1,[tmp,'\n']);           
-           fmt=['%f %f %f %f %f %f %f %f %s %s %s %s %s %s %s'   ]; %the multiple %s here is to remove spaces in the comments
+           fmt='%f %f %f %f %f %f %f %f %f %s %s %s %s %s %s %s'   ; %the multiple %s here is to remove spaces in the comments
            tmp=textscan(fn,fmt,o.nn);
        end
-        o.lreg=tmp{1};
-        o.pmax=tmp{2};
-        o.pmin=tmp{3};
-        o.anglex=tmp{4};
-        o.almax=tmp{5};
-        o.almin=tmp{6};
-        o.atmax=tmp{7};
-        o.atmin=tmp{8};
-        o.pmax=o.pmax*o.pmaxfa;
-        o.pmin=o.pmax*o.pminfa;
-        o.anglex=o.anglex*o.angfac;
-        o.almax=o.almax*o.almaxf;
-        o.almin=o.almin*o.alminf;
-        o.atmax=o.atmax*o.atmaxf;
-        o.atmin=o.atmin*o.atminf;
+        o.l=tmp{1};
+        o.lreg=tmp{2};
+        o.pmax=tmp{3};
+        o.pmin=tmp{4};
+        o.anglex=tmp{5};
+        o.almax=tmp{6};
+        o.almin=tmp{7};
+        o.atmax=tmp{8};
+        o.atmin=tmp{9};
 
       elseif strcmp(o.mshtype{1},'3D')
         tmp=textscan(o.inp.dataset15a,'%*s %f %f %f %f %f %f %f %f %f %f %f %f') ;
@@ -630,11 +666,11 @@ classdef inpObj <handle
       end
 
       % ---------------       DATASET 17   -------------------------
-      fprintf(1,'Trying to parse dataset 17 in %s .inp\n',fname);
+      fprintf(1,'Trying to parse dataset 17 in %s .inp\n',o.fname);
       if o.nsop~=0
-           o.iqcp=zeros(1,o.nsop);
-           o.qinc=zeros(1,o.nsop);
-           o.uinc=zeros(1,o.nsop);
+           o.iqcp=zeros(o.nsop,1);
+           o.qinc=zeros(o.nsop,1);
+           o.uinc=zeros(o.nsop,1);
          for n=1:o.nsop
            tmp= getNextLine(fn,'criterion','without','keyword',...
                               '#','ignoreblankline','yes');
@@ -643,15 +679,15 @@ classdef inpObj <handle
 	   o.qinc(n) = str{2};
 	   o.uinc(n) = str{3};
          end
-                    tmp= getNextLine(fn,'criterion','without','keyword',...
+           getNextLine(fn,'criterion','without','keyword',...
                               '#','ignoreblankline','yes');
       end
 
       % ---------------       DATASET 19   -------------------------
       if o.npbc~=0
-           o.ipbc = zeros(1,o.npbc);
-           o.pbc  = zeros(1,o.npbc);
-           o.ubc  = zeros(1,o.npbc);
+           o.ipbc = zeros(o.npbc,1);
+           o.pbc  = zeros(o.npbc,1);
+           o.ubc  = zeros(o.npbc,1);
          for n=1:o.npbc
            tmp= getNextLine(fn,'criterion','without','keyword',...
                               '#','ignoreblankline','yes');
@@ -662,12 +698,12 @@ classdef inpObj <handle
               o.ubc(n) = str{3};
             end
          end
-        tmp= getNextLine(fn,'criterion','without','keyword',...
+        getNextLine(fn,'criterion','without','keyword',...
          '#','ignoreblankline','yes');
       end
 
       % ---------------       DATASET 22   -------------------------
-      fprintf(1,'Trying to parse dataset 22 in %s .inp\n',fname);
+      fprintf(1,'Trying to parse dataset 22 in %s .inp\n',o.fname);
       o.inp.dataset22a = getNextLine(fn,'criterion','with','keyword',...
                               '''INCIDENCE''');
         o.inp.dataset22b='';
@@ -691,7 +727,7 @@ classdef inpObj <handle
         else % sw_block_reading
            str=getNextLine(fn,'criterion','without','keyword',...
                                    '#','ignoreblankline','yes');          
-           fseek(fn,-1*size(str,2)-1,'cof');   % move back to the beginning of the block
+           fseek(fn,-size(str,2)-2,'cof');   % move back to the beginning of the block
            fmt=repmat('%f ',1, 5);
            %fmt=['%f %f %f %f %f']; % %f %s %s %s %s %s %s'   ]; %the multiple %s here is to remove spaces in the comments
            tmp=textscan(fn,fmt,o.ne);
@@ -711,7 +747,8 @@ classdef inpObj <handle
               [o.ll(n),o.iin1(n),o.iin2(n),o.iin3(n),o.iin4(n),...
                 o.iin5(n),o.iin6(n),o.iin7(n),o.iin8(n)]=deal(tmp{1:5});
       end
-      fprintf(1,'Parsing %s .inp is completed\n',fname);
+      fprintf(1,'Parsing %s .inp is completed\n',o.fname);
+    end  % end sw_read_from_input
       end % Function constructor
 
        function nnv=get.nnv(o)
