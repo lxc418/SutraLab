@@ -1,6 +1,6 @@
 clear all
 close all
-
+c=ConstantObj();
 
 dx=0.05;
 dy=-0.05;
@@ -37,12 +37,26 @@ x=x_nod_mtx(:);
 y=y_nod_mtx(:);
 
 
+node_index_mtx=reshape(ii,ny,nx);  %note node_index_mtx(52)=52
+ipbc=node_index_mtx(:,1);
+ipbc=[ipbc;node_index_mtx(:,end)];
+
+
+pbc=-(y_nod_mtx(:,1)+0.2)*9.81*1025; % salt water boundary
+pbc=[pbc;-(y_nod_mtx(:,1)+0.21)*9.81*1000];  % fresh water boundary
+
+
+
+ubc=zeros(size(pbc));
+ubc(1:length(pbc)/2)=0.357;
+ubc(length(pbc)/2+1,end)=0.001;
 
 
 
 
 
-inp=inpObj('read_from_file','no');   % setup a empty inpObj
+% PART1 is the name
+inp=inpObj('PART1','read_from_file','no');   % setup a empty inpObj
 
 % dataset 1
 inp.title1='title 1 Americal_2020_WRR';
@@ -75,9 +89,9 @@ inp.nn2=nx;
 % ##  DATASET 3:  Simulation Control Numbers
 inp.nn=nn;
 inp.ne=ne;
-inp.npbc=
+inp.npbc=length(ipbc);
 inp.nubc=0;
-inp.nsop=
+inp.nsop=0;
 inp.nsou=0;
 inp.nobs=0;
 
@@ -101,7 +115,7 @@ inp.gnuu=0.01;
 %  
 inp.nsch=1;
 inp.npcyc=1;
-inp.nucyc=1
+inp.nucyc=1;
 
 
 
@@ -135,8 +149,8 @@ inp.tolp=1e-12;
 
 %##  [CSOLVU]  [ITRMXU]         [TOLU]
 inp.csolvu='ORTHOMIN';
-inp.ITRMXU=1000;
-inp.TOLU=1e-12;
+inp.itrmxu=1000;
+inp.tolu=1e-12;
 
 
 %##  DATASET 8:  Output Controls and Options
@@ -179,10 +193,11 @@ inp.cpause='Y';
 
 
 inp.ncolpr=-2920;
-inp.ncol= 'N'  'X'  'Y'  'P'  'U'  'S'  '-';
+%inp.ncol= 'N'  'X'  'Y'  'P'  'U'  'S'  '-';
+inp.ncol={['N'],['X' ],[ 'Y'  ],['P' ],[ 'U' ],[ 'S' ],[ '-']};
 
 inp.lcolpr=2920;
-inp.lcol= 'E'  'X'  'Y'  'VX' 'VY' '-';
+inp.lcol={[ 'E' ],[ 'X' ],[ 'Y'  ],['VX' ],['VY' ],['-']};
 
 
 
@@ -272,6 +287,9 @@ inp.atmin=zeros(ne,1)+0.01;
 % ## DATASET 19:  Data for Specified Pressure Nodes
 %###  [IPBC]                [PBC]                [UBC]
 
+inp.ipbc=ipbc;
+inp.pbc=pbc;
+inp.ubc=ubc;
 
 
 
@@ -279,17 +297,20 @@ inp.atmin=zeros(ne,1)+0.01;
 %##  DATASET     22:  Ele        ment Incid      ence Data
 %##    [LL]      [IIN(1)]        [IIN(2)]        [IIN(3)]        [IIN(4)]
 
-node_index_mtx=reshape(ii,ny,nx);  %note node_index_mtx(52)=52
-ne_mtx=reshape(l,ney,nex);
+%ne_mtx=reshape(l,ney,nex);
+inp.iin1=zeros(inp.ne,1);
+inp.iin2=zeros(inp.ne,1);
+inp.iin3=zeros(inp.ne,1);
+inp.iin4=zeros(inp.ne,1);
 idx=1;
 for j=1:nex
     for i=1:ney
-        iin1(idx)=node_index_mtx(i,j);
-        iin2(idx)=node_index_mtx(i+1,j);
-        iin3(idx)=node_index_mtx(i+1,j+1);
-        iin4(idx)=node_index_mtx(i,j+1);
+        inp.iin1(idx)=node_index_mtx(i,j);
+        inp.iin2(idx)=node_index_mtx(i+1,j);
+        inp.iin3(idx)=node_index_mtx(i+1,j+1);
+        inp.iin4(idx)=node_index_mtx(i,j+1);
         idx=idx+1;
     end
 end
 
-
+inp.export_to_file();

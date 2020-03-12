@@ -13,11 +13,11 @@ filename=[o.fname,'.inp'];
 fid = fopen(filename,'wt');
 
 %% title
-fprintf(fid,'##  SUTRA MAIN INPUT FILE');
-fprintf(fid,'##');
-fprintf(fid,'##  DATASET 1:  OUTPUT HEADING');
-fprintf(fid,'##    [TITLE1]');
-fprintf(fid,'##    [TITLE2]');
+fprintf(fid,'##  SUTRA MAIN INPUT FILE\n');
+fprintf(fid,'##\n');
+fprintf(fid,'##  DATASET 1:  OUTPUT HEADING\n');
+fprintf(fid,'##    [TITLE1]\n');
+fprintf(fid,'##    [TITLE2]\n');
 
 fprintf(fid,'%s \n',o.title1 );
 fprintf(fid,'%s \n',o.title2 );
