@@ -2,8 +2,8 @@ clear all
 close all
 
 
-dx=5;
-dy=-0.2;
+dx=0.05;
+dy=-0.05;
 x_ay=0:dx:200;
 y_ay=0:dy:-5.2;
 nx=length(x_ay);
@@ -64,17 +64,17 @@ inp.simula='SOLUTE';
  %        regular mesh     ==>   ktype(2) = 2
  %        blockwise mesh   ==>   ktype(2) = 3
 
-inp.ktype(1)=1;  % 2D mesh
+inp.ktype(1)=2;  % 2D mesh
 inp.mshtyp{1}='2D';
 inp.mshtyp{2}='REGULAR';
 
-inp.nn1=0
-inp.nn2=0
+inp.nn1=ny;
+inp.nn2=nx;
 
 
 % ##  DATASET 3:  Simulation Control Numbers
 inp.nn=nn;
-inp.ne=
+inp.ne=ne;
 inp.npbc=
 inp.nubc=0;
 inp.nsop=
@@ -144,8 +144,8 @@ inp.TOLU=1e-12;
 %   2920        'N'        'N'        'N'        'Y'     'Y'        'Y'    'Y'      'Y' 'Y' 'Data Set 8A'
 
 
-nprint=2920;  
-cnodal='N'; 
+inp.nprint=2920;  
+inp.cnodal='N'; 
 inp.celmnt='N';
 inp.cincid='N';
 inp.cpands='Y';
@@ -154,7 +154,6 @@ inp.ccort='N';
 inp.cbudg='Y';
 inp.cscrn='Y';
 inp.cpause='Y';
-
 
 
 %## [NCOLPR]    [NCOL]
@@ -267,6 +266,13 @@ inp.almax=zeros(ne,1)+0.1;
 inp.almin=zeros(ne,1)+0.1;
 inp.atmax=zeros(ne,1)+0.01;
 inp.atmin=zeros(ne,1)+0.01;
+
+
+
+% ## DATASET 19:  Data for Specified Pressure Nodes
+%###  [IPBC]                [PBC]                [UBC]
+
+
 
 
 %##
