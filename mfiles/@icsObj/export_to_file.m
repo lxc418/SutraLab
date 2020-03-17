@@ -16,17 +16,13 @@ function o=export_to_file(o,varargin)
     
     fprintf('Writting to file %s.ics\n', o.fname);
     fprintf(fid,'##  SUTRA ICS FILE\n');
-    fprintf(fid,'##\n');
-    fprintf(fid,'##  DATASET 1:  OUTPUT HEADING\n');
-    fprintf(fid,'##    [TITLE1]\n');
-    fprintf(fid,'##    [TITLE2]\n');
     
     
     fprintf(fid, '\t%+e\n',o.tics);
-    fprintf(fid, '''NONUNIFORM''\n');
+    fprintf(fid, '''%s''\n',o.cpuni);
     fprintf(fid,'\t%+E\t%+E\t%+E\t%+E\n',o.pm1);
     fprintf(fid, '\n');
-    fprintf(fid, '''NONUNIFORM''\n');
+    fprintf(fid, '''%s''\n',o.cuuni);
     fprintf(fid,'\t%+E\t%+E\t%+E\t%+E\n',o.um1);
     fprintf(fid, '\n');
     

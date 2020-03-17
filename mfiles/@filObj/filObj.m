@@ -1,6 +1,7 @@
 classdef filObj <handle
     % TO200317 i decided not using k1,k2, fname(13) and ftstr, the variables used in SUTRA, 
     % because it makes very difficult to construct the data structures e.g., fname(0)='aa.smy'
+    % the default value for 'fid' is -1, meaning, this will not write to SUTRA.fil if export
     % 
     % K0  'SMY'  40  'project.smy'   # optional; defaults to          *  | SUTRA_MAIN...29700 
     % K1  'INP'  50  'project.inp'   # required                       *  | SUTRA_MAIN...28400 
@@ -112,9 +113,10 @@ classdef filObj <handle
       
         [inp,  varargin]      = getProp(varargin,'inpObj',[]);
         [o.sw_read_from_file,  varargin] = getProp(varargin,'read_from_file','yes');
-        o.ftstr= fieldnames(o.terms)
+        o.ftstr= fieldnames(o.terms);
       
         if strcmpi(o.sw_read_from_file,'yes')
+          frpintf('creating object by reading from SUTRA.FIL');
           fn=fopen(o.uname);
 
           
@@ -165,7 +167,7 @@ classdef filObj <handle
      function nns = nnns(o)
        % it is working the same time as others, which is not a procedural way.
        % everytime when o.a is changing, nnv is changing.
-       nns.nns = o.a+7;
+       %nns.nns = o.a+7;
      end % function
    end % methods (static)
 end % classdef

@@ -82,6 +82,7 @@ fprintf(fid,'##  [NBCFPR]\t[NBCSPR]\t[NBCPPR]\t[NBCUPR]\t[CINACT]\n');
 fprintf(fid,'%d\t\t%d\t\t%d\t\t%d\t\t''%s''\n',o.nbcfpr,o.nbcspr,o.nbcppr,o.nbcupr,o.cinact);
 
 
+
 fprintf(fid,'##\n');
 fprintf(fid,'##DATASET 9:  FLUID PROPERTIES\n');
 fprintf(fid,'## [COMPFL]\t[CW]\t\t[SIGMAW]\t[RHOW0]\t\t[URHOW0]\t[DRWDU]\t\t[VISC0]\n');
@@ -140,9 +141,9 @@ toc
 fprintf('Writting dataset 15\n')
 dataset15_str='##\n';
 dataset15_str=[dataset15_str,'## DATASET 15 ELEMENT WISE INPUT\n'];
-dataset15_str=[dataset15_str,'##                              [PMAXFA]        [PMINFA]        [ANG1FA]        [ALMAXF]        [ALMINF]        [ATMAXF]        [ATMINF]\n'];
+dataset15_str=[dataset15_str,'##                              [PMAXFA]        [PMINFA]        [ANGFAC]        [ALMAXF]        [ALMINF]        [ATMAXF]        [ATMINF]\n'];
 dataset15_str=[dataset15_str,sprintf('''ELEMENT''\t\t\t%+E\t%+E\t%+E\t%+E\t%+E\t%+E\t%+E\n',o.pmaxfa,o.pminfa,o.angfac,o.almaxf,o.alminf,o.atmaxf,o.atminf)];
-dataset15_str=[dataset15_str,sprintf('## [L]\t\t[NREG(L)]\t[PMAX(L)]\t[PMIN(L)]\t[ANGLE1(L)]\t[ALMAX(L)]\t[ALMIN(L)]\t[ATMAX(L)]\t[ATMIN(L)]\n')];
+dataset15_str=[dataset15_str,sprintf('## [L]\t\t[LREG(L)]\t[PMAX(L)]\t[PMIN(L)]\t[ANGLEX(L)]\t[ALMAX(L)]\t[ALMIN(L)]\t[ATMAX(L)]\t[ATMIN(L)]\n')];
 
 fprintf(fid, dataset15_str);
 
@@ -156,31 +157,35 @@ fprintf(fid, dataset15_str);
 
 
 %% dataset 17
-fprintf('writting dataset 17\n')
-dataset17_str='';
-dataset17_str=[dataset17_str,'##\n'];
-dataset17_str=[dataset17_str,'##  DATASET 16:  (NOT USED)\n'];
-dataset17_str=[dataset17_str,'##  DATASET 17:  Data for Fluid Source and Sinks\n'];
-dataset17_str=[dataset17_str,'##  [IQCP]               [QINC]               [UINC]\n'];
-temp=[o.iqcp,o.qinc,o.uinc];
-
-dataset17_str=[dataset17_str,sprintf('\t%d\t\t%+E\t%+E\n',temp')];
-dataset17_str=[dataset17_str,'00000000000000000000000000000000000000000000000000\n'];
-fprintf(fid, dataset17_str);
+if o.nsop~=0
+    fprintf('writting dataset 17\n')
+    dataset17_str='';
+    dataset17_str=[dataset17_str,'##\n'];
+    dataset17_str=[dataset17_str,'##  DATASET 16:  (NOT USED)\n'];
+    dataset17_str=[dataset17_str,'##  DATASET 17:  Data for Fluid Source and Sinks\n'];
+    dataset17_str=[dataset17_str,'##  [IQCP]               [QINC]               [UINC]\n'];
+    temp=[o.iqcp,o.qinc,o.uinc];
+    
+    dataset17_str=[dataset17_str,sprintf('\t%d\t\t%+E\t%+E\n',temp')];
+    dataset17_str=[dataset17_str,'00000000000000000000000000000000000000000000000000\n'];
+    fprintf(fid, dataset17_str);
+end
 
 
 %% dataset 19%% dataset 19%% dataset 19%% dataset 19%% dataset 19
-fprintf('writting dataset 19\n')
-dataset19_str='';
-dataset19_str=[dataset19_str,'##\n'];
-dataset19_str=[dataset19_str,'##  DATASET 19:  Data for Specified Pressure Nodes\n'];
-dataset19_str=[dataset19_str,'##  [IPBC]                [PBC]                [UBC]\n'];
-temp=[o.ipbc,o.pbc,o.ubc];
-
-dataset19_str=[dataset19_str,sprintf('\t%d\t\t%+E\t%+E\n',temp')];
-dataset19_str=[dataset19_str,'00000000000000000000000000000000000000000000000000\n'];
-fprintf(fid, dataset19_str);
-
+if o.npbc~=0
+    fprintf('writting dataset 19\n')
+    dataset19_str='';
+    dataset19_str=[dataset19_str,'##\n'];
+    dataset19_str=[dataset19_str,'##  DATASET 19:  Data for Specified Pressure Nodes\n'];
+    dataset19_str=[dataset19_str,'##  [IPBC]                [PBC]                [UBC]\n'];
+    temp=[o.ipbc,o.pbc,o.ubc];
+    
+    dataset19_str=[dataset19_str,sprintf('\t%d\t\t%+E\t%+E\n',temp')];
+    dataset19_str=[dataset19_str,'00000000000000000000000000000000000000000000000000\n'];
+    fprintf(fid, dataset19_str);
+end
+    
 
 % dataset 22
 fprintf('writting dataset 22\n')
