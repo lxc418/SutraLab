@@ -14,6 +14,7 @@ function o=export_to_file(o,varargin)
  
     
     
+    fprintf('Writting to file %s.ics\n', o.fname);
     fprintf(fid,'##  SUTRA ICS FILE\n');
     fprintf(fid,'##\n');
     fprintf(fid,'##  DATASET 1:  OUTPUT HEADING\n');
@@ -21,7 +22,7 @@ function o=export_to_file(o,varargin)
     fprintf(fid,'##    [TITLE2]\n');
     
     
-    fprintf(fid, '%\t+e\n',o.tics);
+    fprintf(fid, '\t%+e\n',o.tics);
     fprintf(fid, '''NONUNIFORM''\n');
     fprintf(fid,'\t%+E\t%+E\t%+E\t%+E\n',o.pm1);
     fprintf(fid, '\n');
