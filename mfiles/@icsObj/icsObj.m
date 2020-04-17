@@ -81,6 +81,10 @@ classdef icsObj <handle
           if fn==-1
             fprintf(1,'%s : Trying to open %s .ics\n',caller,o.fname);
             fn=fopen([o.fname,'.ics']);
+            if fn==-1 
+                fprintf(1,'%s : Trying to open %s (without adding extention name)\n',caller,o.fname);
+                fn=fopen(o.fname);
+            end
             if fn==-1
               fprintf('%s: file ics found!!\n',caller,o.fname);
               o=-1;o2=-1;
@@ -93,7 +97,8 @@ classdef icsObj <handle
           temp=textscan(fn,'%d',1);
           o.tics=temp{1};
           temp=textscan(fn,'%s',1);
-          o.cpuni=temp{1}{1};
+          temp=regexprep(temp{1}{1},'''','');
+          o.cpuni=temp;
         
         
           temp=textscan(fn,'%f',inp.nn);
@@ -101,7 +106,9 @@ classdef icsObj <handle
         
         
           temp=textscan(fn,'%s',1);
-          o.cuuni=temp{1}{1};
+          temp=regexprep(temp{1}{1},'''','');
+
+          o.cuuni=temp;
        
           temp=textscan(fn,'%f',inp.nn);
           o.um1=temp{1};

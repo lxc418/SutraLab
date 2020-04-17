@@ -67,13 +67,15 @@ function [o,o2]=readNOD(varargin)
                  '## NODEWISE RESULTS','operation','delete');
   tmp           = textscan(tmp,'%f ');
   o2.ktprn      = tmp{1};  % expected no. time steps
-  if output_no < 0
+  %fprintf('output number is %f  ...\n',output_no);
+  if output_no > 0
     output_no   = min(o2.ktprn,output_no);
   else
     output_no = o2.ktprn;
   end
 
   
+  fprintf('output number is %f  ...\n',output_no);
   
   %% ---------------- parsing expected results    ----------------------------
   % Refering to OUTNOD.......19900
