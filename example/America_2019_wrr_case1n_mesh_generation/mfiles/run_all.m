@@ -8,6 +8,8 @@
 delete('PART6.mat');clear_and_close;read_from=-2;sl_read_from;n=1;sl_plot_results_movie_last;post_calculation;
 
 
+%
+n=50;sl_plot_results_movie_last;
 
 % run analysis to read all the result 
 

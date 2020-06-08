@@ -272,6 +272,7 @@ classdef inpObj <handle
     x_nod_mtx
     y_nod_mtx
     z_nod_mtx
+    vol_mtx
   end
   
   

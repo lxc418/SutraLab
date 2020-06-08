@@ -3,6 +3,13 @@ clear a
 load myCustomColormap.mat;
 map=myCustomColormap;
 set(groot,'defaultLineLineWidth',2.0)
+cmPm=100;
+% TO200604  top soilthickness is used to determine the thinkness of the solid salt
+% this is determined as the case in America(2020) was using such grid size as top soil
+topsoil_thickness_solid_salt_m=0.025;    
+
+[~,topsoil_y_idx]=  min(abs(-cumsum(inp.dy_cell_mtx(1:10,1))-topsoil_thickness_solid_salt_m)); % plus ensures the top soil is larger than 0.025 
+topsoil_y_idx=topsoil_y_idx+1;
 
 xnod_idx  = strcmp(nod(1).label,'X');
 ynod_idx  = strcmp(nod(1).label,'Y');
@@ -42,8 +49,11 @@ et_y_ay=nod(1).terms{ynod_idx}(bcof(1).i(evp_node_index_in_bcof));
 et_x_ay=x_nod_mtx(1,:);
 et_y_ay=y_nod_mtx(1,:);
 
-parameter=(1-0.24)*2600*(1*10^-47)*(1000^20);
-vol=0.05*0.025*1;
+%parameter=(1-inp.por(1))*inp.rhos*(10^-47)*(1000^20);
+parameter=(1-inp.por(1))*inp.rhos*inp.chi1*1000^(1/inp.chi2);
+%vol_m3=0.05*0.025*1;
+%vol_m3=abs(inp.dx_cell_mtx(1) * inp.dy_cell_mtx(1) * inp.z(1));
+vol_mtx_m3=abs(inp.dx_cell_mtx .* inp.dy_cell_mtx * inp.z(1));
 color1=[0.8500, 0.3250, 0.0980];
 color2=[0.4660, 0.6740, 0.1880];
 color3=[0.343, 0.757, 0.9282];
@@ -65,7 +75,7 @@ startx_in_ele=[x_ele_mtx(starty_idx(1:5),1);x_ele_mtx(starty_idx(6:end),end)]';
 starty_in_ele=[yele_mtx(starty_idx(1:5),1);yele_mtx(starty_idx(6:end),end)]';
 
 
-%start_ay=[startx;starty]'
+%start_ay=[startx;starty]';
 %[~, index] = ismember( start_ay, [x_ele_mtx(:) x_ele_mtx(:)], 'rows' );
 %[~, index] = ismember( start_ay, [x_ele_mtx(:) x_ele_mtx(:)], 'rows' );
 
@@ -73,20 +83,20 @@ starty_in_ele=[yele_mtx(starty_idx(1:5),1);yele_mtx(starty_idx(6:end),end)]';
 
 %% now we analyze the problem
 
-a.iv=12;
-a.ivy=2;
-a.fs=26;
-a.fontsize=26;
-a.axislinewidth=3;
+a.iv            = 12;
+a.ivy           = 2;
+a.fs            = 26;
+a.fontsize      = 26;
+a.axislinewidth = 3;
 
-%a.left =  0.08;
-a.left =  0.15;
-a.bot  =  0.7;
-a.width= 0.68;
-a.width2=0.68;
-a.height= 0.2;
-a.h_interval=0.2;
-a.lw=3;
+%a.left      = 0.08;
+a.left       = 0.15;
+a.bot        = 0.7;
+a.width      = 0.68;
+a.width2     = 0.68;
+a.height     = 0.2;
+a.h_interval = 0.2;
+a.lw         = 3;
 %
 %
 %n=8000;
@@ -145,9 +155,14 @@ fprintf('Now Drawing graph\n')
   ax1 = gca;
   set(ax1,'XTickLabel','')
   yyaxis right
-  ssalt=parameter.*((c_mtx(1,:)).^20).*vol;
-  sthick=ssalt./2600./inp.dx_cell_mtx(1,:).*100;
-  plot(et_x_ay,sthick,'k','LineWidth',a.lw);
+  %ssalt=parameter.*((c_mtx(1,:)).^20).*vol_surface_ay_m3;
+  %parameter=(1-inp.por).*inp.rhos*inp.chi1*1000^(1/inp.chi2);
+  solid_salt_mtx_kg=parameter.*c_mtx.^(1/inp.chi2).*vol_mtx_m3;
+  %parameter=(1-inp.por(1))*inp.rhos*inp.chi1*1000^(1/inp.chi2);
+  solid_salt_thick_mtx_cm=solid_salt_mtx_kg/inp.rhos./inp.dx_cell_mtx/ inp.z(1) *cmPm;
+
+  %plot(et_x_ay,solid_salt_thick_mtx_cm(1,:),'k','LineWidth',a.lw);hold on
+  plot(et_x_ay,sum(solid_salt_thick_mtx_cm(1:topsoil_y_idx,:),1),'k','LineWidth',a.lw);
   get(gca,'xtick');
   set(gca,'fontsize',a.fontsize,'TickDir','out','xlim',[0 200],'XTick',[],'ylim',[0 20],'YTick',[10 20]);
   xlabel('');
@@ -165,7 +180,8 @@ fprintf('Now Drawing graph\n')
   n_fig=n_fig+1;
   %% sat over x axis 
   subplot('position',[a.left,a.bot-n_fig*a.h_interval,a.width2,a.height])
-  et_mmday=-bcof(n).qin(evp_node_index_in_bcof)./inp.qinc(evp_node_index_in_bcof)'*3600*24;
+  %et_mmday=-bcof(n).qin(evp_node_index_in_bcof)./inp.qinc(evp_node_index_in_bcof)'*3600*24;  %TO200603
+  et_mmday=-bcof(n).qin(evp_node_index_in_bcof)./inp.qinc(evp_node_index_in_bcof)*3600*24;
   yyaxis left
   plot(et_x_ay,s_mtx(1,:),'color', color3,'linewidth',a.lw); 
   get(gca,'xtick');
