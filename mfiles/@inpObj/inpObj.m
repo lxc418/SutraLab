@@ -291,7 +291,7 @@ classdef inpObj <handle
       % vapinpObj constructor
     [o.mtx_transpose,  varargin] = getProp(varargin,'mtx_transpose','no');
     [o.sw_read_from_file,  varargin] = getProp(varargin,'read_from_file','yes');
-    [o.sw_block_reading,  varargin] = getProp(varargin,'block_reading','no');
+    [o.sw_block_reading,  varargin] = getProp(varargin,'block_reading','yes');
     caller=dbstack('-completenames'); caller=caller.name;
     o.varargin        = varargin;
     [o.fname, varargin] = getNext(varargin,'char','');
