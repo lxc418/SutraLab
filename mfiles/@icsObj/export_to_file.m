@@ -25,7 +25,9 @@ function o=export_to_file(o,varargin)
     fprintf(fid, '''%s''\n',o.cuuni);
     fprintf(fid,'\t%+E\t%+E\t%+E\t%+E\n',o.um1);
     fprintf(fid, '\n');
-    
+    fprintf(fid, '''%s''\n',o.ctuni);
+    fprintf(fid,'\t%+E\t%+E\t%+E\t%+E\n',o.tm1);
+    fprintf(fid, '\n');    
     
     fclose(fid);
 end % function_export to file

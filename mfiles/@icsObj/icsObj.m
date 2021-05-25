@@ -43,11 +43,15 @@ classdef icsObj <handle
     tics
     cpuni    % pressure format
     cuuni    % concentration format
+    ctuni    % temperature format
 
     pm1      % initial pressure
     um1      % initial concentration
+    tm1      % initial temperature
+   
     pm1_mtx
     um1_mtx
+    tm1_mtx
     nn
     ne
 
