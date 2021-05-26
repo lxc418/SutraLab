@@ -40,7 +40,7 @@ addpath([pathstr 'etc']);
 %addpath([pathstr 'gridcoords']);
 addpath([pathstr 'read']);
 %addpath([pathstr 'visualization']);
-addpath([pathstr 'write']);
+addpath([pathstr 'sutravap']);
 addpath([pathstr 'sutraset']);
 addpath([pathstr 'misc']);
 
