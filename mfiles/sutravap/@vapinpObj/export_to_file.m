@@ -33,7 +33,7 @@ fprintf(fid,'\t%d\t\t%d\t\t%d\t\t%d\t\t%d\t\t%d\t\t%d\t\n',o.nn,o.ne,o.npbc,o.nu
 fprintf(fid,'##\n');
 fprintf(fid,'##  DATASET 4:  SIMULATION MODE OPTIONS\n');
 fprintf(fid,'##\t[CUNSAT]\t\t[CSSFLO]\t\t[CSSTRA]\t\t\t\t[CREAD]\t\t[ISTORE]\n');
-fprintf(fid,'%s''\t''%s''\t''%s''\t\t''%s''\t\t%d\n',o.cunsat, o.cssflo, o.csstra, o.cread, o.istore);
+fprintf(fid,'\t''%s''\t\t''%s''\t''%s''\t\t''%s''\t\t%d\n',o.cunsat, o.cssflo, o.csstra, o.cread, o.istore);
 
 fprintf(fid,'##\n');
 fprintf(fid,'##  DATASET 5:  NUMERICAL CONTROL PARAMETERS\n');
