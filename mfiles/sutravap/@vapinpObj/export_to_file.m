@@ -27,13 +27,13 @@ fprintf(fid,'''SUTRA VERSION 2.2 SOLUTE TRANSPORT''\n' );
 fprintf(fid,'''2D REGULAR MESH''\t%d\t%d\n',[o.nn1,o.nn2] );
 fprintf(fid,'##\n' );
 fprintf(fid,'##  DATASET 3:  SIMULATION CONTROL NUMBERS\n' );
-fprintf(fid,'##      [NN]\t\t[NE]\t\t[NPBC]\t\t[NUBC]\t\t[NSOP]\t\t[NSOU]\t\t[NOBS]\n' );
+fprintf(fid,'##  [NN]\t\t[NE]\t\t[NPBC]\t[NUBC]\t\t[NSOP]\t[NSOU]\t[NOBS]\n' );
 fprintf(fid,'\t%d\t\t%d\t\t%d\t\t%d\t\t%d\t\t%d\t\t%d\t\n',o.nn,o.ne,o.npbc,o.nubc,o.nsop,o.nsou,o.nobs);
 
 fprintf(fid,'##\n');
 fprintf(fid,'##  DATASET 4:  SIMULATION MODE OPTIONS\n');
-fprintf(fid,'##\t[CUNSAT]\t\t[CSSFLO]\t\t[CSSTRA]\t\t\t[CREAD]\t\t[ISTORE]\n');
-fprintf(fid,'\t''%s''\t\t''%s''\t''%s''\t\t''%s''\t\t%d\n',o.cunsat, o.cssflo, o.csstra, o.cread, o.istore);
+fprintf(fid,'##\t[CUNSAT]\t\t[CSSFLO]\t\t[CSSTRA]\t\t\t\t[CREAD]\t\t[ISTORE]\n');
+fprintf(fid,'%s''\t''%s''\t''%s''\t\t''%s''\t\t%d\n',o.cunsat, o.cssflo, o.csstra, o.cread, o.istore);
 
 fprintf(fid,'##\n');
 fprintf(fid,'##  DATASET 5:  NUMERICAL CONTROL PARAMETERS\n');
@@ -43,9 +43,9 @@ fprintf(fid,'\t%.4E\t\t%.4E\t\t%.4E\n',o.up,o.gnup,o.gnuu);
 
 fprintf(fid,'##\n');
 fprintf(fid,'##  DATASET 6:  TEMPORAL CONTROL AND SOLUTION CYCLING DATA\n');
-fprintf(fid,'##\t[NSCH]\t\t[NPCYC]\t\t[NUCYC]\n');
+fprintf(fid,'##\t[NSCH]\t[NPCYC]\t[NUCYC]\n');
 fprintf(fid,'\t%d\t\t%d\t\t%d\n',o.nsch,o.npcyc,o.nucyc);
-fprintf(fid,'## [SCHNAM]\t[SCHTYP]\t[CREFT]\t\t[SCALT]\t\t[NTMAX]\t\t[TIMEI]\t\t[TIMEL]\t\t[TIMEC]\t\t[NTCYC]\t\t[TCMULT]\t[TCMIN]\t[TCMAX]\n');
+fprintf(fid,'## [SCHNAM]\t\t[SCHTYP]\t\t[CREFT]\t\t[SCALT]\t[NTMAX]\t\t[TIMEI]\t[TIMEL]\t\t[TIMEC]\t[NTCYC]\t\t[TCMULT]\t[TCMIN]\t\t[TCMAX]\n');
 fprintf(fid,'''%s''\t''%s''\t''%s''\t%d\t\t%d\t\t%d\t\t%.4E\t%d\t\t%d\t\t%.4E\t%.4E\t%.4E\n',o.schnam,o.schtyp,o.creft,o.scalt,o.ntmax,o.timei,o.timel,o.timec,o.ntcyc,o.tcmult,o.tcmin,o.tcmax);
 fprintf(fid,'''-''\n');
 
@@ -65,7 +65,7 @@ fprintf(fid,'\t%s\t%d\t\t%.4E\n',o.csolvu,o.itrmxu,o.tolu);
 fprintf(fid,'##\n');
 fprintf(fid,'##    DATASET 8:  OUTPUT CONTROLS AND OPTIONS\n');
 fprintf(fid,'##  [NPRINT]\t[CNODAL]\t[CELMNT]\t[CINCID]\t[CPANDS]\t[CVEL]\t[CCORT]\t[CBUDG]\t[CSCRN]\t[CPAUSE]\n');
-fprintf(fid,'\t%d\t''%s''\t\t''%s''\t\t''%s''\t\t''%s''\t\t''%s''\t''%s''\t''%s''\t''%s''\t''%s''\t\n'...
+fprintf(fid,'\t%d\t''%s''\t\t''%s''\t\t''%s''\t\t''%s''\t\t''%s''\t\t''%s''\t\t''%s''\t\t''%s''\t\t''%s''\t\n'...
     ,o.nprint,o.cnodal,o.celmnt,o.cincid,o.cpands,o.cvel,o.ccort,o.cbudg,o.cscrn,o.cpause);
 fprintf(fid,'## [NCOLPR]\t[NCOL]\n');
 fprintf(fid,'%d\t',o.ncolpr);
@@ -79,7 +79,7 @@ fprintf(fid,'%s\n',str);
 fprintf(fid,'## [NOBCYC]\t[INOB]\n');
 fprintf(fid,'##\n');
 fprintf(fid,'##  [NBCFPR]\t[NBCSPR]\t[NBCPPR]\t[NBCUPR]\t[CINACT]\n');
-fprintf(fid,'%d\t\t%d\t\t%d\t\t%d\t\t''%s''\n',o.nbcfpr,o.nbcspr,o.nbcppr,o.nbcupr,o.cinact);
+fprintf(fid,'%d\t\t\t%d\t\t\t%d\t\t\t%d\t\t\t''%s''\n',o.nbcfpr,o.nbcspr,o.nbcppr,o.nbcupr,o.cinact);
 
 
 
@@ -117,63 +117,63 @@ fprintf(fid,' %.4E\t%.4E\t%.4E\n',o.gravx,o.gravy,o.gravz);
 
 fprintf(fid,'##\n');
 fprintf(fid,'##  DATASET 13B: TIDE FLUCTUATION IN USUBS\n');
-fprintf(fid,'##  [TA]\t[TP]\t[TM]\t[RHOST]\t[SC\t[ITT]\n');
+fprintf(fid,'##  [TA]\t[TP]\t\t[TM]\t\t[RHOST]\t\t[SC]\t\t[ITT]\n');
 fprintf(fid,' %.4E\t%.4E\t%.4E\t%.4E\t%.4E\t%.4E\n',o.ta,o.tp,o.tm,o.rhost,o.sc,o.itt);
 
 fprintf(fid,'##\n');
 fprintf(fid,'##  DATASET 13C: CONTROLLING PARAMETERS\n');
-fprintf(fid,'##  [MET]\t[MAR]\t\t[MSR]\t[MSC]\t[MHT]\t[MVT]\t[MFT]\t[MRK]\n');
+fprintf(fid,'##  [MET]\t[MAR]\t\t[MSR]\t\t[MSC]\t\t[MHT]\t\t[MVT]\t\t[MFT]\t\t[MRK]\n');
 fprintf(fid,' %.4E\t%.4E\t%.4E\t%.4E\t%.4E\t%.4E\t%.4E\t%.4E\n',o.met,o.mar,o.msr,o.msc,o.mht,o.mvt,o.mft,o.mrk);
 
 fprintf(fid,'##\n');
 fprintf(fid,'##  DATASET 13D: EVAPORATION SINARIO\n');
-fprintf(fid,'##  [GRAVX]\t[GRAVY]\t\t[GRAVZ]\n');
+fprintf(fid,'##  [QET]\t[UET]\t\t[PET]\t\t[UVM]\t\t[NIGHT]\t\t[ITE]\n');
 fprintf(fid,' %.4E\t%.4E\t%.4E\t%.4E\t%.4E\t%.4E\n',o.qet,o.uet,o.pet,o.uvm,o.night,o.ite);
 
 fprintf(fid,'##\n');
 fprintf(fid,'##  DATASET 13E: EVAPORATION PARAMETER\n');
-fprintf(fid,'##  [GRAVX]\t[GRAVY]\t\t[GRAVZ]\n');
+fprintf(fid,'##  [TMA]\t[TMI]\t\t[ALF]\t\t[RS]\t\t[RH]\t\t[AP]\t\t[BP]\t\t[U2]\t\t[TSD]\t\t[SCF]\n');
 fprintf(fid,' %.4E\t%.4E\t%.4E\t%.4E\t%.4E\t%.4E\t%.4E\t%.4E\t%.4E\t%.4E\n',o.tma,o.tmi,o.alf,o.rs,o.rh,o.ap,o.bp,o.u2,o.tsd,o.scf);
 
 fprintf(fid,'##\n');
 fprintf(fid,'##  DATASET 13F: AERODYNAMIC RESISTANCE TERM\n');
-fprintf(fid,'##  [GRAVX]\t[GRAVY]\t\t[GRAVZ]\n');
+fprintf(fid,'##  [RAVT]\t[RAVS]\t\t[SWART]\n');
 fprintf(fid,' %.4E\t%.4E\t%.4E\n',o.ravt,o.ravs,o.swart);
 
 fprintf(fid,'##\n');
 fprintf(fid,'##  DATASET 13G: SOIL THERMO PROPERTY TERM\n');
-fprintf(fid,'##  [GRAVX]\t[GRAVY]\t\t[GRAVZ]\n');
+fprintf(fid,'##  [HSC]\t[HER]\t\t[ROUS]\t\t[HCS]\n');
 fprintf(fid,' %.4E\t%.4E\t%.4E\t%.4E\n',o.hsc,o.her,o.rous,o.hcs);
 
 fprintf(fid,'##\n');
-fprintf(fid,'##  13H: PARAMETERS FOR THE SALT RESISTANCE\n');
-fprintf(fid,'##  [GRAVX]\t[GRAVY]\t\t[GRAVZ]\n');
+fprintf(fid,'##  DATASET 13H: PARAMETERS FOR THE SALT RESISTANCE\n');
+fprintf(fid,'##  [AR]\t[BR]\n');
 fprintf(fid,' %.4E\t%.4E\n',o.ar,o.br);
 
 fprintf(fid,'##\n');
-fprintf(fid,'##  DATASET 13E: EVAPORATION PARAMETER\n');
-fprintf(fid,'##  [GRAVX]\t[GRAVY]\t\t[GRAVZ]\n');
+fprintf(fid,'##  DATASET 13I SOIL CHARACTERISTIC PARAMETERS\n');
+fprintf(fid,'##  [SWRES1]\t[AA1]\t\t[VN1]\t[SWRES2]\t[AA2]\t\t[VN2]\t\t[SWRES3]\t[LAM3]\t\t[PHYB3]\t\t[SWRES4]\t\t[LAM4]\t\t[PHYB4]\t\t[PHY0]\t\t[ECTO]\n');
 fprintf(fid,' %.4E\t%.4E\t%.4E\t%.4E\t%.4E\t%.4E\t%.4E\t%.4E\t%.4E\t%.4E\t%.4E\t%.4E\t%.4E\t%.4E\n',...
     o.swres1,o.aa1,o.vn1,o.swres2,o.aa2,o.vn2,o.swres3,o.lam3,o.phyb3,o.swres4,o.lam4,o.phyb4,o.phy0,o.ecto);
 
 fprintf(fid,'##\n');
 fprintf(fid,'##  DATASET 13J: THERMAL CONDUCTIVITIES OF WATER AND LIQUID\n');
-fprintf(fid,'##  [GRAVX]\t[GRAVY]\t\t[GRAVZ]\n');
+fprintf(fid,'##  [NTC]\t[B1]\t\t[B2]\t\t[B3]\n');
 fprintf(fid,' %.4E\t%.4E\t%.4E\t%.4E\n',o.ntc,o.b1,o.b2,o.b3);
 
 fprintf(fid,'##\n');
 fprintf(fid,'##  DATASET 13K: ENHANCEMENT FACTOR\n');
-fprintf(fid,'##  [GRAVX]\t[GRAVY]\t\t[GRAVZ]\n');
+fprintf(fid,'##  [NEF]\t[YA]\t\t[YB]\t\t[YC]\t\t[YD]\t\t[YE]\t\t[FC]\n');
 fprintf(fid,' %.4E\t%.4E\t%.4E\t%.4E\t%.4E\t%.4E\t%.4E\n',o.nef,o.ya,o.yb,o.yc,o.yd,o.ye,o.fc);
 
 fprintf(fid,'##\n');
 fprintf(fid,'##  DATASET 13L: PARAMETERS FOR SURFACE RESISTANCE\n');
-fprintf(fid,'##  [GRAVX]\t[GRAVY]\t\t[GRAVZ]\n');
+fprintf(fid,'##  [TAL]\t[EC]\t\t[ETR]\t\t[PSIP]\t\t[CORS]\n');
 fprintf(fid,' %.4E\t%.4E\t%.4E\t%.4E\t%.4E\n',o.tal,o.ec,o.etr,o.psip,o.cors);
 
 fprintf(fid,'##\n');
 fprintf(fid,'##  DATASET 13M FILM TRANSPORT ALGORITHM\n');
-fprintf(fid,'##  [GRAVX]\t[GRAVY]\t\t[GRAVZ]\n');
+fprintf(fid,'##  [CORF]\t[AGR]\t\t[PHICM]\t\t[ASVL]\n');
 fprintf(fid,' %.4E\t%.4E\t%.4E\t%.4E\n',o.corf,o.agr,o.phicm,o.asvl);
 
 % dataset 14
@@ -195,18 +195,16 @@ dataset14_str= sprintf('\t%d\t%d\t\t%+E\t%+E\t%+E\t%+E\n', temp');
 fprintf(fid, dataset14_str);
 toc
 
-
+% dataset 15
 
 fprintf('Writting dataset 15\n')
 dataset15_str='##\n';
 dataset15_str=[dataset15_str,'## DATASET 15 ELEMENT WISE INPUT\n'];
 dataset15_str=[dataset15_str,'##                              [PMAXFA]        [PMINFA]        [ANGFAC]        [ALMAXF]        [ALMINF]        [ATMAXF]        [ATMINF]\n'];
 dataset15_str=[dataset15_str,sprintf('''ELEMENT''\t\t\t%+E\t%+E\t%+E\t%+E\t%+E\t%+E\t%+E\n',o.pmaxfa,o.pminfa,o.angfac,o.almaxf,o.alminf,o.atmaxf,o.atminf)];
-dataset15_str=[dataset15_str,sprintf('## [L]\t\t[LREG(L)]\t[PMAX(L)]\t[PMIN(L)]\t[ANGLEX(L)]\t[ALMAX(L)]\t[ALMIN(L)]\t[ATMAX(L)]\t[ATMIN(L)]\n')];
+dataset15_str=[dataset15_str,sprintf('##[L]\t[LREG(L)]\t[PMAX(L)]\t\t[PMIN(L)]\t\t[ANGLEX(L)]\t\t[ALMAX(L)]\t\t[ALMIN(L)]\t\t[ATMAX(L)]\t\t[ATMIN(L)]\n')];
 
 fprintf(fid, dataset15_str);
-
-
 
 temp=[  o.l,o.lreg,o.pmax,o.pmin,o.anglex,o.almax,o.almin,o.atmax,o.atmin];
 
@@ -237,7 +235,7 @@ if o.npbc~=0
     dataset19_str='';
     dataset19_str=[dataset19_str,'##\n'];
     dataset19_str=[dataset19_str,'##  DATASET 19:  Data for Specified Pressure Nodes\n'];
-    dataset19_str=[dataset19_str,'##  [IPBC]                [PBC]                [UBC]\n'];
+    dataset19_str=[dataset19_str,'##  [IPBC]             [PBC]             [UBC]\n'];
     temp=[o.ipbc,o.pbc,o.ubc];
     
     dataset19_str=[dataset19_str,sprintf('\t%d\t\t%+E\t%+E\n',temp')];
