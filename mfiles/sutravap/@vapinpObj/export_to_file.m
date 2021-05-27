@@ -118,17 +118,17 @@ fprintf(fid,' %.4E\t%.4E\t%.4E\n',o.gravx,o.gravy,o.gravz);
 fprintf(fid,'##\n');
 fprintf(fid,'##  DATASET 13B: TIDE FLUCTUATION IN USUBS\n');
 fprintf(fid,'##  [TA]\t[TP]\t\t[TM]\t\t[RHOST]\t\t[SC]\t\t[ITT]\n');
-fprintf(fid,' %.4E\t%.4E\t%.4E\t%.4E\t%.4E\t%.4E\n',o.ta,o.tp,o.tm,o.rhost,o.sc,o.itt);
+fprintf(fid,' %.4E\t%.4E\t%.4E\t%.4E\t%.4E\t\t%d\n',o.ta,o.tp,o.tm,o.rhost,o.sc,o.itt);
 
 fprintf(fid,'##\n');
 fprintf(fid,'##  DATASET 13C: CONTROLLING PARAMETERS\n');
 fprintf(fid,'##  [MET]\t[MAR]\t\t[MSR]\t\t[MSC]\t\t[MHT]\t\t[MVT]\t\t[MFT]\t\t[MRK]\n');
-fprintf(fid,' %.4E\t%.4E\t%.4E\t%.4E\t%.4E\t%.4E\t%.4E\t%.4E\n',o.met,o.mar,o.msr,o.msc,o.mht,o.mvt,o.mft,o.mrk);
+fprintf(fid,' \t%d\t\t%d\t\t%d\t\t%d\t\t%d\t\t%d\t\t%d\t\t%d\n',o.met,o.mar,o.msr,o.msc,o.mht,o.mvt,o.mft,o.mrk);
 
 fprintf(fid,'##\n');
 fprintf(fid,'##  DATASET 13D: EVAPORATION SINARIO\n');
 fprintf(fid,'##  [QET]\t[UET]\t\t[PET]\t\t[UVM]\t\t[NIGHT]\t\t[ITE]\n');
-fprintf(fid,' %.4E\t%.4E\t%.4E\t%.4E\t%.4E\t%.4E\n',o.qet,o.uet,o.pet,o.uvm,o.night,o.ite);
+fprintf(fid,' %.4E\t%.4E\t%.4E\t%.4E\t\t%d\t\t%d\n',o.qet,o.uet,o.pet,o.uvm,o.night,o.ite);
 
 fprintf(fid,'##\n');
 fprintf(fid,'##  DATASET 13E: EVAPORATION PARAMETER\n');
@@ -151,7 +151,7 @@ fprintf(fid,'##  [AR]\t[BR]\n');
 fprintf(fid,' %.4E\t%.4E\n',o.ar,o.br);
 
 fprintf(fid,'##\n');
-fprintf(fid,'##  DATASET 13I SOIL CHARACTERISTIC PARAMETERS\n');
+fprintf(fid,'##  DATASET 13I: SOIL CHARACTERISTIC PARAMETERS\n');
 fprintf(fid,'##  [SWRES1]\t[AA1]\t\t[VN1]\t[SWRES2]\t[AA2]\t\t[VN2]\t\t[SWRES3]\t[LAM3]\t\t[PHYB3]\t\t[SWRES4]\t\t[LAM4]\t\t[PHYB4]\t\t[PHY0]\t\t[ECTO]\n');
 fprintf(fid,' %.4E\t%.4E\t%.4E\t%.4E\t%.4E\t%.4E\t%.4E\t%.4E\t%.4E\t%.4E\t%.4E\t%.4E\t%.4E\t%.4E\n',...
     o.swres1,o.aa1,o.vn1,o.swres2,o.aa2,o.vn2,o.swres3,o.lam3,o.phyb3,o.swres4,o.lam4,o.phyb4,o.phy0,o.ecto);
@@ -159,12 +159,12 @@ fprintf(fid,' %.4E\t%.4E\t%.4E\t%.4E\t%.4E\t%.4E\t%.4E\t%.4E\t%.4E\t%.4E\t%.4E\t
 fprintf(fid,'##\n');
 fprintf(fid,'##  DATASET 13J: THERMAL CONDUCTIVITIES OF WATER AND LIQUID\n');
 fprintf(fid,'##  [NTC]\t[B1]\t\t[B2]\t\t[B3]\n');
-fprintf(fid,' %.4E\t%.4E\t%.4E\t%.4E\n',o.ntc,o.b1,o.b2,o.b3);
+fprintf(fid,' \t%d\t%.4E\t%.4E\t%.4E\n',o.ntc,o.b1,o.b2,o.b3);
 
 fprintf(fid,'##\n');
 fprintf(fid,'##  DATASET 13K: ENHANCEMENT FACTOR\n');
 fprintf(fid,'##  [NEF]\t[YA]\t\t[YB]\t\t[YC]\t\t[YD]\t\t[YE]\t\t[FC]\n');
-fprintf(fid,' %.4E\t%.4E\t%.4E\t%.4E\t%.4E\t%.4E\t%.4E\n',o.nef,o.ya,o.yb,o.yc,o.yd,o.ye,o.fc);
+fprintf(fid,' \t%d\t%.4E\t%.4E\t%.4E\t%.4E\t%.4E\t%.4E\n',o.nef,o.ya,o.yb,o.yc,o.yd,o.ye,o.fc);
 
 fprintf(fid,'##\n');
 fprintf(fid,'##  DATASET 13L: PARAMETERS FOR SURFACE RESISTANCE\n');
@@ -172,7 +172,7 @@ fprintf(fid,'##  [TAL]\t[EC]\t\t[ETR]\t\t[PSIP]\t\t[CORS]\n');
 fprintf(fid,' %.4E\t%.4E\t%.4E\t%.4E\t%.4E\n',o.tal,o.ec,o.etr,o.psip,o.cors);
 
 fprintf(fid,'##\n');
-fprintf(fid,'##  DATASET 13M FILM TRANSPORT ALGORITHM\n');
+fprintf(fid,'##  DATASET 13M: FILM TRANSPORT ALGORITHM\n');
 fprintf(fid,'##  [CORF]\t[AGR]\t\t[PHICM]\t\t[ASVL]\n');
 fprintf(fid,' %.4E\t%.4E\t%.4E\t%.4E\n',o.corf,o.agr,o.phicm,o.asvl);
 
