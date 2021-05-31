@@ -54,12 +54,10 @@ fprintf(fid,'##\n');
 fprintf(fid,'##  DATASET 7:  ITERATION AND MATRIX SOLVER CONTROLS\n');
 fprintf(fid,'##\t[ITRMAX]\t[RPMAX]\t\t[RUMAX]\n');
 fprintf(fid,'\t%d\t\t%.4E\t%.4E\n',o.itrmax,o.rpmax,o.rumax);
-
 fprintf(fid,'##\t[CSOLVP]\t[ITRMXP]\t[TOLP]\n');
-fprintf(fid,'\t%s\t%d\t\t%.4E\n',o.csolvp,o.itrmxp,o.tolp);
-
+fprintf(fid,'\t''%s''\t%d\t\t%.4E\n',o.csolvp,o.itrmxp,o.tolp);
 fprintf(fid,'##\t[CSOLVU]\t[ITRMXU]\t[TOLU]\n');
-fprintf(fid,'\t%s\t%d\t\t%.4E\n',o.csolvu,o.itrmxu,o.tolu);
+fprintf(fid,'\t''%s''\t%d\t\t%.4E\n',o.csolvu,o.itrmxu,o.tolu);
 
 
 fprintf(fid,'##\n');
@@ -68,18 +66,18 @@ fprintf(fid,'##  [NPRINT]\t[CNODAL]\t[CELMNT]\t[CINCID]\t[CPANDS]\t[CVEL]\t[CCOR
 fprintf(fid,'\t%d\t''%s''\t\t''%s''\t\t''%s''\t\t''%s''\t\t''%s''\t\t''%s''\t\t''%s''\t\t''%s''\t\t''%s''\t\n'...
     ,o.nprint,o.cnodal,o.celmnt,o.cincid,o.cpands,o.cvel,o.ccort,o.cbudg,o.cscrn,o.cpause);
 fprintf(fid,'## [NCOLPR]\t[NCOL]\n');
-fprintf(fid,'%d\t',o.ncolpr);
+fprintf(fid,'\t%d\t',o.ncolpr);
 str=sprintf('''%s'' ',o.ncol{:});
 fprintf(fid,'%s\n',str);
 
 fprintf(fid,'## [LCOLPR]\t[LCOL]\n');
-fprintf(fid,'%d\t',o.lcolpr);
+fprintf(fid,'\t%d\t',o.lcolpr);
 str=sprintf('''%s'' ',o.lcol{:});
 fprintf(fid,'%s\n',str);
 fprintf(fid,'## [NOBCYC]\t[INOB]\n');
 fprintf(fid,'##\n');
 fprintf(fid,'##  [NBCFPR]\t[NBCSPR]\t[NBCPPR]\t[NBCUPR]\t[CINACT]\n');
-fprintf(fid,'%d\t\t\t%d\t\t\t%d\t\t\t%d\t\t\t''%s''\n',o.nbcfpr,o.nbcspr,o.nbcppr,o.nbcupr,o.cinact);
+fprintf(fid,'\t%d\t\t\t%d\t\t\t%d\t\t\t%d\t\t\t''%s''\n',o.nbcfpr,o.nbcspr,o.nbcppr,o.nbcupr,o.cinact);
 
 
 
