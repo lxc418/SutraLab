@@ -82,11 +82,11 @@ function [o,o2]=readBCOF(varargin)
                     ,'keyword','##   Node');
 
       [tmp, o2.nsop] = getBlock(fn,'keyword','#'); %TO190312 sutraset learns nsop from the first trial
-      tmp = textscan(tmp,'%f %s %s %f %f %f ',o2.nsop);
+      tmp = textscan(tmp,'%f %s %s %f %f %f %f %f %f ',o2.nsop);
       if output_from==1
           parsing_start_node=2;
-          [o(n).i,o(n).ibc,o(n).notapp,o(n).qin,o(n).uucut,...
-                   o(n).qu]= deal(tmp{:});
+           [o(n).i,o(n).ibc,o(n).notapp,o(n).qin,o(n).uucut,...
+                   o(n).qu,o(n).pd,o(n).pw,o(n).pc]= deal(tmp{:});          
       end
 
       
@@ -172,9 +172,9 @@ function [o,o2]=readBCOF(varargin)
 %                   o(n).qu]= deal(tmp{:});
 %           end
 %       elseif n>=output_from
-           tmp = textscan(fn ,'%f %s %s %f %f %f ',o2.nsop);
+           tmp = textscan(fn ,'%f %s %s %f %f %f %f %f %f ',o2.nsop);
            [o(n).i,o(n).ibc,o(n).notapp,o(n).qin,o(n).uucut,...
-                   o(n).qu]= deal(tmp{:});          
+                   o(n).qu,o(n).pd,o(n).pw,o(n).pc]= deal(tmp{:});          
 %       end
 %       % get o.nbcp as it is not disclosed in *.bcof
 %       if n==output_from 

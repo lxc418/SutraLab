@@ -124,13 +124,13 @@ function [o,o2]=readBCOP(varargin)
       % get o.npbc as it is not disclosed in *.npbc
       if n==output_from 
         [tmp,o2.npbc] = getBlock(fn,'keyword','#');
-        tmp = textscan(tmp,'%f %s %s %f %f %f %f %f',o2.npbc);
+        tmp = textscan(tmp,'%f %s %s %f %f %f %f %f %f %f %f ',o2.npbc);
       else
-        tmp = textscan(fn ,'%f %s %s %f %f %f %f %f',o2.npbc);
+        tmp = textscan(fn ,'%f %s %s %f %f %f %f %f %f %f %f ',o2.npbc);
       end
 
       [o(i).i,o(i).ibc,o(i).bcdstr,o(i).qpl,o(i).uucut,...
-                      o(i).qpu,o(i).pvec,o(i).pbc]= deal(tmp{:});
+                      o(i).qpu,o(i).pvec,o(i).pbc]= deal(tmp{1:8});
       i=i+1;
     else
       fprintf(1,['WARNING FROM %s: Simulation is not completed\n %g'...
