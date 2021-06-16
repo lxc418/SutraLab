@@ -1,5 +1,5 @@
 
-function qv  = readQV(inp,ele)
+function qv  = readQV(inp,ele,nod)
 %function qv = readQV(fname,inp,ele,nod,et)
 %output  qv.se
 %        qv.qvx
@@ -20,26 +20,25 @@ function qv  = readQV(inp,ele)
       qv(i).qvy = fscanf(fn, '%g   ',[inp.nn2,inp.nn1-1])';
    end %loop
 
-% %% -----------calculating the first vaporization plane location----------
-% % ef(1,1:SWELE) is the time of the output (day)
-% % ef(2:(p.nev+2),1:SWELE) is the position of the vaporization plane
-% ef1=zeros(inp.nn2,length(ele));  % initialize the size of ef
-% %ef1(1,:)=ta(2,:);   
-% for i=1:length(ele) %p.neo   % loop of node on y direction 
-%   for k=1:inp.nn2 %p.nnh   % loop of node on x direction
-%     for j=1:inp.nn1 %p.nnv
-% %        if a1(5,k*(p.nnv)-j+1,i)>=0.02 % 0.1 here is the corresponding residual liquid     
-%         if nod(i).terms{s_nod_idx}(k*inp.nn1+1-j)>=0.02 % 0.1 here is the corresponding residual liquid     
-%     % warning: this check is from the top of the column to the bottom
-% %            ef1(k,i)=       %a1(2,k*(p.nnv)-j+1,i);
-%              qv(i).vapori_plane_y(k)=nod(i).terms{y_nod_idx}(k*inp.nn1+1-j);
-%             %a.vPlane= 
-%         break
-%         end %if
-%     end % j=1:p.nnv
-%   end % i=1;p.neo
-% end % k=1:p.nnh
-% 
+%% -----------calculating the first vaporization plane location----------
+% ef(1,1:SWELE) is the time of the output (day)
+% ef(2:(p.nev+2),1:SWELE) is the position of the vaporization plane
+ef1=zeros(inp.nn2,length(ele));  % initialize the size of ef
+%ef1(1,:)=ta(2,:);   
+for i=1:length(ele) %p.neo   % loop of node on y direction 
+  for k=1:inp.nn2 %p.nnh   % loop of node on x direction
+    for j=1:inp.nn1 %p.nnv
+        if nod(i).terms{6}(k*inp.nn1+1-j)>=inp.swres1 % residual saturation     
+    % warning: this check is from the top of the column to the bottom
+%            ef1(k,i)=       %a1(2,k*(p.nnv)-j+1,i);
+             qv(i).vapori_plane_y(k)=nod(i).terms{3}(k*inp.nn1+1-j);
+            %a.vPlane= 
+        break
+        end %if
+    end % j=1:p.nnv
+  end % i=1;p.neo
+end % k=1:p.nnh
+
 % 
 % 
 % %% --------calculate the vaporization rate  --------

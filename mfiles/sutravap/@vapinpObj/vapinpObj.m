@@ -656,7 +656,7 @@ classdef vapinpObj <handle
         input_number=3;
         fmt=repmat('%f ',1,input_number);
         str=textscan(o.inp.dataset13f,fmt);
-        [o.ravt,o.ravs,o.swrat] =deal(str{1:input_number});
+        [o.ravt,o.ravs,o.swart] =deal(str{1:input_number});
 
       % ---------------       DATASET 13G   -------------------------
       o.inp.dataset13g = getNextLine(fn,'criterion','without','keyword','#','ignoreblankline','yes');
