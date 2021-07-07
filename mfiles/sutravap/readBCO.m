@@ -1,6 +1,6 @@
-function [et,mesh]=readBCO(fname,inp,nod)
+function [et,mesh]=readBCO(inp,nod)
 %function [xyf,xyr,et1,aet1,avet1,et]=readbco(fname,p,nod)
-    fn=fopen(fname);
+    fn=fopen('BCO.DAT');
     line=fgetl(fn);
     mesh=struct;
     temp=fscanf(fn,'%g %g %g %g %g %g %g %g %g %g ', [10 inp.nsop]);  
@@ -47,7 +47,7 @@ function [et,mesh]=readBCO(fname,inp,nod)
     %in that case, the
     %data obtain will repeat using the pattern given by %g. 
     if inp.nbcspr==1
-        output_no=inp.ntmax;
+        output_no=length(nod)-2;
         temp=fscanf(fn, '%g', [(inp.nn2+2) output_no]); 
 %       % here using only one %g would be enough
 %       % notice: temp here stores the evaporation rate at all time steps
@@ -83,7 +83,7 @@ function [et,mesh]=readBCO(fname,inp,nod)
        end
         
     else  % when nbcspr is the same as nod
-        output_no=ceil(inp.ntmax/inp.nbcspr)+1;
+        output_no=length(nod)-2;
         temp=fscanf(fn, '%g', [(inp.nn2+2) output_no]); 
 %       % here using only one %g would be enough
 %       % notice: temp here stores the evaporation rate at all time steps
