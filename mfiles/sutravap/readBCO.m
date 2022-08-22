@@ -47,6 +47,11 @@ function [et,mesh]=readBCO(inp,nod)
     %in that case, the
     %data obtain will repeat using the pattern given by %g. 
         output_no=length(nod)-1;
+		if mod(inp.ntmax,inp.nbcspr)==0
+        output_no=length(nod)-1;
+		else
+		output_no=length(nod)-2;
+		end
         temp=fscanf(fn, '%g', [(inp.nn2+2) output_no]); 
 %       % here using only one %g would be enough
 %       % notice: temp here stores the evaporation rate at all time steps
